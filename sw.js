@@ -1,5 +1,5 @@
 // Bump CACHE when you upload a new version so phones pick it up.
-const CACHE = 'charge-the-line-v1.6.0';
+const CACHE = 'charge-the-line-v1.7.1';
 const CORE = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));

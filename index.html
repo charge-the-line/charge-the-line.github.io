@@ -100,7 +100,7 @@
   <div class="gauges">
     <div class="gauge"><svg viewBox="0 0 100 62" id="g-master"></svg><div class="val" id="v-master">0</div><div class="lab">Master discharge</div></div>
     <div class="gauge"><svg viewBox="0 0 100 62" id="g-intake"></svg><div class="val" id="v-intake">0</div><div class="lab">Master intake</div></div>
-    <div class="gauge"><svg viewBox="0 0 100 62" id="g-front"></svg><div class="val" id="v-front">0</div><div class="lab">#1 front discharge</div></div>
+    <div class="gauge"><svg viewBox="0 0 100 62" id="g-front"></svg><div class="val" id="v-front">0</div><div class="lab" id="l-front">#1 front discharge</div></div>
     <div class="gauge"><svg viewBox="0 0 100 62" id="g-aux"></svg><div class="val" id="v-aux">0</div><div class="lab" id="l-aux">#2 rear discharge</div></div>
   </div>
   <div class="row2">
@@ -171,12 +171,12 @@
   <p><b>Crack</b> opens a valve a quarter turn at a time. <b>Snap</b> throws it wide open — water hammer, or a lost prime at draft. The MIV travels on its own; that's what it's for.</p>
   <p>Three tiers per scenario: <b>Guided</b> shows every step and the target pressure. <b>Recall</b> hides the checklist and makes you figure the PDP from the hose layout. <b>Chaos</b> is Recall plus things going wrong.</p>
   <p style="font-size:14px">Training aid only. Department SOPs and the preconnect chart on the rig are the real numbers.</p>
-  <p style="font-size:13px;color:var(--muted)">Version 1.6.0 · Found a problem? Use "Report an issue" under any mission.</p>
+  <p style="font-size:13px;color:var(--muted)">Version 1.7.1 · Found a problem? Use "Report an issue" under any mission.</p>
   <button class="warn" id="b-start" style="width:100%;font-size:18px">Continue</button>
 </div></div>
 
 <div class="overlay hidden" id="menu"><div class="box">
-  <h2>Menu <span style="font-size:14px;color:var(--muted);font-weight:400">v1.6.0</span></h2>
+  <h2>Menu <span style="font-size:14px;color:var(--muted);font-weight:400">v1.7.1</span></h2>
   <div style="display:flex;gap:8px;margin-bottom:12px"><button id="b-math" style="flex:1">Pump math drills</button><button id="b-progress" style="flex:1">My progress</button></div>
   <h3 style="margin:0 0 4px;font-size:18px">Difficulty</h3>
   <div class="tiers"><button data-tier="0">Guided</button><button data-tier="1">Recall</button><button data-tier="2">Chaos</button></div>
@@ -277,7 +277,7 @@ function freshState(){
     miv:0,mivDir:0,hardSuction:false,strainer:false,primerOn:false,primerT:0,primeHold:0,primed:false,vac:0,warnedOpen:false,
     foamOn:false,foamPct:3,foamTank:20,flushing:false,flushT:0,flushed:false,foamEmptyWarned:false,residWarned:false,residLow:0,
     tank:TANK,tankMax:TANK,xfer:'pressure',xferWarned:false,rpm:700,mode:'psi',set:150,psi:0,score:100,t:0,mission:0,hold:0,cav:0,incidents:[],running:false,dry:false,
-    fault:null,faultT:0,faultDue:0,burstT:0,susp:15,clog:0,clearing:0,vortexT:0,clogWarned:false,decisions:[],mStart:0,valves:{}});
+    fault:null,faultT:0,faultDue:0,burstT:0,bldg:false,sysPsi:300,heatT:0,heatWarned:false,susp:15,clog:0,clearing:0,vortexT:0,clogWarned:false,decisions:[],mStart:0,valves:{}});
   for(const k in VALVES)S.valves[k]={...VALVES[k],open:0,burst:false};
 }
 
@@ -289,7 +289,7 @@ function buildValves(keys){
 }
 function setValve(k,a){
   const v=S.valves[k];
-  if(a==='close'){v.open=0;radio('Engineer',`${v.n} closed`);if(v.burst){v.burst=false;S.burstT=-8;radio('FF Nowak','Burst length isolated, swapping it out — give us a few seconds','good');}}
+  if(a==='close'){v.open=0;radio('Engineer',`${v.n} closed`);if(v.burst){v.burst=false;const bm=CAMP[S.camp].burstCloseMsg;if(bm){S.burstT=0;radio(bm[0],bm[1],'good');}else{S.burstT=-8;radio('FF Nowak','Burst length isolated, swapping it out — give us a few seconds','good');}}}
   else if(a==='crack'){v.open=Math.min(100,v.open+25);radio('Engineer',`${v.n} at ${v.open}%`);}
   else{const was=v.open>0;v.open=100;
     if(!was){if(supplied().draft){S.primed=false;S.vac=0;ding(15,`Lost prime — snapped ${v.n} open at a draft`);}else if(S.psi>60)ding(15,`Water hammer on ${v.n} — open it slowly`);}
@@ -306,11 +306,11 @@ $('s-supply').onclick=()=>{if(S.supply)return;S.supply=true;$('s-hyd').disabled=
 $('s-hyd').onclick=()=>{if(S.hydrant)return;S.hydrant=true;$('s-fill').disabled=false;if(S.miv>0)$('s-bleed').disabled=false;radio('FF Cruz','Hydrant open, water coming to you');refreshSwitches();};
 $('s-bleed').onclick=()=>{if(!S.hydrant||S.miv===0){radio('Engineer','Nothing to bleed — no water at the intake yet');return;}S.bled=true;radio('Engineer','Air bled at the left intake — solid stream','good');refreshSwitches();};
 $('s-fill').onclick=()=>{S.fill=!S.fill;radio('Engineer',`Tank fill ${S.fill?'open':'closed'}`);refreshSwitches();};
-$('s-fdc').onclick=()=>{if(S.fdcLine)return;S.fdcLine=true;radio('FF Nowak','2½" on the FDC off #3 rear, clappers checked');refreshSwitches();};
+$('s-fdc').onclick=()=>{if(S.fdcLine)return;S.fdcLine=true;const fm=CAMP[S.camp].fdcMsg||['FF Nowak','2½" on the FDC off #3 rear, clappers checked'];radio(fm[0],fm[1]);refreshSwitches();};
 $('s-relay').onclick=()=>{if(S.relayLine)return;S.relayLine=true;const rm=CAMP[S.camp].relayMsg||['Engine 10-1','We have your 5" on our intake, send water when ready'];radio(rm[0],rm[1]);refreshSwitches();};
 $('s-hard').onclick=()=>{if(S.hardSuction)return;S.hardSuction=true;$('s-fill').disabled=false;radio('FF Cruz',CAMP[S.camp].hardMsg||'Two lengths of hard suction on the left intake, gaskets checked');refreshSwitches();};
 $('s-strainer').onclick=()=>{if(S.strainer)return;S.strainer=true;radio('FF Cruz',CAMP[S.camp].strainerMsg||'Floating strainer in, tied off, off the bottom');refreshSwitches();};
-function setXfer(m){if(S.xfer===m)return;if(S.psi>50)ding(10,'Changed the transfer valve under pressure — bring it to idle first');S.xfer=m;radio('Engineer',`Transfer valve to ${m.toUpperCase()}`);}
+function setXfer(m){if(S.xfer===m)return;if(S.pump&&S.rpm>1100)ding(10,'Changed the transfer valve under pressure — bring it to idle first');S.xfer=m;radio('Engineer',`Transfer valve to ${m.toUpperCase()}`);}
 $('x-vol').onclick=()=>setXfer('volume');$('x-pres').onclick=()=>setXfer('pressure');
 $('d-up').onclick=()=>{S.susp=Math.min(100,S.susp+10);radio('FF Cruz',`Suction raised (${Math.round(S.susp)}% up the water column)`);};
 $('d-dn').onclick=()=>{S.susp=Math.max(0,S.susp-10);radio('FF Cruz',`Suction lowered (${Math.round(S.susp)}% up the water column)`);};
@@ -345,14 +345,14 @@ function modeUI(){['psi','rpm','idle'].forEach(m=>$('b-'+m).classList.toggle('on
 function supplied(){const tank=S.ttp&&S.tank>0,hyd=S.supply&&S.hydrant&&S.miv>0&&S.bled,draft=S.hardSuction&&S.strainer&&S.primed&&S.pump;return {any:tank||hyd||draft,hyd,tank,draft};}
 function dischargesClosed(){return Object.keys(VALVES).every(k=>S.valves[k].open===0);}
 function linePsi(v){if(v.open===0)return 0;const p=S.psi*(0.45+0.55*v.open/100);return v.burst?p*0.25:p;}
-function totalFlow(){let f=0;for(const k in S.valves){const v=S.valves[k];if(v.open>0&&S.psi>0)f+=v.gpm*(v.burst?2.2:1)*v.open/100*Math.sqrt(Math.max(S.psi,1)/150);}return f;}
+function totalFlow(){let f=0;const fk=CAMP[S.camp]&&CAMP[S.camp].fdcKeys;for(const k in S.valves){const v=S.valves[k];let m=1;if(fk&&S.bldg&&fk.includes(k)&&!v.burst)m=Math.max(0,Math.min(1,(linePsi(v)-S.sysPsi)/40));if(v.open>0&&S.psi>0)f+=m*v.gpm*(v.burst?2.2:1)*v.open/100*Math.sqrt(Math.max(S.psi,1)/150);}return f;}
 function residual(){return S.hydCap-totalFlow()*0.05;}
 function tick(dt){
   S.t+=dt;const sup=supplied();const flow=totalFlow();const c=CAMP[S.camp];
   if(S.mivDir!==0){S.miv=Math.max(0,Math.min(100,S.miv+S.mivDir*100/6*dt));if(S.miv===0||S.miv===100){radio('Engineer',`MIV ${S.miv===100?'open':'closed'}`);S.mivDir=0;}}
   if(!S.pump)S.rpm=Math.max(700,S.rpm-150*dt);
   else if(S.mode==='idle')S.rpm=Math.max(900,S.rpm-300*dt);
-  else if(S.mode==='psi'){const target=dischargesClosed()?Math.min(S.set,80):S.set;const cf=(c.depth&&sup.draft&&!sup.hyd)?Math.max(0.2,1-S.clog/100*0.85):1;const need=900+(target+flow*0.08-(sup.hyd?Math.max(0,residual()):0))/300*1500/cf;const d=Math.max(-200*dt,Math.min(200*dt,need-S.rpm));S.rpm=Math.max(900,Math.min(2400,S.rpm+d));}
+  else if(S.mode==='psi'){const target=dischargesClosed()?Math.min(S.set,80):S.set;const cf=((c.depth&&sup.draft&&!sup.hyd)?Math.max(0.2,1-S.clog/100*0.85):1)*((c.rig&&c.rig.twoStage&&S.xfer==='pressure')?1.25:1);const need=900+(target+flow*0.08-(sup.hyd?Math.max(0,residual()):0))/300*1500/cf;const d=Math.max(-200*dt,Math.min(200*dt,need-S.rpm));S.rpm=Math.max(900,Math.min(2400,S.rpm+d));}
   if(c.draft){
     const closed=dischargesClosed();
     if(S.primerOn){S.primerT+=dt;
@@ -374,7 +374,8 @@ function tick(dt){
     }
   }
   let base=0;if(S.pump&&sup.any)base=(S.rpm-900)/1500*300+(sup.hyd?Math.max(0,residual()):0);
-  if(c.rig&&c.rig.twoStage&&S.xfer==='pressure'&&flow>c.rig.rated*0.5){base*=c.rig.rated*0.5/flow;if(!S.xferWarned){S.xferWarned=true;if(TIER===0)radio('Engineer','Pump is in PRESSURE (series) — it cannot move this much water. Idle down and go to VOLUME','bad');}}else if(flow<c.rig.rated*0.4)S.xferWarned=false;
+  if(c.rig&&c.rig.twoStage&&S.xfer==='pressure'&&S.pump&&sup.any)base+=Math.max(0,(S.rpm-900)/1500*300)*0.25;
+  if(c.rig&&c.rig.twoStage&&S.xfer==='pressure'&&flow>c.rig.rated*0.5){base*=c.rig.rated*0.5/flow;if(!S.xferWarned){S.xferWarned=true;if(TIER===0)radio('Engineer','Pump is in PRESSURE (series) — it cannot move this much water. Idle down and go to VOLUME','bad');}}else if(c.rig&&flow<c.rig.rated*0.4)S.xferWarned=false;
   if(c.depth&&sup.draft&&!sup.hyd){base*=1-S.clog/100*0.85;if(S.susp>75)base*=0.8+Math.random()*0.2;}
   S.psi=Math.max(0,base-flow*0.08*(S.pump&&sup.any?1:0));
   if(S.pump&&!sup.any&&S.rpm>1100&&!c.draft){S.cav+=dt;if(S.cav>3){ding(10,'Cavitation — pump running with no water');S.cav=-6;}}else S.cav=Math.max(0,S.cav);
@@ -388,6 +389,10 @@ function tick(dt){
   /* burst timing */
   if(S.burstT<0){S.burstT+=dt;if(S.burstT>=0)radio('FF Nowak','New length is in, ready for water again','good');}
   for(const k in S.valves){const v=S.valves[k];if(v.burst&&v.open>0){S.burstT+=dt;if(S.burstT>20){ding(10,'Burst line flowed 20 seconds unattended');S.burstT=0;}}}
+  if(c.heat){const hf=flow+(S.fill?40:0);
+    if(S.pump&&S.rpm>1150&&hf<20){S.heatT+=dt;if(S.heatT>10&&!S.heatWarned){S.heatWarned=true;radio('Engineer',TIER===0?'Pump casing is getting hot — no water is moving through it. Get some flow: crack the tank fill':'Pump casing is getting hot','bad');}
+      if(S.heatT>28){ding(10,'Pump overheated churning with no flow');S.heatT=5;}}
+    else{S.heatT=Math.max(0,S.heatT-2*dt);if(S.heatT<3)S.heatWarned=false;}}
   faults(dt);checkMission(dt);render();
 }
 
@@ -417,9 +422,9 @@ function faults(dt){
 function intakeVal(){const sup=supplied();if(CAMP[S.camp].draft&&S.vac>0)return -S.vac;if(sup.hyd)return Math.max(0,residual());return 0;}
 function render(){
   const aux=S.valves[CAMP[S.camp].aux];
-  drawGauge($('g-master'),S.psi,0,400,300);drawGauge($('g-front'),linePsi(S.valves.front),0,400,300);drawGauge($('g-aux'),linePsi(aux),0,400,300);
+  drawGauge($('g-master'),S.psi,0,400,300);const gA=S.valves[CAMP[S.camp].gA||'front'];drawGauge($('g-front'),linePsi(gA),0,400,300);drawGauge($('g-aux'),linePsi(aux),0,400,300);
   const iv=intakeVal();drawGauge($('g-intake'),iv,-30,100,100);
-  $('v-master').textContent=Math.round(S.psi);$('v-front').textContent=Math.round(linePsi(S.valves.front));$('v-aux').textContent=Math.round(linePsi(aux));
+  $('v-master').textContent=Math.round(S.psi);$('v-front').textContent=Math.round(linePsi(gA));$('v-aux').textContent=Math.round(linePsi(aux));
   $('v-intake').textContent=iv<0?Math.round(-iv)+'" Hg':Math.round(iv);
   $('d-psi').textContent=Math.round(S.psi);$('d-rpm').textContent=Math.round(S.rpm);
   $('tankfill').style.height=(S.tank/S.tankMax*100)+'%';$('tankgal').textContent=Math.round(S.tank);
@@ -558,6 +563,60 @@ CAMP.push({name:'Breezy Point — Superstorm Sandy, 2012',real:true,
    chat:{k:'rear4',lo:140,hi:160,low:()=>radio('TL-159','Losing reach up here','bad'),high:()=>radio('TL-159','Back it down some','bad'),ok:()=>radio('TL-159','Good water','good')}}
  ]});
 
+CAMP.push({name:'First Interstate Bank — Los Angeles, 1988',real:true,
+ desc:'62-story high-rise, no sprinklers, building fire pumps shut off. You are the engineer on Engine 209, feeding the standpipe from 6th Street.',
+ story:`<p>May 4, 1988. The First Interstate Bank building is the tallest in Los Angeles — 62 stories, glass curtain walls, and a sprinkler system that is only about 90 percent installed.</p><p>At 2222 hours a sprinkler contractor shuts down the building's two fire pumps and drains the standpipes to the 58th floor for a tie-in. Three minutes later, fire breaks out on the 12th floor.</p><p>At 2238 the box comes in. You are the engineer on <b>Engine 209</b>. Your assignment: 6th Street, the fire department connections. Crews are climbing twelve floors with 2-inch lines into standpipes with no pressure — and every landing has a pressure-reducing valve between them and your pump.</p><p>This is the opposite of Breezy Point. There, the problem was volume from a bad source. Here, it's <b>pressure</b> — pushing water up a skyscraper.</p><p style="font-size:14px;color:var(--muted)">LAFD's exact 1988 Engine 209 specifications aren't published; the rig is modeled as a two-stage big-city pumper. Unit actions and times follow LAFD's after-action report and the USFA technical report; radio traffic and pressures are reconstructed for training.</p>`,
+ source:'Reconstructed from the LAFD Executive Summary of the First Interstate Bank Building Fire (LAFD Historical Archive) and USFA Technical Report TR-022.',
+ url:'https://lafire.com/famous_fires/1988-0504_1stInterstateFire/ExSummary/LAFD-ExecutiveSummary.htm',
+ outcome:'Engine 9, Engine 209, and Engine 210 fed the standpipes from 6th Street through falling glass until Engine 17 and a building engineer restarted the fire pumps around 2320. Crews attacked from four stairwells at once, then made a stand on the 16th floor while companies below hit the 14th and 15th. The fire was knocked down at 0219 — after 383 LAFD members flowed half a million gallons through 10,000 feet of hose. It destroyed four floors and damaged a fifth, in a 62-story building some experts feared could be lost entirely. One building maintenance worker, who took an elevator to investigate the alarms, died. No firefighters were killed. Los Angeles then required sprinklers in all its high-rises.',
+ valves:['rear3','rear2','front'],aux:'rear2',auxLabel:'Discharge 2 · FDC west',gA:'rear3',gALabel:'Discharge 3 · FDC east',fdcKeys:['rear3','rear2'],heat:true,hydCap:50,
+ rig:{title:'LAFD Engine 209 · 1988 pumper',tank:500,rated:1250,twoStage:true,xferStart:'volume',intakeTitle:'Intake gate (hydrant)'},
+ valveNames:{rear3:['Discharge 3','2½" → FDC east inlet'],rear2:['Discharge 2','2½" → FDC west inlet'],front:['Discharge 1','crosslay']},valveGpm:{rear3:250,rear2:250},
+ show:['sw-supply','sw-hyd','sw-bleed','miv','sw-fdc','sw-relay'],
+ labels:{'sw-supply':'Hydrant line (6th Street)','sw-bleed':'Intake bleeder','sw-fdc':'2½" to FDC — east inlet','sw-relay':'2½" to FDC — west inlet'},
+ fdcMsg:['FF (E-209)','2½" is on the east inlet, clapper checked'],relayMsg:['FF (E-209)','Second 2½" is on the west inlet — stayed clear of the glass line'],burstCloseMsg:['FF (E-209)','East line is dead — we are leaving it under the glass'],
+ jpr:'Driver/Operator JPRs — supply a fire department connection to a standpipe system; pump from a pressurized source; operate a two-stage pump.',
+ missions:[
+  {title:'2241 hrs · Feed the standpipe',intro:()=>'Battalion 1 has the 12th floor fully involved on the east and south sides. Engine 3 and Engine 9 are climbing with 2-inch lines into dry risers. Get on the hydrant, get on the east FDC inlet, and give Lobby 230–260 at the connection.',faults:['gov'],
+   steps:[{t:'Engage the pump',f:()=>S.pump},{t:'Connect the hydrant line',f:()=>S.supply},{t:'Open the hydrant',f:()=>S.hydrant},{t:'Open the intake gate',f:()=>S.miv>0},{t:'Bleed the air',f:()=>S.bled},{t:'Close tank-to-pump',f:()=>S.bled&&!S.ttp},
+    {t:'Decision: the transfer valve',dec:{tag:'Transfer valve for a high-rise',q:'The building pumps are off and the risers are drained. You are the only thing pushing water up twelve floors through a pressure-reducing valve at every landing. Two 2-inch lines — modest volume, big pressure. Where do you put the transfer valve?',
+      opts:[{t:'PRESSURE (series) — both impellers stacked for head',r:'good',why:'Series stacks the impellers to build head. You are not moving much water — you are lifting it 130 feet and pushing it through PRVs.'},
+            {t:'VOLUME (parallel) — more water is always better',r:'bad',why:'Parallel is for big flow at moderate pressure. Up a high-rise you will run out of RPM before you reach the pressure the crews need.'},
+            {t:'Leave it wherever it is and just throttle up',r:'partial',why:'Maybe it is already in the right stage — but an engineer who does not know which stage the pump is in is guessing on a high-rise.'}],
+      real:'Engine 9, Engine 209, and Engine 210 took the connections on 6th Street and pumped into the combination standpipes. LAFD later wrote that pumpers must pump at sufficient pressure to actually get into a building\'s standpipe system.'},f:()=>true},
+    {t:'Transfer valve set for pressure (idle first)',f:()=>S.xfer==='pressure'},{t:'Connect the 2½" to the east inlet',f:()=>S.fdcLine},{t:'Open Discharge 3 (slowly)',f:()=>S.valves.rear3.open>0},
+    {t:TIER===0?'Discharge 3 at 230–260 PSI':'Give Lobby the pressure it asked for',f:()=>inB('rear3',230,260)},{t:'Hold 15 seconds',hold:15,k:'rear3',lo:230,hi:260,f:()=>inB('rear3',230,260)}],
+   chat:{k:'rear3',lo:230,hi:260,low:()=>radio('Engine 3','Twelfth floor — we have almost no pressure up here!','bad'),high:()=>radio('Lobby Control','Ease off — PRVs on the lower landings are leaking','bad'),ok:()=>radio('Engine 3','Good water on 12, pushing in','good')}},
+  {title:'2255 hrs · Falling glass',intro:()=>'Windows are failing up high. Glass and debris are coming down on 6th Street — right where your supply lines run into the building. Keep the east line pumping and keep your eyes up.',
+   steps:[{t:'Decision: the east line',dec:{tag:'Severed FDC line',q:'A sheet of glass just came down across 6th Street. Your east FDC line is cut — Discharge 3 pressure crashed and water is pouring into the street. Crews on 12 are losing water. What do you do?',
+      opts:[{t:'Shut down Discharge 3, stretch a second line to the west inlet away from the glass, and charge it',r:'good',why:'Isolate the dead line, protect the pump, and restore supply by a route out of the collapse zone. Nobody walks under that building to fix a length of hose.'},
+            {t:'Run out and replace the cut length at the connection',r:'bad',why:'That connection is directly under the falling glass. You would trade a length of hose for a firefighter.'},
+            {t:'Throttle up to make up the lost pressure',r:'bad',why:'You would just pump more water into the street. Pressure on a cut line goes nowhere.'}],
+      real:'Falling glass and debris damaged pumpers hooked to the connections and cut lines stretched into them. Lobby Control moved to the north side, and LAFD established a safe route into the building through the pedestrian tunnel under Hope Street.'},
+      f:()=>{if(!S.valves.rear3.burst&&S.valves.rear3.open>0&&S.t-S.mStart>12){S.valves.rear3.burst=true;S.burstT=0;radio('Engineer','GLASS COMING DOWN — the east line just got cut!','bad');}return S.valves.rear3.burst;}},
+    {t:'Shut down Discharge 3',f:()=>S.valves.rear3.open===0},{t:'Stretch a second 2½" to the west inlet',f:()=>S.relayLine},{t:'Open Discharge 2 (slowly)',f:()=>S.valves.rear2.open>0},
+    {t:TIER===0?'Discharge 2 at 230–260 PSI':'Back to the pressure 12 needs',f:()=>inB('rear2',230,260)},{t:'Hold 15 seconds',hold:15,k:'rear2',lo:230,hi:260,f:()=>inB('rear2',230,260)}],
+   chat:{k:'rear2',lo:230,hi:260,low:()=>radio('Engine 3','Still weak on 12','bad'),high:()=>radio('Lobby Control','Too much — back it down','bad'),ok:()=>radio('Engine 3','Water is back on 12','good')}},
+  {title:'2320 hrs · The building pumps come back',intro:()=>'Engine 17 took a building engineer to the basement and got the fire pumps running again. The standpipes are about to have more pressure than you are giving them.',onStart:()=>{S.bldg=true;S.sysPsi=300;},
+   steps:[{t:'Decision: your pump is churning',dec:{tag:'Building pumps overpower you',q:()=>`Your discharge gauge climbed and flow into the FDC stopped — the check valve closed because the building pumps are pushing harder than you (${Math.round(linePsi(S.valves.rear2))} PSI at your discharge). No water is moving through your pump. What now?`,
+      opts:[{t:'Stay connected at pressure as backup, and crack the tank fill so water keeps moving through the pump',r:'good',why:'A pump spinning with no flow heats up fast. A little recirculation keeps it cool, and you stay ready if the building supply fails.'},
+            {t:'Shut down and pick up — the building has it now',r:'bad',why:'The building pumps draw from an on-site tank. If it runs dry or the pumps fail again, the fire department pumpers are the only supply left.'},
+            {t:'Keep pumping as-is; the building can take whatever you give it',r:'bad',why:'The check valve means you are giving it nothing. Your pump is churning — heat builds with every second and can damage seals and impeller.'}],
+      real:'Engine 17 and a building engineer restarted the fire pumps around 2320, and the lines on the fire floors finally produced good streams. The USFA report noted that the building\'s pumps drew from an on-site tank — and if that tank had emptied, only fire department pumpers would have been left to supply the standpipes.'},
+      f:()=>S.heatT>6||S.t-S.mStart>15},
+    {t:'Crack the tank fill to keep water moving',f:()=>S.fill},
+    {t:'Stay charged and cool for 20 seconds',hold:20,f:()=>S.fill&&S.pump&&S.valves.rear2.open>0&&S.heatT<10}]},
+  {title:'0130 hrs · The stand on 16',intro:()=>'The 15th floor is fully involved and fire is lapping into 16 through the gap behind the curtain wall. Division 16 is making a stand while companies below hit 14 and 15. With every line on five floors flowing, standpipe pressure is sagging. Command wants the pumpers on 6th Street pushing into the system.',onStart:()=>{S.sysPsi=290;},faults:['gov'],
+   steps:[{t:'Decision: the new sprinklers',dec:{tag:'Charging the sprinklers',q:'The Water Resources Officer is on the radio. The half-installed sprinkler system on 17, 18, and 19 could be charged from the same risers. Command asks: do we charge it?',
+      opts:[{t:'No — charging it would steal pressure from the attack lines on 12 through 16',r:'good',why:'Every gallon going to heads on floors that are not burning yet is a gallon not reaching the lines that are stopping the fire.'},
+            {t:'Yes — put water above the fire before it gets there',r:'bad',why:'It sounds right, but the risers are already struggling. Opening dozens of heads would drop pressure on every line that is actually fighting fire.'},
+            {t:'Charge only the 17th floor',r:'partial',why:'A smaller hit, but still water taken from the crews on 14 through 16 at the worst moment.'}],
+      real:'LAFD\'s Water Resources Officer evaluated charging the sprinkler system on the 17th, 18th, and 19th floors and advised that it could hurt the firefighting streams. The decision was made not to activate it.'},f:()=>true},
+    {t:TIER===0?'Get above building pressure: Discharge 2 at 315–345 PSI':'Push into the system — beat building pressure',f:()=>inB('rear2',315,345)},
+    {t:'Hold it 20 seconds while 16 makes the stand',hold:20,k:'rear2',lo:315,hi:345,f:()=>inB('rear2',315,345)&&S.heatT<10}],
+   chat:{k:'rear2',lo:315,hi:345,low:()=>radio('Division 16','Pressure is falling off up here — we need more','bad'),high:()=>radio('Lobby Control','Easy — you are over what the PRVs can handle','bad'),ok:()=>radio('Division 16','Good water on 16 — we are holding it','good')}}
+ ]});
+
 let crewState='none',crewT=0,stepsDone=[];
 function loadCampaign(i){
   freshState();S.camp=i;const c=CAMP[i];S.running=true;if(c.tank)S.tank=c.tank;
@@ -568,9 +627,10 @@ function loadCampaign(i){
   if(!$('rigtitle').dataset.def){$('rigtitle').dataset.def=$('rigtitle').textContent;$('mivtitle').dataset.def=$('mivtitle').textContent;}
   $('rigtitle').textContent=c.rig?c.rig.title:$('rigtitle').dataset.def;$('mivtitle').textContent=c.rig&&c.rig.intakeTitle||$('mivtitle').dataset.def;
   $('xferp').classList.toggle('hidden',!(c.rig&&c.rig.twoStage));
-  if(c.rig){S.tankMax=c.rig.tank;S.tank=c.rig.tank;}
+  if(c.rig){S.tankMax=c.rig.tank;S.tank=c.rig.tank;if(c.rig.xferStart)S.xfer=c.rig.xferStart;}
   if(c.valveNames)for(const k in c.valveNames){S.valves[k].n=c.valveNames[k][0];S.valves[k].tag=c.valveNames[k][1];}
   if(c.valveGpm)for(const k in c.valveGpm)S.valves[k].gpm=c.valveGpm[k];
+  $('l-front').textContent=c.gALabel||'#1 front discharge';
   c.show.forEach(id=>$(id).classList.remove('hidden'));
   $('l-aux').textContent=c.auxLabel||VALVES[c.aux].n;$('s-hyd').disabled=true;$('s-bleed').disabled=true;$('s-fill').disabled=true;
   buildValves(c.valves);$('radio').innerHTML='';refreshSwitches();modeUI();
@@ -670,7 +730,7 @@ $('b-math').onclick=()=>{$('menu').classList.add('hidden');$('mathov').classList
 $('m-exit').onclick=()=>{$('mathov').classList.add('hidden');showMenu();};
 
 /* ===== version, reporting, offline ===== */
-const APP_VERSION='1.6.0';
+const APP_VERSION='1.7.1';
 function snapshot(){
   const c=CAMP[S.camp],m=c.missions[S.mission];const done=stepsDone.filter(Boolean).length;
   const open=Object.keys(S.valves).filter(k=>S.valves[k].open>0).map(k=>`${S.valves[k].n} ${S.valves[k].open}%${S.valves[k].burst?' (burst)':''}`).join(', ')||'none';
