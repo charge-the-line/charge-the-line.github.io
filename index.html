@@ -120,7 +120,7 @@
     <div class="sw" id="sw-supply"><span class="lab">Supply line on #1 left intake</span><div style="display:flex;align-items:center"><button id="s-supply">Connect</button><span class="lamp" id="l-supply"></span></div></div>
     <div class="sw" id="sw-hyd"><span class="lab">Hydrant</span><div style="display:flex;align-items:center"><button id="s-hyd" disabled>Open</button><span class="lamp" id="l-hyd"></span></div></div>
     <div class="sw" id="sw-bleed"><span class="lab">Air bleeder (left intake)</span><div style="display:flex;align-items:center"><button id="s-bleed" disabled>Bleed</button><span class="lamp" id="l-bleed"></span></div></div>
-    <div class="sw"><span class="lab">Tank fill</span><div style="display:flex;align-items:center"><button id="s-fill" disabled>Open</button><span class="lamp" id="l-fill"></span></div></div>
+    <div class="sw" id="sw-fill"><span class="lab">Tank fill</span><div style="display:flex;align-items:center"><button id="s-fill" disabled>Open</button><span class="lamp" id="l-fill"></span></div></div>
     <div class="sw hidden" id="sw-fdc"><span class="lab">2½" to FDC</span><div style="display:flex;align-items:center"><button id="s-fdc">Connect</button><span class="lamp" id="l-fdc"></span></div></div>
     <div class="sw hidden" id="sw-relay"><span class="lab">5" LDH to Engine 10-1</span><div style="display:flex;align-items:center"><button id="s-relay">Connect</button><span class="lamp" id="l-relay"></span></div></div>
     <div class="sw hidden" id="sw-hard"><span class="lab">Hard suction on left intake</span><div style="display:flex;align-items:center"><button id="s-hard">Connect</button><span class="lamp" id="l-hard"></span></div></div>
@@ -134,6 +134,12 @@
   <div class="miv hidden" id="xferp">
     <h3>Transfer valve — two-stage pump</h3>
     <div class="r"><button id="x-vol">Volume</button><button id="x-pres">Pressure</button><span id="x-txt" style="font-size:13px;color:var(--muted);margin-left:6px"></span></div>
+  </div>
+  <div class="miv hidden" id="pondp">
+    <h3>Portable pond · dump site</h3>
+    <div class="r"><div class="trk" style="height:14px"><div id="pondbar" style="background:#5aa9ff"></div></div><span id="pondgal" style="font-family:'Barlow Condensed';font-size:16px;min-width:92px;text-align:right">0 gal</span></div>
+    <div id="pondtxt" style="font-size:13px;color:var(--muted);margin-top:6px"></div>
+    <div id="coldtxt" style="font-size:13px;color:#7fc0ff;margin-top:2px"></div>
   </div>
   <div class="miv hidden" id="depthp">
     <h3>Suction in the flooded street</h3>
@@ -171,12 +177,12 @@
   <p><b>Crack</b> opens a valve a quarter turn at a time. <b>Snap</b> throws it wide open — water hammer, or a lost prime at draft. The MIV travels on its own; that's what it's for.</p>
   <p>Three tiers per scenario: <b>Guided</b> shows every step and the target pressure. <b>Recall</b> hides the checklist and makes you figure the PDP from the hose layout. <b>Chaos</b> is Recall plus things going wrong.</p>
   <p style="font-size:14px">Training aid only. Department SOPs and the preconnect chart on the rig are the real numbers.</p>
-  <p style="font-size:13px;color:var(--muted)">Version 1.7.1 · Found a problem? Use "Report an issue" under any mission.</p>
+  <p style="font-size:13px;color:var(--muted)">Version 1.8.0 · Found a problem? Use "Report an issue" under any mission.</p>
   <button class="warn" id="b-start" style="width:100%;font-size:18px">Continue</button>
 </div></div>
 
 <div class="overlay hidden" id="menu"><div class="box">
-  <h2>Menu <span style="font-size:14px;color:var(--muted);font-weight:400">v1.7.1</span></h2>
+  <h2>Menu <span style="font-size:14px;color:var(--muted);font-weight:400">v1.8.0</span></h2>
   <div style="display:flex;gap:8px;margin-bottom:12px"><button id="b-math" style="flex:1">Pump math drills</button><button id="b-progress" style="flex:1">My progress</button></div>
   <h3 style="margin:0 0 4px;font-size:18px">Difficulty</h3>
   <div class="tiers"><button data-tier="0">Guided</button><button data-tier="1">Recall</button><button data-tier="2">Chaos</button></div>
@@ -277,7 +283,7 @@ function freshState(){
     miv:0,mivDir:0,hardSuction:false,strainer:false,primerOn:false,primerT:0,primeHold:0,primed:false,vac:0,warnedOpen:false,
     foamOn:false,foamPct:3,foamTank:20,flushing:false,flushT:0,flushed:false,foamEmptyWarned:false,residWarned:false,residLow:0,
     tank:TANK,tankMax:TANK,xfer:'pressure',xferWarned:false,rpm:700,mode:'psi',set:150,psi:0,score:100,t:0,mission:0,hold:0,cav:0,incidents:[],running:false,dry:false,
-    fault:null,faultT:0,faultDue:0,burstT:0,bldg:false,sysPsi:300,heatT:0,heatWarned:false,susp:15,clog:0,clearing:0,vortexT:0,clogWarned:false,decisions:[],mStart:0,valves:{}});
+    fault:null,faultT:0,faultDue:0,burstT:0,bldg:false,sysPsi:300,pond:0,pondMax:3000,pondSet:false,nextTk:0,tkN:0,gapUntil:0,pondVortexT:0,freezeT:0,frozen:0,freezeWarned:false,primedEver:false,downClosed:false,downUntil:0,downStarted:false,downEnd:0,heatT:0,heatWarned:false,susp:15,clog:0,clearing:0,vortexT:0,clogWarned:false,decisions:[],mStart:0,valves:{}});
   for(const k in VALVES)S.valves[k]={...VALVES[k],open:0,burst:false};
 }
 
@@ -342,10 +348,10 @@ $('b-dn').onclick=()=>{if(S.mode==='psi')S.set=Math.max(20,S.set-10);else{S.mode
 function modeUI(){['psi','rpm','idle'].forEach(m=>$('b-'+m).classList.toggle('on',S.mode===m));$('d-set').textContent=S.mode==='psi'?S.set:'—';}
 
 /* ===== physics ===== */
-function supplied(){const tank=S.ttp&&S.tank>0,hyd=S.supply&&S.hydrant&&S.miv>0&&S.bled,draft=S.hardSuction&&S.strainer&&S.primed&&S.pump;return {any:tank||hyd||draft,hyd,tank,draft};}
+function supplied(){const tank=S.ttp&&S.tank>0,hyd=S.supply&&S.hydrant&&S.miv>0&&S.bled,draft=S.hardSuction&&S.strainer&&S.primed&&S.pump&&(!(CAMP[S.camp]&&CAMP[S.camp].pond)||S.pond>0);return {any:tank||hyd||draft,hyd,tank,draft};}
 function dischargesClosed(){return Object.keys(VALVES).every(k=>S.valves[k].open===0);}
 function linePsi(v){if(v.open===0)return 0;const p=S.psi*(0.45+0.55*v.open/100);return v.burst?p*0.25:p;}
-function totalFlow(){let f=0;const fk=CAMP[S.camp]&&CAMP[S.camp].fdcKeys;for(const k in S.valves){const v=S.valves[k];let m=1;if(fk&&S.bldg&&fk.includes(k)&&!v.burst)m=Math.max(0,Math.min(1,(linePsi(v)-S.sysPsi)/40));if(v.open>0&&S.psi>0)f+=m*v.gpm*(v.burst?2.2:1)*v.open/100*Math.sqrt(Math.max(S.psi,1)/150);}return f;}
+function totalFlow(){let f=0;const fk=CAMP[S.camp]&&CAMP[S.camp].fdcKeys;for(const k in S.valves){const v=S.valves[k];let m=1;if(fk&&S.bldg&&fk.includes(k)&&!v.burst)m=Math.max(0,Math.min(1,(linePsi(v)-S.sysPsi)/40));if(S.frozen>0)m=0;if(S.downClosed&&CAMP[S.camp].relayKey===k)m=0;if(v.open>0&&S.psi>0)f+=m*v.gpm*(v.burst?2.2:1)*v.open/100*Math.sqrt(Math.max(S.psi,1)/150);}return f;}
 function residual(){return S.hydCap-totalFlow()*0.05;}
 function tick(dt){
   S.t+=dt;const sup=supplied();const flow=totalFlow();const c=CAMP[S.camp];
@@ -356,9 +362,9 @@ function tick(dt){
   if(c.draft){
     const closed=dischargesClosed();
     if(S.primerOn){S.primerT+=dt;
-      const inWater=!c.depth||(S.susp>=20&&S.susp<=80);
+      const inWater=(!c.depth||(S.susp>=20&&S.susp<=80))&&(!c.pond||S.pond>200);
       if(S.pump&&S.hardSuction&&S.strainer&&closed&&!S.ttp&&S.miv===0&&inWater&&!S.primed){S.vac=Math.min(22,S.vac+3*dt);if(S.vac>=15){S.primeHold+=dt;if(S.primeHold>2){S.primed=true;S.primerOn=false;S.primeHold=0;radio('Engineer','Pump primed — water at the pump','good');refreshSwitches();}}}
-      else if(!S.primed){S.vac=Math.max(0,S.vac-2*dt);if(S.primerT>3&&!S.warnedOpen){S.warnedOpen=true;radio('Engineer',!S.pump?'Primer needs the pump engaged':S.miv>0?'MIV is open — the primer is pulling air back through the hydrant line. Close it.':!inWater?(S.susp<20?'Suction is down in the sand — raise it into the water':'Suction is at the surface — lower it into the water'):S.ttp?'Tank-to-pump is open — primer is pulling from the tank, not the pond':!closed?'Primer pulling air through an open discharge — close everything':!S.strainer?'Strainer is not set':'Primer pulling air — check hard suction gaskets','bad');}}
+      else if(!S.primed){S.vac=Math.max(0,S.vac-2*dt);if(S.primerT>3&&!S.warnedOpen){S.warnedOpen=true;radio('Engineer',!S.pump?'Primer needs the pump engaged':S.miv>0?'MIV is open — the primer is pulling air back through the hydrant line. Close it.':(c.pond&&S.pond<=200)?'Pond is empty — the strainer is sucking air. Wait for a tanker':!inWater?(S.susp<20?'Suction is down in the sand — raise it into the water':'Suction is at the surface — lower it into the water'):S.ttp?'Tank-to-pump is open — primer is pulling from the tank, not the pond':!closed?'Primer pulling air through an open discharge — close everything':!S.strainer?'Strainer is not set':'Primer pulling air — check hard suction gaskets','bad');}}
       if(S.primerT>45){ding(10,'Primer ran over 45 seconds — stop, check for air leaks');S.primerT=0;S.primerOn=false;S.vac=0;S.primeHold=0;S.warnedOpen=false;refreshSwitches();}
     }else{S.primerT=0;S.warnedOpen=false;if(!S.primed)S.vac=Math.max(0,S.vac-4*dt);}
     S.overCd=Math.max(0,(S.overCd||0)-dt);if(S.primed){S.vac=c.depth?Math.min(25,4+flow*0.012+S.clog*0.2):6+flow*0.02;const cav=c.depth?(S.vac>=22):(S.rpm>2100);if(cav&&flow>0&&S.overCd<=0){ding(10,c.depth?'Cavitating — strainer is choking the intake and the governor is chasing it':'Over-revving at a draft — cavitating');S.rpm=1600;S.overCd=8;}}
@@ -393,6 +399,16 @@ function tick(dt){
     if(S.pump&&S.rpm>1150&&hf<20){S.heatT+=dt;if(S.heatT>10&&!S.heatWarned){S.heatWarned=true;radio('Engineer',TIER===0?'Pump casing is getting hot — no water is moving through it. Get some flow: crack the tank fill':'Pump casing is getting hot','bad');}
       if(S.heatT>28){ding(10,'Pump overheated churning with no flow');S.heatT=5;}}
     else{S.heatT=Math.max(0,S.heatT-2*dt);if(S.heatT<3)S.heatWarned=false;}}
+  if(c.pond){const m=c.missions[S.mission];const every=m.every||c.every||60,gal=m.tkGal||c.tkGal||1500;
+    if(S.pondSet&&S.t>=S.nextTk){if(S.gapUntil&&S.t<S.gapUntil){S.nextTk=S.gapUntil;}else{S.tkN++;S.pond=Math.min(S.pondMax,S.pond+gal);radio('Tanker '+(['5-1','12-2','7-1','9-3','18-1'][S.tkN%5]),`Dumping ${gal.toLocaleString()} — clear in five`);S.nextTk=S.t+every;}}
+    if(sup.draft)S.pond=Math.max(0,S.pond-flow/60*dt*(c.pondScale||3));
+    if(S.primed&&S.pond<S.pondMax*0.08&&flow>0){S.pondVortexT+=dt;if(S.pondVortexT>5){S.primed=false;S.vac=0;S.pondVortexT=0;ding(10,'Pond ran too low — the strainer took air and you lost prime');}}else S.pondVortexT=0;}
+  if(c.cold){if(S.primed)S.primedEver=true;
+    if(S.frozen>0){S.frozen-=dt;if(S.frozen<=0){S.frozen=0;radio('Engineer','Discharge thawed — water moving again','good');}}
+    const moving=S.pump&&(flow+(S.fill?40:0))>=20;
+    if(S.primedEver&&!moving&&S.frozen<=0){S.freezeT+=dt;if(S.freezeT>12&&!S.freezeWarned){S.freezeWarned=true;radio('Engineer',TIER===0?'Water is sitting still in the pump at 0°F — it will freeze. Keep it moving: crack the tank fill':'Water is sitting still in the pump','bad');}
+      if(S.freezeT>30){ding(15,'Water froze in the pump and discharges — 20 seconds to thaw');S.frozen=20;S.freezeT=0;}}
+    else{S.freezeT=Math.max(0,S.freezeT-2*dt);if(S.freezeT<4)S.freezeWarned=false;}}
   faults(dt);checkMission(dt);render();
 }
 
@@ -432,6 +448,9 @@ function render(){
   $('miv-bar').style.width=S.miv+'%';$('miv-pct').textContent=S.miv===0?'closed':S.miv===100?'open':Math.round(S.miv)+'%';
   for(const k in S.valves){const el=$('open-'+k);if(!el)continue;el.style.width=S.valves[k].open+'%';$('pct-'+k).textContent=S.valves[k].open?S.valves[k].open+'%':'closed';const ve=$('valve-'+k);if(ve)ve.classList.toggle('burst',S.valves[k].burst);}
   $('x-vol').classList.toggle('on',S.xfer==='volume');$('x-pres').classList.toggle('on',S.xfer==='pressure');$('x-txt').textContent=S.xfer==='volume'?'parallel · big flow':'series · high pressure, half the volume';
+  if(CAMP[S.camp]&&CAMP[S.camp].pond){$('pondbar').style.width=(S.pond/S.pondMax*100)+'%';$('pondbar').style.background=S.pond<S.pondMax*0.15?'#ff5d3a':'#5aa9ff';$('pondgal').textContent=Math.round(S.pond).toLocaleString()+' gal';
+    $('pondtxt').textContent=!S.pondSet?'Pond not set':(S.gapUntil&&S.t<S.gapUntil)?`Shuttle gap — no tankers inbound for ${Math.ceil(S.gapUntil-S.t)} s`:`Next tanker in ${Math.max(0,Math.ceil(S.nextTk-S.t))} s`;
+    $('coldtxt').textContent=S.frozen>0?`FROZEN — thawing, ${Math.ceil(S.frozen)} s`:`0°F · wind chill −15°F${S.freezeT>5?' · water sitting still!':''}`;}
   $('wmark').style.bottom=S.susp+'%';$('clogbar').style.width=S.clog+'%';
   $('d-txt').textContent=S.clearing>0?'Clearing the strainer…':S.susp<20?'Buried in the sand':S.susp<35?'Near the bottom — picking up sand and debris':S.susp>80?'Out of the water':S.susp>65?'Near the surface — drawing air and floating trash':'Good depth';
   $('score').textContent=S.score;const m=Math.floor(S.t/60),s=Math.floor(S.t%60);$('clock').textContent=`${m}:${s<10?'0':''}${s}`;
@@ -617,10 +636,59 @@ CAMP.push({name:'First Interstate Bank — Los Angeles, 1988',real:true,
    chat:{k:'rear2',lo:315,hi:345,low:()=>radio('Division 16','Pressure is falling off up here — we need more','bad'),high:()=>radio('Lobby Control','Easy — you are over what the PRVs can handle','bad'),ok:()=>radio('Division 16','Good water on 16 — we are holding it','good')}}
  ]});
 
+CAMP.push({name:'Port Jervis, NY — tanker shuttle at 0°F, 2005',real:true,
+ desc:'Wind-driven fire, three exposures, a hydrant system that can\'t keep up, and 0°F with a stiff north wind. You run the pumper at the dump site.',
+ story:`<p>January 27, 2005, 0403 hours. Port Jervis, New York. The chief is wrapping up a sprinkler alarm when he looks over his shoulder and sees smoke — two structures already going in the Riverside section.</p><p>The fire building sits mid-block with a house on one side, a warehouse on the other, and more wood-frame exposures behind. It's <b>0°F with a stiff north wind — the wind chill is near 15 below</b>. The city's hydrants are fine for most fires, but not for master streams and three exposures on a night like this.</p><p>Command calls for a <b>tanker shuttle</b> to back up the hydrants. Mutual aid rolls in from three states. You are the engineer on the pumper assigned to the <b>dump site</b>: you draft from the portable pond and push that water to the attack engine. Every gallon on the fire goes through your panel — and at 0°F, anything that stops moving freezes.</p><p>This one should feel familiar: small department, mutual aid, no hydrant on every corner, Great Lakes winter.</p><p style="font-size:14px;color:var(--muted)">Built from the water operations officer's own account. Your pumper is a composite role — the account doesn't name which engine worked the dump site — and times after 0403 are reconstructed. Tanker timing, pond size, and pressures are modeled for training.</p>`,
+ source:'Reconstructed from J. Flynn, "Water Tanker Shuttles: 10 Rules for Success," Fire Engineering, October 2005 — written by the water operations officer at this fire.',
+ url:'https://www.fireengineering.com/firefighting/water-tanker-shuttles-10-rules-for-success/',
+ outcome:'Port Jervis and mutual-aid companies from New York, Pennsylvania, and New Jersey ran the city hydrants and a tanker shuttle together to supply master streams and protect three exposures. Banked snow and parked cars left room for exactly one portable pond, so tankers stacked up two blocks back, waiting to back in one at a time. In the cold, both fill sites had problems, and crews got a substitute fill site running fast. Water-supply crews were rotated through a warm pumper cab to keep going. The water operations officer\'s verdict: it was a close call, but they stayed just ahead of the demand curve. He turned that night into ten rules still taught today — control traffic first, you may get only one chance to spot the pond, and call for enough tankers early. (The published account focuses on the water operation and does not detail the final property loss.)',
+ valves:['rear4','front','deck'],aux:'front',auxLabel:'Discharge 1 · crosslay',gA:'rear4',gALabel:'Discharge 4 · LDH',relayKey:'rear4',
+ draft:true,pond:true,cold:true,every:45,tkGal:2000,pondScale:4,
+ rig:{title:'Mutual-aid pumper · dump site',tank:750,rated:1250,twoStage:false},
+ valveNames:{rear4:['Discharge 4','5" LDH → attack engine'],front:['Discharge 1','crosslay'],deck:['Deck gun','master stream']},valveGpm:{rear4:800},
+ show:['sw-hard','sw-strainer','sw-primer','sw-relay','pondp'],
+ labels:{'sw-hard':'Hard suction into the pond','sw-strainer':'Low-level strainer','sw-relay':'5" LDH to attack engine','sw-fill':'Tank fill / recirculate'},
+ hardMsg:'Two lengths of hard suction over the pond wall — gaskets are stiff in this cold, but they are seated',strainerMsg:'Low-level strainer is flat on the pond floor',relayMsg:['Attack Engine','We have your 5" on our intake — send it when you have it'],
+ jpr:'Driver/Operator JPRs — pump from a static source (portable tank); relay-pump a supply line; operate in cold-weather conditions.',
+ missions:[
+  {title:'0420 hrs · One chance to spot the pond',intro:()=>'Command: the hydrants will not carry master streams and three exposures. You have the dump site. Streets are narrowed by banked snow and lined with firefighters\' parked cars. There is one usable street in, and the tankers are already rolling.',
+   steps:[{t:'Decision: where the pond goes',dec:{tag:'Spotting the portable pond',q:'Snowbanks, parked cars, a rail line to the north, the river to the south. There is one street tankers can use. Where do you set the portable pond?',
+      opts:[{t:'On that street, set so tankers can back in, dump, and pull straight out without blocking each other',r:'good',why:'The pond becomes the most important fixed object on the fireground. Its spot decides how fast every tanker cycles all night.'},
+            {t:'Right in front of the fire building — shortest lay to the attack engine',r:'bad',why:'Radiant heat, collapse zone, and it blocks the apparatus that need that street. And once it is full at 0°F, it is not moving.'},
+            {t:'Two ponds, one on each side of the fire, so tankers can come from both directions',r:'partial',why:'That is the ideal — a loop where tankers enter one way and leave another. Here the streets will not allow it. Plan for the scene you have.'}],
+      real:'Congestion left only one street for limited use — so only one pond could be set up, and tankers backed up two blocks waiting to dump. The water operations officer\'s rule: you may get only one chance to spot the pond, because once it is placed and filled in freezing weather, it stays.',after:()=>{S.pondSet=true;S.nextTk=S.t+3;}},f:()=>true},
+    {t:'First tanker dumps into the pond',f:()=>S.pond>=1000},{t:'Hard suction into the pond',f:()=>S.hardSuction},{t:'Low-level strainer set',f:()=>S.strainer},
+    {t:'Every discharge closed',f:()=>dischargesClosed()},{t:'Close tank-to-pump',f:()=>!S.ttp},{t:'Engage the pump',f:()=>S.pump},
+    {t:'RPM mode, 1,000–1,300',f:()=>S.mode==='rpm'&&S.rpm>=1000&&S.rpm<=1300},{t:'Run the primer',f:()=>S.primerOn||S.primed},{t:'Primed — pressure on the master',f:()=>S.primed&&S.psi>0}]},
+  {title:'0445 hrs · Feed the attack engine',intro:()=>'The attack engine wants your water for master streams. Charge the 5" and give them 40–60 at your discharge. Now watch two things at once: the pond level, and the fact that the water in your pump will freeze if it ever stops moving.',faults:['gov'],every:45,tkGal:2000,
+   steps:[{t:'Connect the 5" LDH to the attack engine',f:()=>S.relayLine},{t:'Open Discharge 4 (crack it — snap it and you lose the prime)',f:()=>S.valves.rear4.open>0},
+    {t:TIER===0?'Discharge 4 at 40–60 PSI':'Give the attack engine a good relay pressure',f:()=>inB('rear4',40,60)},
+    {t:'Hold 30 seconds with the pond above 20%',hold:30,k:'rear4',lo:40,hi:60,f:()=>inB('rear4',40,60)&&S.pond>S.pondMax*0.2}],
+   chat:{k:'rear4',lo:40,hi:60,low:()=>radio('Attack Engine','Our intake is dropping — we need more from you','bad'),high:()=>radio('Attack Engine','Too much — our intake relief is dumping','bad'),ok:()=>radio('Attack Engine','Good water — both master streams are working','good')}},
+  {title:'0520 hrs · Trouble at the fill sites',intro:()=>'Tankers are cycling and the pond is nearly full. Everything is working. Then the water supply channel lights up.',every:45,tkGal:2000,onStart:()=>{S.pond=Math.max(S.pond,S.pondMax*0.85);S.gapUntil=S.t+16+80;},
+   steps:[{t:'Decision: the shuttle gap',dec:{tag:'Shuttle gap at 0°F',q:()=>`Water Supply: "Both fill sites are having problems in this cold. Next tanker is more than a minute out." Your pond is at ${Math.round(S.pond/S.pondMax*100)}% and dropping. What do you do?`,
+      opts:[{t:'Tell Command now, throttle back to what the pond can sustain, and keep water moving',r:'good',why:'A smaller stream that never stops beats a big one that dies. Command can adjust the attack to the flow you can promise.'},
+            {t:'Keep flowing full — the tankers will catch up',r:'bad',why:'If the pond runs dry, the strainer takes air, you lose prime, and the master streams die all at once — with no warning to the crews.'},
+            {t:'Shut down and wait for the next tanker',r:'bad',why:'At 0°F, water that stops moving freezes — in your pump, your discharges, and the 5" to the attack engine.'}],
+      real:'The account says there were initial problems at both fill sites — not unusual in bitter cold — and the firefighters there quickly got a substitute fill site running. The operation stayed just ahead of the demand curve.'},f:()=>S.t-S.mStart>16},
+    {t:'Throttle back (drop the set point or RPM)',f:()=>totalFlow()<380},
+    {t:'Keep water moving — don\'t run the pond dry — until tankers return',f:()=>S.t>=S.gapUntil&&S.primed&&totalFlow()>60}]},
+  {title:'0615 hrs · Hold it in the cold',intro:()=>'Tankers are cycling again. The attack engine is repositioning a master stream — they will shut down their streams for a minute. The cold has not gone anywhere.',every:50,tkGal:2000,onStart:()=>{S.pond=Math.max(S.pond,S.pondMax*0.8);S.downUntil=S.t+10;},
+   steps:[{t:'Decision: no flow at 0°F',dec:{tag:'Freeze protection',q:'Attack Engine: "Shutting down to reposition — hold your water." Your flow drops to nothing. It is 0°F with a north wind. Your pump, your discharges, and 600 feet of 5" are full of still water. What do you do?',
+      opts:[{t:'Keep the pump engaged and crack the tank fill to recirculate — keep water moving and stay ready',r:'good',why:'Moving water does not freeze. Recirculating keeps the pump and piping alive until they call for water again.'},
+            {t:'Disengage, open the drains, and re-prime when they call',r:'partial',why:'Draining protects the pump — but re-priming from the pond costs you minutes the attack engine may not have.'},
+            {t:'Disengage and leave everything charged until they call',r:'bad',why:'Still water at 0°F freezes in the pump and discharges. When they call for water, you will not have any to give.'}],
+      real:'Cold drove every part of this operation: the pond, once filled, was not going anywhere, both fill sites fought the weather, and water-supply crews were rotated through a warm pumper cab and kept hydrated to keep working. Keeping water moving is standard cold-weather pump practice.',after:()=>{S.downClosed=true;S.downEnd=S.t+40;}},f:()=>{if(S.t>=S.downUntil&&!S.downStarted){S.downStarted=true;radio('Attack Engine','Shutting down to reposition — hold your water','bad');}return S.downStarted&&S.t-S.downUntil>3;}},
+    {t:'Crack the tank fill to keep water moving',f:()=>S.fill},
+    {t:'Stay primed and unfrozen until they call for water',hold:30,f:()=>S.primed&&S.frozen<=0&&S.freezeT<12},
+    {t:TIER===0?'Water back to the attack engine — Discharge 4 at 40–60 for 15 seconds':'Water back to the attack engine — hold it 15 seconds',hold:15,k:'rear4',lo:40,hi:60,f:()=>{if(S.downClosed&&S.t>=S.downEnd){S.downClosed=false;radio('Attack Engine','Repositioned — send it!','good');}return !S.downClosed&&inB('rear4',40,60)&&S.primed;}}],
+   chat:{k:'rear4',lo:40,hi:60,low:()=>radio('Attack Engine','Intake is soft','bad'),high:()=>radio('Attack Engine','Ease off','bad'),ok:()=>radio('Attack Engine','Good water','good')}}
+ ]});
+
 let crewState='none',crewT=0,stepsDone=[];
 function loadCampaign(i){
   freshState();S.camp=i;const c=CAMP[i];S.running=true;if(c.tank)S.tank=c.tank;
-  document.querySelectorAll('#sw-supply,#sw-hyd,#sw-bleed,#sw-fdc,#sw-relay,#sw-hard,#sw-strainer,#sw-primer,#foam,#miv,#depthp').forEach(el=>el.classList.add('hidden'));
+  document.querySelectorAll('#sw-supply,#sw-hyd,#sw-bleed,#sw-fdc,#sw-relay,#sw-hard,#sw-strainer,#sw-primer,#foam,#miv,#depthp,#pondp').forEach(el=>el.classList.add('hidden'));
   document.querySelectorAll('.sw .lab').forEach(l=>{if(!l.dataset.def)l.dataset.def=l.textContent;l.textContent=l.dataset.def;});
   if(c.labels)for(const id in c.labels)$(id).querySelector('.lab').textContent=c.labels[id];
   if(c.hydCap)S.hydCap=c.hydCap;
@@ -648,7 +716,8 @@ function checkMission(dt){
   m.steps.forEach((s,j)=>{
     if(stepsDone[j]){done++;return;}
     if(s.dec){if(!DEC&&(s.dec.anyOrder||j===0||stepsDone[j-1])&&s.f())openDecision(s,j);allDone=false;return;}
-    const ok=s.f()&&(!s.hold||j===0||stepsDone[j-1]);
+    if(s.hold&&!(j===0||stepsDone[j-1])){allDone=false;return;}
+    const ok=s.f();
     if(s.hold){if(ok){S.hold+=dt;const el=$('hold-'+j);if(el)el.textContent=`(${Math.max(0,Math.ceil(s.hold-S.hold))}s)`;if(TIER>0)$('rc').textContent=`holding ${Math.max(0,Math.ceil(s.hold-S.hold))}s`;if(S.hold>=s.hold){stepsDone[j]=true;if($('st-'+j))$('st-'+j).classList.add('done');}else allDone=false;}
       else{if(S.hold>0)S.hold=0;const el=$('hold-'+j);if(el&&s.k){const p=Math.round(linePsi(S.valves[s.k]));el.textContent=p===0?'(line closed)':p<s.lo?`(line at ${p} — too low)`:p>s.hi?`(line at ${p} — too high)`:'(pressure good — check residual/supply)';}else if(el)el.textContent='';allDone=false;}}
     else if(ok&&(j===0||stepsDone[j-1])){stepsDone[j]=true;if($('st-'+j))$('st-'+j).classList.add('done');done++;}
@@ -730,7 +799,7 @@ $('b-math').onclick=()=>{$('menu').classList.add('hidden');$('mathov').classList
 $('m-exit').onclick=()=>{$('mathov').classList.add('hidden');showMenu();};
 
 /* ===== version, reporting, offline ===== */
-const APP_VERSION='1.7.1';
+const APP_VERSION='1.8.0';
 function snapshot(){
   const c=CAMP[S.camp],m=c.missions[S.mission];const done=stepsDone.filter(Boolean).length;
   const open=Object.keys(S.valves).filter(k=>S.valves[k].open>0).map(k=>`${S.valves[k].n} ${S.valves[k].open}%${S.valves[k].burst?' (burst)':''}`).join(', ')||'none';
