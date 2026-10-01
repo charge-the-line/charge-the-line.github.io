@@ -203,16 +203,16 @@
   <h2 style="font-size:34px;letter-spacing:.5px">Charge the Line</h2>
   <p style="font-family:'Barlow Condensed';font-size:18px;color:var(--yellow);margin-top:-6px">Every call starts at the panel.</p>
   <p>Modeled on 10-2: HME rescue pumper, Hale Q-Flo 1250 GPM, 800-gallon tank, FRC pressure governor, Hale MIV electric master intake valve.</p>
-  <p><b>Crack</b> opens a valve a quarter turn at a time. <b>Snap</b> throws it wide open — water hammer, or a lost prime at draft. The MIV travels on its own; that's what it's for.</p>
+  <p><b>Crack +</b> opens a valve a quarter turn at a time; <b>Gate −</b> closes it a quarter turn, to give one line less pressure than another. <b>Snap</b> throws it wide open — water hammer, or a lost prime at draft. The MIV travels on its own; that's what it's for.</p>
   <p>Three tiers per scenario: <b>Guided</b> shows every step and the target pressure. <b>Recall</b> hides the checklist and makes you figure the PDP from the hose layout. <b>Chaos</b> is Recall plus things going wrong.</p>
   <p><b>New: Panel guide.</b> Tap <b>Panel guide</b> (top right) during any mission, then tap any control to learn what it does, when to use it, and what goes wrong. Free in Guided, 2 points per lookup in Recall, locked in Chaos.</p>
   <p style="font-size:14px">Training aid only. Department SOPs and the preconnect chart on the rig are the real numbers.</p>
-  <p style="font-size:13px;color:var(--muted)">Version 2.1.0 · Found a problem? Use "Report an issue" under any mission.</p>
+  <p style="font-size:13px;color:var(--muted)">Version 2.1.1 · Found a problem? Use "Report an issue" under any mission.</p>
   <button class="warn" id="b-start" style="width:100%;font-size:18px">Continue</button>
 </div></div>
 
 <div class="overlay hidden" id="menu"><div class="box">
-  <h2>Menu <span style="font-size:14px;color:var(--muted);font-weight:400">v2.1.0</span></h2>
+  <h2>Menu <span style="font-size:14px;color:var(--muted);font-weight:400">v2.1.1</span></h2>
   <button id="b-resume" class="warn hidden" style="width:100%;margin-bottom:8px;font-size:17px">Resume current scenario</button>
   <div style="display:flex;gap:8px;margin-bottom:12px"><button id="b-math" style="flex:1">Pump math drills</button><button id="b-progress" style="flex:1">My progress</button><button id="b-howto">How to play</button></div>
   <button id="b-gindex" class="guidebtn" style="width:100%;margin-bottom:12px;font-size:16px;padding:10px">Panel guide — every control, gauge, and concept</button>
@@ -336,13 +336,14 @@ function freshState(){
 /* ===== valves ===== */
 function buildValves(keys){
   const box=$('valves');box.innerHTML='';
-  keys.forEach(k=>{const v=S.valves[k];box.insertAdjacentHTML('beforeend',`<div class="valve" id="valve-${k}" data-g="${k==='deck'?'deck':'discharge'}"><div><div class="top"><span class="name">${v.n} <span class="tag ${v.cls}">${v.tag}</span></span><span class="pct" id="pct-${k}">closed</span></div><div class="track"><div class="open" id="open-${k}"></div></div></div><div class="acts"><button data-k="${k}" data-a="crack">Crack</button><button data-k="${k}" data-a="snap">Snap open</button><button data-k="${k}" data-a="close">Close</button></div></div>`);});
+  keys.forEach(k=>{const v=S.valves[k];box.insertAdjacentHTML('beforeend',`<div class="valve" id="valve-${k}" data-g="${k==='deck'?'deck':'discharge'}"><div><div class="top"><span class="name">${v.n} <span class="tag ${v.cls}">${v.tag}</span></span><span class="pct" id="pct-${k}">closed</span></div><div class="track"><div class="open" id="open-${k}"></div></div></div><div class="acts"><button data-k="${k}" data-a="crack">Crack +</button><button data-k="${k}" data-a="gate">Gate −</button><button data-k="${k}" data-a="snap">Snap open</button><button data-k="${k}" data-a="close">Close</button></div></div>`);});
   box.onclick=e=>{const b=e.target.closest('button');if(!b)return;setValve(b.dataset.k,b.dataset.a);};
 }
 function setValve(k,a){
   const v=S.valves[k];
   if(a==='close'){v.open=0;radio('Engineer',`${v.n} closed`);if(v.burst){v.burst=false;const bm=CAMP[S.camp].burstCloseMsg;if(bm){S.burstT=0;radio(bm[0],bm[1],'good');}else{S.burstT=-8;radio('FF Nowak','Burst length isolated, swapping it out — give us a few seconds','good');}}}
   else if(a==='crack'){v.open=Math.min(100,v.open+25);radio('Engineer',`${v.n} at ${v.open}%`);}
+  else if(a==='gate'){if(v.open<=25){radio('Engineer',`${v.n} is at ${v.open}% — use Close to shut it`);return;}v.open-=25;radio('Engineer',`${v.n} gated back to ${v.open}%`);}
   else{const was=v.open>0;v.open=100;
     if(!was){if(supplied().draft){S.primed=false;S.vac=0;ding(15,`Lost prime — snapped ${v.n} open at a draft`);}else if(S.psi>60)ding(15,`Water hammer on ${v.n} — open it slowly`);}
     radio('Engineer',`${v.n} snapped open`);}
@@ -634,7 +635,7 @@ CAMP.push({name:'Breezy Point — Superstorm Sandy, 2012',real:true,
    chat:{k:'rear4',lo:140,hi:160,low:()=>radio('TL-159','Stream is falling short in this wind — need more water','bad'),high:()=>radio('TL-159','Easy — the bucket crew can barely hold the nozzle','bad'),ok:()=>radio('TL-159','Good water in the bucket, holding the north side','good')}},
   {title:'0600 hrs · The wind shift',intro:()=>'After six hours the wind swings from southeast to straight south. Command sees the opening: hit the western flank now. Keep TL-159 fed and charge a 2½" off Discharge 2 for the flank crew. The tide is going out — watch your suction.',faults:['gov'],tide:1.1,onStart:()=>{S.susp=Math.min(S.susp,50);},
    steps:[{t:'Open Discharge 2 for the flank line (crack it)',f:()=>S.valves.rear2.open>0},
-    {t:TIER===0?`Both lines in band (Discharge 4 140–160, Discharge 2 ${bandOf(LINE.rear250,15)[0]}–${bandOf(LINE.rear250,15)[1]} — gate it)`:'Both lines at their pressure — the 2½" needs far less than the tower',f:()=>inB('rear4',140,160)&&inB('rear2',...bandOf(LINE.rear250,15).slice(0,2))},
+    {t:TIER===0?`Both lines in band (Discharge 4 140–160, Discharge 2 ${bandOf(LINE.rear250,15)[0]}–${bandOf(LINE.rear250,15)[1]} — use Gate − on Discharge 2)`:'Both lines at their pressure — the 2½" needs far less than the tower',f:()=>inB('rear4',140,160)&&inB('rear2',...bandOf(LINE.rear250,15).slice(0,2))},
     {t:'Decision: the tide',dec:{anyOrder:true,tag:'Suction near the surface',q:'The pump is surging and the compound needle is bouncing near zero. The tide is dropping and your suction is riding up toward the surface. What do you do?',
       opts:[{t:'Lower the suction back into the middle of the water column',r:'good',why:'Near the surface the suction pulls in air and floating trash. Mid-water, off the bottom, is where you want it.'},
             {t:'Throttle down and ride it out',r:'partial',why:'Less flow may keep you primed a little longer, but the tide keeps dropping — you are just delaying the fix while the flank crew loses pressure.'},
@@ -788,7 +789,7 @@ CAMP.push({name:'Queens, NY — gasoline tanker fire, 1994',real:true,
     {t:'Hold the foam line ready — charged at eductor pressure, pump cool, for 15 seconds',hold:15,f:()=>S.valves.front.open>0&&S.downClosed&&inB('front',185,215)&&S.heatT<10}]},
   {title:'Protect the exposures',intro:()=>`The tanker will burn for hours. Its diesel saddle tanks are soaking up heat — a BLEVE risk — and an overpass carries traffic right above the fire. Stretch a 2½" cooling line off Discharge 2: ${describe(Q24)}. Keep the foam line charged at eductor pressure the whole time.`,faults:['gov'],
    steps:[{t:'Open Discharge 2 for the cooling line (crack it)',f:()=>S.valves.rear2.open>0},
-    {t:TIER===0?'Gate Discharge 2 to 115–135 PSI — foam line stays at 185–215':'Both lines at their pressures — the cooling line needs far less',f:()=>inB('rear2',115,135)&&inB('front',185,215)},
+    {t:TIER===0?'Gate Discharge 2 to 115–135 PSI (Gate − down to 25%) — foam line stays at 185–215':'Both lines at their pressures — the cooling line needs far less',f:()=>inB('rear2',115,135)&&inB('front',185,215)},
     {t:'Decision: the overpass',dec:{tag:'Overpass cooling',q:'Crews are putting water on the underside of the overpass, but the heat is overpowering them — steel and concrete are still heating. Your cooling water is split between the overpass and the saddle tanks. What do you recommend?',
       opts:[{t:'Pull off the overpass — put the cooling water on the saddle tanks, where it can win',r:'good',why:'Water is limited and so are people. Spend it where it changes the outcome: keeping the fuel tanks from failing. The overpass can be rebuilt.'},
             {t:'Bring in the deck gun from close range to save the overpass',r:'bad',why:'Moving the rig in puts it and its crew in the heat and the fuel\'s path for a fight the handlines already showed they cannot win.'},
@@ -960,7 +961,7 @@ $('b-math').onclick=()=>{$('menu').classList.add('hidden');$('mathov').classList
 $('m-exit').onclick=()=>{$('mathov').classList.add('hidden');showMenu();};
 
 /* ===== version, reporting, offline ===== */
-const APP_VERSION='2.1.0';
+const APP_VERSION='2.1.1';
 function snapshot(){
   const c=CAMP[S.camp],m=c.missions[S.mission];const done=stepsDone.filter(Boolean).length;
   const open=Object.keys(S.valves).filter(k=>S.valves[k].open>0).map(k=>`${S.valves[k].n} ${S.valves[k].open}%${S.valves[k].burst?' (burst)':''}`).join(', ')||'none';
