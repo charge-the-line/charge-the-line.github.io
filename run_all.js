@@ -18,7 +18,9 @@ const short=n=>n.length>38?n.slice(0,37)+'…':n;
 if(want.includes('syntax')){try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('syntax','index.html script compiles',true);}catch(e){report('syntax','index.html script compiles',false,e.message);}
   const ver=(html.match(/APP_VERSION='([^']+)'/)||[])[1],sw=fs.readFileSync(path.join(__dirname,'..','sw.js'),'utf8'),cache=(sw.match(/CACHE = '([^']+)'/)||[])[1];
   report('syntax','service-worker cache matches app version',cache===`charge-the-line-v${ver}`,`app ${ver}, cache ${cache}`);
-  report('syntax','service worker ignores the Patient Contact app on the same domain',/patient-contact/.test(sw));}
+  {const m=sw.match(/const ownFile = (.+);/);let ok=!!m;if(m){const own=new Function('url','return '+m[1]+';');const T=p=>own({pathname:p});
+    ok=T('/')&&T('/index.html')&&T('/icon-192.png')&&T('/sw.js')&&['/patient-contact/','/patient-contact/index.html','/bleed-control/','/bleed-control/sw.js','/bls-ready/','/bls-ready/index.html','/anything-new/'].every(p=>!T(p));}
+    report('syntax','service worker handles only its own root files — every sub-app folder is left alone',ok);}}
 
 const env=(want.some(x=>['balance','play','paths','human','stress','fuzz'].includes(x)))?require('./qa.js'):null;
 if(want.includes('balance')){const {CAMP}=env.env.api;let lo=0,sh=0,t=0,first=0;for(const c of CAMP)for(const m of c.missions)for(const s of m.steps)if(s.dec&&s.dec.opts){const L=s.dec.opts.map(x=>x.t.length),g=s.dec.opts.findIndex(x=>x.r==='good');t++;if(L[g]===Math.max(...L))lo++;else if(L[g]===Math.min(...L))sh++;}

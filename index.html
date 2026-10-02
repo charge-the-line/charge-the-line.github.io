@@ -212,7 +212,7 @@
 </div></div>
 
 <div class="overlay hidden" id="menu"><div class="box">
-  <h2>Menu <span style="font-size:14px;color:var(--muted);font-weight:400">v2.2.0</span></h2>
+  <h2>Menu <span style="font-size:14px;color:var(--muted);font-weight:400">v2.2.1</span></h2>
   <button id="b-resume" class="warn hidden" style="width:100%;margin-bottom:8px;font-size:17px">Resume current scenario</button>
   <div style="display:flex;gap:8px;margin-bottom:12px"><button id="b-math" style="flex:1">Pump math drills</button><button id="b-progress" style="flex:1">My progress</button><button id="b-howto">How to play</button></div>
   <button id="b-gindex" class="guidebtn" style="width:100%;margin-bottom:12px;font-size:16px;padding:10px">Panel guide — every control, gauge, and concept</button>
@@ -983,7 +983,7 @@ $('b-math').onclick=()=>{$('menu').classList.add('hidden');$('mathov').classList
 $('m-exit').onclick=()=>{$('mathov').classList.add('hidden');showMenu();};
 
 /* ===== version, reporting, offline ===== */
-const APP_VERSION='2.2.0';
+const APP_VERSION='2.2.1';
 function snapshot(){
   const c=CAMP[S.camp],m=c.missions[S.mission];const done=stepsDone.filter(Boolean).length;
   const open=Object.keys(S.valves).filter(k=>S.valves[k].open>0).map(k=>`${S.valves[k].n} ${S.valves[k].open}%${S.valves[k].burst?' (burst)':''}`).join(', ')||'none';
