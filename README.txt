@@ -13,3 +13,7 @@ The link never changes. Bump the version in sw.js each time so phones refresh.
 
 Install on a phone: open the link -> iPhone: Share -> Add to Home Screen
                                    Android: menu -> Install app
+
+TESTS (optional, for whoever maintains the app)
+The tests/ folder and TESTING.md can live in the same repository. They don't affect the app.
+To run them on a computer with Node.js:  node tests/run_all.js
