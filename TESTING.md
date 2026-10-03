@@ -63,3 +63,8 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 ## Patient Contact lesson (October 2026)
 
 - `L.pcDrill.lesson` names it and a `drillRuns` row with `drill:'lesson'` shows as type Lesson; Patient Contact's tile total is 16.
+
+## Milestone 9 checks (added October 2026)
+
+- Daily drill: sixteen consecutive day numbers give sixteen different drills across all four modules, each with a readable name and a deep link under its module path; day 17 repeats day 1. Done-today is true only for that module's drill with that name recorded today.
+- Progression: streak counts consecutive days ending today or yesterday; level is one per eight activities (17 done = level 3, one into it); the Today view shows the daily card and the level card, and an empty phone reads level 1.

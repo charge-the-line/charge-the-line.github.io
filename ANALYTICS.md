@@ -18,6 +18,7 @@ Dashboard: **https://preconnect.goatcounter.com** (sign in with the account you 
 | `pc/quit/arrest/mission-2` · `ctl/finish/scenario-6/guided/attempt-1/score-80s` | Patient Contact calls, Charge the Line scenarios |
 | `*/lesson` · `*/exam` · `*/drill-…` | Lessons, exam practice, quick drills |
 | `hub/training-record-csv` · `hub/backup` · `hub/restore` · `hub/feedback-sent` | Home-page actions |
+| `hub/daily-drill` | Someone tapped the day's 60-second drill on the home page |
 | `hub/drill-night-start` · `hub/drill-night-end` · `hub/drill-night-csv` | A Drill Night session was started, ended, or exported (counts only; never who was there) |
 | `error/<module>/<message>` | A bug someone hit. **Check these weekly** |
 
