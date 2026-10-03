@@ -32,3 +32,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 - Spacing: 1, 3, 7, 14, 30 days after each clear at 70+; a miss resets; overdue reads as due.
 - Debrief body: compare line (best, last time, new best), metrics table, what cost points, lesson chips, steps table.
 - Due for review cards on the Today view, most overdue first; a miss reads "try again". Sibling repos' core copies must be identical when checked out side by side.
+
+## Milestone 4 checks (added October 2026)
+
+- The motion rules are checked in the shared core now (the hub no longer carries its own copy of the look CSS).
