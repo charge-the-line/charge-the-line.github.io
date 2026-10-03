@@ -1,5 +1,5 @@
 // Preconnect home page. Bump CACHE when you upload a new version so phones pick it up.
-const CACHE = 'preconnect-v1.1.0';
+const CACHE = 'preconnect-v1.1.1';
 const CORE = ['./', 'index.html', 'privacy.html', 'feedback.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));

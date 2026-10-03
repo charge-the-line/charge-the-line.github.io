@@ -1,6 +1,6 @@
 # Preconnect statistics — how to read them
 
-Dashboard: **https://preconnect.goatcounter.com** (sign in with the Association account).
+Dashboard: **https://preconnect.goatcounter.com** (sign in with the account you created).
 
 ## What gets counted
 
