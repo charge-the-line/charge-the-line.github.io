@@ -111,7 +111,7 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:6px;border:1
 <p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. Preconnect and its modules are independent and not affiliated with or endorsed by either organization. <span id="ver"></span></p>
 <script>
 const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
-const APP_VERSION='1.5.0';
+const APP_VERSION='1.5.1';
 const $=id=>document.getElementById(id);const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HUBKEY='preconnect';
 
@@ -146,7 +146,7 @@ function profile(){const h=get(HUBKEY)||{};let name=h.name||'',org=h.org||'';
   for(const m of MODS){const d=get(m.key)||{};if(!name&&d.name)name=d.name;if(!org&&d.dept)org=d.dept;}return {name,org};}
 /* every completed activity, from all four modules, as one list of rows */
 function records(){const out=[];const add=(mod,type,act,pat,d,mode,score,who,inst)=>out.push({mod,type,act,pat:pat||'',d:d||'',mode:mode||'',score,who:who||null,inst:inst||''});
-  const ctl=get('e102-pump-trainer');if(ctl){if(ctl.log&&ctl.log.length)ctl.log.forEach(r=>add('Charge the Line','Scenario',L.ctl[r.i]||('Scenario '+(+r.i+1)),'',r.d,TIERS[r.tier],r.score));
+  const ctl=get('e102-pump-trainer');if(ctl){if(ctl.log&&ctl.log.length)ctl.log.forEach(r=>add('Charge the Line','Scenario',L.ctl[r.i]||('Scenario '+(+r.i+1)),r.v?'Layout '+r.v:'',r.d,TIERS[r.tier]+(r.inst?' · instructor':''),r.score));
     else Object.keys(ctl.scen||{}).forEach(i=>{const s=ctl.scen[i];if(s&&s.runs)add('Charge the Line','Scenario (best of '+s.runs+')',L.ctl[i]||('Scenario '+(+i+1)),'',s.last,TIERS[s.tier],s.best);});
     (ctl.extra||[]).forEach(r=>add('Charge the Line',r.kind==='lesson'?'Lesson':'Drill',L.ctlX[r.id]||r.id,'',r.d,'',r.score));}
   const pc=get('patient-contact');if(pc){(pc.runs||[]).forEach(r=>add('Patient Contact','Call',L.pc[r.call||'arrest']||r.call,r.variant,r.d,TIERS[r.tier],r.score,r.who,r.inst));(pc.drillRuns||[]).forEach(r=>add('Patient Contact','Drill',L.pcDrill[r.drill]||r.drill,'',r.d,'',r.score));}

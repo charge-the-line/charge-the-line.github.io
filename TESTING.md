@@ -40,3 +40,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 ## Milestone 5 part one checks (added October 2026)
 
 - Charge the Line lesson and drill runs (`extra[]`) appear in the record with readable names from `L.ctlX`, and count toward the module's tile total (15 activities).
+
+## Milestone 5 part two checks (added October 2026)
+
+- A Charge the Line run with a layout letter shows "Layout B" in the Patient column, and an instructor-injected run reads "Recall · instructor" in Mode; plain runs are unchanged.
