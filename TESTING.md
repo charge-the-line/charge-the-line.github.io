@@ -55,3 +55,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 ## BLS depth pack (October 2026)
 
 - `L.bls` names the new station, scenarios and drill (child2, pool, crib, special); the Today-view check expects 19 BLS activities.
+
+## Milestone 6 checks (added October 2026)
+
+- Core sound and haptics with a fake AudioContext (records every tone) and a fake vibrate (records every pattern): silent with sound off, haptics follow their switch, turning sound on previews 660/990 Hz, the bad cue is 220 Hz with a 30/40/30 buzz, the metronome schedules 880 Hz ticks at 110 and stops.
