@@ -81,3 +81,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 ## Instructor mode in every module (added October 3, 2026)
 
 - `records`: a Bleed Control or BLS Ready run with `inst:1` shows "· instructor" in Mode and leaves the Instructor column empty; a run stamped with an instructor's name on a drill night fills the column instead.
+
+## Upwind U0 (added October 3, 2026)
+
+- `links to all five module folders`; `ownFile` leaves `/upwind/` alone; a boot with an `upwind` key shows the tile with 16 planned activities, reads a drill and an incident with readable names, `Chaos · instructor` and `Layout B`, and includes the key in a backup. The fixture progress check now tolerates a module with no records yet.

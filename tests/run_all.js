@@ -7,9 +7,9 @@ const FIX=JSON.parse(fs.readFileSync(path.join(__dirname,'fixture.json'),'utf8')
 try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('script compiles',true);}catch(e){report('script compiles',false,e.message);}
 {const ver=(html.match(/APP_VERSION='([^']+)'/)||[])[1],cache=(sw.match(/CACHE = '([^']+)'/)||[])[1];report('offline cache matches app version',cache===`preconnect-v${ver}`,`${ver} / ${cache}`);}
 {const m=sw.match(/const ownFile = (.+);/);const own=new Function('url','return '+m[1]+';');const T=p=>own({pathname:p});
- report('offline helper handles only its own root files (and its fonts folder)',T('/')&&T('/index.html')&&T('/icon-192.png')&&T('/fonts/atkinson-hyperlegible-latin-400-normal.woff2')&&['/charge-the-line/','/patient-contact/index.html','/bleed-control/','/bls-ready/sw.js','/next-module/'].every(p=>!T(p)));
+ report('offline helper handles only its own root files (and its fonts folder)',T('/')&&T('/index.html')&&T('/icon-192.png')&&T('/fonts/atkinson-hyperlegible-latin-400-normal.woff2')&&['/charge-the-line/','/patient-contact/index.html','/bleed-control/','/bls-ready/sw.js','/upwind/','/upwind/index.html','/next-module/'].every(p=>!T(p)));
  report('offline helper only clears its own old caches',/k\.startsWith\('preconnect-v'\)/.test(sw));}
-{const {api}=boot();report('links to all four module folders (relative paths)',['charge-the-line/','patient-contact/','bleed-control/','bls-ready/'].every(p=>api.MODS.some(m=>m.path===p)));}
+{const {api}=boot();report('links to all five module folders (relative paths)',['charge-the-line/','patient-contact/','bleed-control/','bls-ready/','upwind/'].every(p=>api.MODS.some(m=>m.path===p)));}
 {const {api}=boot();report('empty device: no records, no crash',api.records().length===0&&api.csvRows().length===1);}
 {const {api}=boot(FIX);const R=api.records();const mods=new Set(R.map(r=>r.mod));
  report('reads records from all four modules',mods.size===4,[...mods].join(', '));
@@ -51,7 +51,7 @@ try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('scrip
 {// Milestone 2: the Today view and module progress
  const a=boot({'bls-ready':JSON.stringify({runs:[{kind:'station',id:'adult',score:95,d:new Date().toISOString(),tier:1}]})});const T=a.api.today();a.api.render();
  report('Today view: picks up where you left off and counts this week',!!T.last&&T.last.mod==='BLS Ready'&&T.last.act==='Adult CPR and AED'&&T.last.score===95&&T.week===1&&T.mods.find(m=>m.id==='bls').done===1&&T.mods.find(m=>m.id==='bls').total===19&&/Pick up where you left off/.test(a.els.today.innerHTML)&&/bls-ready\//.test(a.els.today.innerHTML),`${T.last&&T.last.act} · week ${T.week}`);
- const b=boot(FIX);const Tb=b.api.today();report('module progress counts distinct activities, never above the total',Tb.mods.every(m=>m.done<=m.total&&m.done>0),Tb.mods.map(m=>`${m.id} ${m.done}/${m.total}`).join(', '));
+ const b=boot(FIX);const Tb=b.api.today();report('module progress counts distinct activities, never above the total',Tb.mods.every(m=>m.done<=m.total&&(m.done>0||!b.api.records().some(r=>r.mod===m.name))),Tb.mods.map(m=>`${m.id} ${m.done}/${m.total}`).join(', '));
  const c=boot();c.api.render();report('empty device: Today view points new people at a lesson',/Start with a ten-minute lesson/.test(c.els.today.innerHTML)&&c.api.today().last===null);}
 {// Milestone 2: one settings sheet, one key, applied to the page
  const a=boot();a.api.setSetting('text','large');a.api.setSetting('contrast','high');const s=a.api.settings();const de=global.document.documentElement.dataset;
@@ -77,6 +77,9 @@ try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('scrip
   report('sound and haptics: silent with sound off, haptics follow their switch, turning sound on previews a tone, cues play their notes, the metronome schedules 880 Hz ticks at 110 and stops',off===false&&offBuzz===true&&F.buzz[0]==='[30,40,30]'&&preview.join()==='660,990'&&F.fs().includes(220)&&F.buzz.filter(b=>b==='[30,40,30]').length>=2&&nb===false&&!!st&&st.bpm===110&&ticks>=1&&api.pcMetroState()===null,`preview ${preview.join()}, ticks ${ticks}, buzz ${F.buzz.join(' ')}`);
   function buzz0(F){return JSON.parse(F.buzz[0]);}
   delete global.window.AudioContext;delete navigator.vibrate;}}
+{// Upwind (U0): the fifth tile, its name table, records with readable names, the instructor mark and the backup key
+ const u=boot({upwind:JSON.stringify({runs:[{kind:'drill',id:'placard',score:88,d:new Date().toISOString(),tier:0},{kind:'scenario',id:'i75',score:70,d:new Date().toISOString(),tier:2,variant:'B',inst:1}]})});const UR=u.api.records();const UT=u.api.today().mods.find(m=>m.id==='uw');
+ report('Upwind: tile with 16 planned activities, records read with readable names, incidents show tier, layout and the instructor mark, key is backed up',UR.length===2&&UR.some(r=>r.mod==='Upwind'&&r.type==='Drill'&&r.act==='Placard ID')&&UR.some(r=>r.type==='Incident'&&r.act==='Tanker on its side, I-75'&&r.mode==='Chaos · instructor'&&r.pat==='Layout B')&&UT.total===16&&UT.done===2&&u.api.MODS.some(m=>m.key==='upwind'&&m.path==='upwind/')&&Object.keys(u.api.backup().data).includes('upwind'),UR.map(r=>r.act+' / '+r.mode).join(' | '));}
 {const b=boot({'bleed-control':JSON.stringify({runs:[{kind:'scenario',id:'garage',score:80,d:new Date().toISOString(),tier:1,inst:1}]}),'bls-ready':JSON.stringify({runs:[{kind:'station',id:'adult',score:90,d:new Date().toISOString(),tier:0,inst:1,who:['Jo'],night:'x'}]})});const R=b.api.records();
  report('Bleed Control and BLS Ready instructor-injected runs read "· instructor" in Mode, and a Drill Night name still rides along',R.find(r=>r.score===80).mode==='Recall · instructor'&&R.find(r=>r.score===90).mode==='Guided · instructor'&&R.find(r=>r.score===90).who[0]==='Jo',R.map(r=>r.mode).join(' | '));}
 {// Milestone 10: daylight contrast, automatic high contrast, focus outlines, landscape rules, screen-reader hooks

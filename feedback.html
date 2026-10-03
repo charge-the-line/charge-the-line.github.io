@@ -69,7 +69,7 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:8px;border:1
 <div class="card">
   <label class="stat" for="f-mod">Which part?</label>
   <select id="f-mod" style="width:100%;font-size:16px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0f1114;color:var(--ink);margin:4px 0 10px">
-    <option value="Preconnect home">Preconnect home page</option><option value="Charge the Line">Charge the Line</option><option value="Patient Contact">Patient Contact</option><option value="Bleed Control">Bleed Control</option><option value="BLS Ready">BLS Ready</option>
+    <option value="Preconnect home">Preconnect home page</option><option value="Charge the Line">Charge the Line</option><option value="Patient Contact">Patient Contact</option><option value="Bleed Control">Bleed Control</option><option value="BLS Ready">BLS Ready</option><option>Upwind</option>
   </select>
   <label class="stat" for="f-kind">What kind?</label>
   <select id="f-kind" style="width:100%;font-size:16px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0f1114;color:var(--ink);margin:4px 0 10px">
@@ -85,7 +85,7 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:8px;border:1
 <script>
 /* Where reports go. Set this to your feedback email address. While it's blank, "Send" opens the phone's share sheet. */
 var FEEDBACK_TO='';
-var MODS={ctl:'Charge the Line',pc:'Patient Contact',bc:'Bleed Control',bls:'BLS Ready'};
+var MODS={ctl:'Charge the Line',pc:'Patient Contact',bc:'Bleed Control',bls:'BLS Ready',uw:'Upwind'};
 var from=(location.search.match(/[?&]from=([a-z]+)/)||[])[1];if(from&&MODS[from])document.getElementById('f-mod').value=MODS[from];
 try{var h=JSON.parse(localStorage.getItem('preconnect')||'{}');if(h.name)document.getElementById('f-from').value=h.name+(h.org?', '+h.org:'');}catch(e){}
 function body(){return 'Part: '+document.getElementById('f-mod').value+'\nKind: '+document.getElementById('f-kind').value+'\n\n'+(document.getElementById('f-text').value.trim()||'(no description)')+'\n\nFrom: '+(document.getElementById('f-from').value.trim()||'(not given)')+'\nDevice: '+navigator.userAgent+'\nScreen: '+screen.width+'x'+screen.height;}

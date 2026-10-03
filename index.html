@@ -49,7 +49,7 @@
 button{min-height:48px}
 </style>
 <style>
-:root{--bg:#0a0c0f;--deck:#14171c;--deck2:#1c2026;--line:#2a2f37;--ink:#f6f7f9;--soft:#aab2bd;--acc:#ff7a1a;--acc-ink:#0a0c0f;--or:#ff7a1a;--or2:#ff9a4d;--ctl:#f0b323;--pc:#ff7a1a;--bc:#e5383b;--bls:#3b8bff;--good:#39e36f;--warn:#ffc23d}
+:root{--bg:#0a0c0f;--deck:#14171c;--deck2:#1c2026;--line:#2a2f37;--ink:#f6f7f9;--soft:#aab2bd;--acc:#ff7a1a;--acc-ink:#0a0c0f;--or:#ff7a1a;--or2:#ff9a4d;--ctl:#f0b323;--pc:#ff7a1a;--bc:#e5383b;--bls:#3b8bff;--uw:#49c76f;--good:#39e36f;--warn:#ffc23d}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,sans-serif;-webkit-text-size-adjust:100%}
 body{max-width:560px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top,0px)) calc(16px + env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) calc(16px + env(safe-area-inset-left,0px));font-size:16px;line-height:1.4}
 h1,h2,h3{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:600;margin:0;line-height:1.05}
@@ -65,7 +65,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--or2);outline-offset
 .icon{width:44px;height:44px;border-radius:8px;flex:none;background:#0a0c0f;border:1px solid var(--line);display:block}
 .mod{display:block;text-decoration:none;color:var(--ink)}.mod:active{transform:translateY(1px)}.mod b.t{display:block;font-family:"Saira Condensed",sans-serif;font-size:22px;font-weight:600;line-height:1.05}.mod .l{font-size:13px;color:var(--soft);margin-top:2px}
 .pc-due .chip{background:var(--warn);color:#0a0c0f}
-.m-ctl{--acc:var(--ctl)}.m-pc{--acc:var(--pc)}.m-bc{--acc:var(--bc)}.m-bls{--acc:var(--bls)}
+.m-ctl{--acc:var(--ctl)}.m-pc{--acc:var(--pc)}.m-bc{--acc:var(--bc)}.m-bls{--acc:var(--bls)}.m-uw{--acc:var(--uw)}
 input{font-family:inherit;font-size:16px;padding:10px;border-radius:6px;border:1px solid var(--line);background:#0a0c0f;color:var(--ink);width:100%;margin-bottom:8px}
 .stat{font-size:13px;color:var(--soft);line-height:1.45}.legal{font-size:12px;color:#8d939d;line-height:1.5;margin-top:18px}
 .overlay{position:fixed;inset:0;background:rgba(4,6,9,.94);display:flex;align-items:flex-start;justify-content:center;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));z-index:10;overflow:auto}
@@ -116,7 +116,7 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:6px;border:1
 <p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. Preconnect and its modules are independent and not affiliated with or endorsed by either organization. <span id="ver"></span></p>
 <script>
 const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
-const APP_VERSION='1.9.1';
+const APP_VERSION='1.10.0';
 const $=id=>document.getElementById(id);const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HUBKEY='preconnect';
 
@@ -135,14 +135,16 @@ const MODS=[
  {id:'ctl',key:'e102-pump-trainer',path:'charge-the-line/',name:'Charge the Line',desc:'Pump panel simulator: hydrants, drafting, relays, foam, and ten real saves.'},
  {id:'pc',key:'patient-contact',path:'patient-contact/',name:'Patient Contact',desc:'Medical first responder calls: arrest, overdose, stroke, childbirth, and more.'},
  {id:'bc',key:'bleed-control',path:'bleed-control/',name:'Bleed Control',desc:'The ABCs of bleeding: tourniquets, wound packing, and scenarios on the clock.'},
- {id:'bls',key:'bls-ready',path:'bls-ready/',name:'BLS Ready',desc:'High-quality CPR, AED, and choking — updated for the 2025 guidelines.'}];
+ {id:'bls',key:'bls-ready',path:'bls-ready/',name:'BLS Ready',desc:'High-quality CPR, AED, and choking — updated for the 2025 guidelines.'},
+ {id:'uw',key:'upwind',path:'upwind/',name:'Upwind',desc:'Hazmat Awareness and Operations: size-up, the ERG, zones, meters, and when to call the team. Building now.'}];
 const L={
  ctl:["Residential structure fire","Commercial building — FDC","Vehicle fire — Class B foam","Rural barn fire — draft","Relay — supply Engine 10-1","Breezy Point — Superstorm Sandy, 2012","First Interstate Bank — Los Angeles, 1988","Port Jervis, NY — tanker shuttle at 0°F, 2005","Queens, NY — gasoline tanker fire, 1994","Corvallis, OR — the Mayday nobody heard"],
  ctlX:{lesson:'Pump operations lesson',friction:'Friction loss',pdp:'Pump discharge pressure',control:'Find the control',hydrant:'Hydrant math',math:'Pump math'},
  pc:{arrest:'Cardiac arrest',mva:'Car versus tree',od:'Overdose',ep:'Anaphylaxis',st:'Stroke',fl:'Elderly fall',cb:'Childbirth',dm:'Diabetic emergency'},
  pcDrill:{lesson:'The lesson',cpr:'CPR tempo',leads:'Lead placement',rhythm:'Rhythm ID',med:'Med math',o2:'Oxygen math',apgar:'APGAR',lkw:'Last known well'},
  bc:{kitchen:'"He cut his arm on the glass"',garage:'Table saw in the garage',glass:'Through the glass door',crash:'Two-car crash','tq-arm':'Tourniquet — arm','tq-leg':'Tourniquet — leg',pack:'Wound packing',press:'Direct pressure',threat:'Life-threatening or not?',method:'Which technique?',place:'Tourniquet placement',lesson:'The lesson'},
- bls:{tempo:'Compressions and breaths',adult:'Adult CPR and AED',infant:'Infant CPR — two rescuers',child2:'Child CPR — two rescuers',pool:'Pulled from the pool',crib:'Not breathing in the crib',special:'Special situations',bvm:'Bag-mask breaths',chokeA:'Choking — adult or child',chokeI:'Choking — infant',team:'Collapse in the hallway',opioid:'Found in the restroom',baby:'Infant at the daycare',child:'Choking at the birthday party',numbers:'Numbers that matter',ages:'Adult vs. child vs. infant',choke:'Choking by age',exam:'Exam practice',lesson:'The lesson'}};
+ bls:{tempo:'Compressions and breaths',adult:'Adult CPR and AED',infant:'Infant CPR — two rescuers',child2:'Child CPR — two rescuers',pool:'Pulled from the pool',crib:'Not breathing in the crib',special:'Special situations',bvm:'Bag-mask breaths',chokeA:'Choking — adult or child',chokeI:'Choking — infant',team:'Collapse in the hallway',opioid:'Found in the restroom',baby:'Infant at the daycare',child:'Choking at the birthday party',numbers:'Numbers that matter',ages:'Adult vs. child vs. infant',choke:'Choking by age',exam:'Exam practice',lesson:'The lesson'},
+ uw:{lesson:'The lesson',placard:'Placard ID',erg:'ERG lookup',container:'Container recognition',nfpa704:'NFPA 704',zones:'Zone setup',meter:'Meter interpretation',shelter:'Shelter or evacuate',ppe:'PPE limits',i75:'Tanker on its side, I-75',nurse:'Nurse tank on a gravel road',propane:'Propane at the refill cage',pool:'Chlorine at the swim club',house:'Something in the house',rail:'Rail car by the siding',powder:'White powder in an envelope'}};
 const TYPE={lesson:'Lesson',station:'Skill',scenario:'Scenario',drill:'Drill',exam:'Exam practice'};
 const TIERS=['Guided','Recall','Chaos'];
 function get(k){try{return JSON.parse(localStorage.getItem(k))||null;}catch(e){return null;}}
@@ -157,6 +159,7 @@ function records(){const out=[];const add=(mod,type,act,pat,d,mode,score,who,ins
   const pc=get('patient-contact');if(pc){(pc.runs||[]).forEach(r=>add('Patient Contact','Call',L.pc[r.call||'arrest']||r.call,r.variant,r.d,TIERS[r.tier],r.score,r.who,r.inst,r.night));(pc.drillRuns||[]).forEach(r=>add('Patient Contact',r.drill==='lesson'?'Lesson':'Drill',L.pcDrill[r.drill]||r.drill,'',r.d,'',r.score,r.who,r.inst,r.night));}
   const bc=get('bleed-control');if(bc)(bc.runs||[]).forEach(r=>add('Bleed Control',TYPE[r.kind]||r.kind,L.bc[r.id]||r.id,r.variant,r.d,(r.kind==='scenario'?TIERS[r.tier]:'')+(r.inst===1?' · instructor':''),r.score,r.who,typeof r.inst==='string'?r.inst:'',r.night));
   const bls=get('bls-ready');if(bls)(bls.runs||[]).forEach(r=>add('BLS Ready',TYPE[r.kind]||r.kind,L.bls[r.id]||r.id,'',r.d,((r.kind==='station'||r.kind==='scenario')?['Guided','Recall'][r.tier]||'':'')+(r.inst===1?' · instructor':''),r.score,r.who,typeof r.inst==='string'?r.inst:'',r.night));
+  const uw=get('upwind');if(uw)(uw.runs||[]).forEach(r=>add('Upwind',r.kind==='scenario'?'Incident':TYPE[r.kind]||r.kind,L.uw[r.id]||r.id,r.variant?'Layout '+r.variant:'',r.d,(r.kind==='scenario'?TIERS[r.tier]||'':'')+(r.inst===1?' · instructor':''),r.score,r.who,typeof r.inst==='string'?r.inst:'',r.night));
   return out.sort((a,b)=>String(b.d).localeCompare(String(a.d)));}
 function csvRows(recs){const P=profile();const rows=[['Name','Organization','Module','Type','Activity','Patient','Date','Mode','Score','Instructor']];
   for(const r of (recs||records())){const names=r.who&&r.who.length?r.who:[P.name];for(const n of names)rows.push([n,P.org,r.mod,r.type,r.act,r.pat,String(r.d).slice(0,16).replace('T',' '),r.mode,r.score,r.inst]);}return rows;}
@@ -165,7 +168,7 @@ function download(name,text,type){try{const a=document.createElement('a');a.href
 function daysAgo(d){const t=Date.parse(d);if(!t)return null;return Math.floor((Date.now()-t)/864e5);}
 /* The Today view (Milestone 2): the most recent activity, this week's count, and each module's progress as distinct activities done out of its total. */
 function today(){const recs=records();const last=recs[0]||null;const week=recs.filter(r=>{const n=daysAgo(r.d);return n!==null&&n>=0&&n<7;}).length;
-  const totals={ctl:L.ctl.length+Object.keys(L.ctlX).length-1,pc:Object.keys(L.pc).length+Object.keys(L.pcDrill).length,bc:Object.keys(L.bc).length,bls:Object.keys(L.bls).length};
+  const totals={ctl:L.ctl.length+Object.keys(L.ctlX).length-1,pc:Object.keys(L.pc).length+Object.keys(L.pcDrill).length,bc:Object.keys(L.bc).length,bls:Object.keys(L.bls).length,uw:Object.keys(L.uw).length};
   const mods=MODS.map(m=>{const r=recs.filter(x=>x.mod===m.name);const done=Math.min(totals[m.id],new Set(r.map(x=>x.act)).size);return {id:m.id,name:m.name,path:m.path,done,total:totals[m.id],last:r[0]||null};});
   return {last,week,mods,days:last?daysAgo(last.d):null};}
 /* Due for review: every activity's run history through pcSpacing (Milestone 3). Most overdue first; a miss shows as "try again". */
@@ -174,7 +177,7 @@ function due(){const recs=records();const by={};recs.forEach(r=>{const k=r.mod+'
 /* ===== Milestone 9: progression and the daily drill. One quick drill a day, rotating across the four modules, deep-linked with ?drill=<id>; a level and a day streak computed from the records already on the phone. Nothing new is stored. ===== */
 const DAILY=[['bls','numbers'],['ctl','friction'],['pc','med'],['bc','threat'],['bls','ages'],['ctl','pdp'],['pc','o2'],['bc','method'],['bls','choke'],['ctl','control'],['pc','apgar'],['bc','place'],['bls','special'],['ctl','hydrant'],['pc','lkw'],['pc','rhythm']];
 function dayIndex(d){d=d||new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5);}
-function dailyPick(di){if(di===undefined)di=dayIndex();const [mod,id]=DAILY[((di%DAILY.length)+DAILY.length)%DAILY.length];const M=MODS.find(m=>m.id===mod);const name=({bls:L.bls,ctl:L.ctlX,pc:L.pcDrill,bc:L.bc})[mod][id]||id;return {mod,id,name,module:M.name,href:`${M.path}?drill=${id}`};}
+function dailyPick(di){if(di===undefined)di=dayIndex();const [mod,id]=DAILY[((di%DAILY.length)+DAILY.length)%DAILY.length];const M=MODS.find(m=>m.id===mod);const name=({bls:L.bls,ctl:L.ctlX,pc:L.pcDrill,bc:L.bc,uw:L.uw})[mod][id]||id;return {mod,id,name,module:M.name,href:`${M.path}?drill=${id}`};}
 function dailyDone(pick,recs){const t=new Date().toDateString();return (recs||records()).some(r=>r.mod===pick.module&&r.act===pick.name&&r.type==='Drill'&&new Date(r.d).toDateString()===t);}
 function streak(recs){const days=new Set((recs||records()).map(r=>{const t=new Date(r.d);return isNaN(t)?null:dayIndex(t);}).filter(x=>x!==null));let n=0,d=dayIndex();if(!days.has(d))d--;while(days.has(d)){n++;d--;}return n;}
 const LEVEL_STEP=8,LEVEL_MAX=10;

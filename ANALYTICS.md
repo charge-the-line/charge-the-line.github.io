@@ -22,7 +22,7 @@ Dashboard: **https://preconnect.goatcounter.com** (sign in with the account you 
 | `hub/drill-night-start` · `hub/drill-night-end` · `hub/drill-night-csv` | A Drill Night session was started, ended, or exported (counts only; never who was there) |
 | `error/<module>/<message>` | A bug someone hit. **Check these weekly** |
 
-Module codes: `ctl` Charge the Line · `pc` Patient Contact · `bc` Bleed Control · `bls` BLS Ready · `hub` home page.
+Module codes: `ctl` Charge the Line · `pc` Patient Contact · `bc` Bleed Control · `bls` BLS Ready · `uw` Upwind · `hub` home page.
 Score bands: `score-90-100`, `score-80s`, `score-70s`, `score-60s`, `score-under-60`. Attempts: `attempt-1` … `attempt-5plus`.
 
 ## Questions it answers
