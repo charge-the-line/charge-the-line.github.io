@@ -68,3 +68,8 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 
 - Daily drill: sixteen consecutive day numbers give sixteen different drills across all four modules, each with a readable name and a deep link under its module path; day 17 repeats day 1. Done-today is true only for that module's drill with that name recorded today.
 - Progression: streak counts consecutive days ending today or yesterday; level is one per eight activities (17 done = level 3, one into it); the Today view shows the daily card and the level card, and an empty phone reads level 1.
+
+## Milestone 10 checks (added October 2026)
+
+- Core: Daylight tokens, focus outlines and the landscape rule are in the look CSS; Daylight applies to the page; a stubbed `prefers-contrast: more` turns Off into High but never overrides Daylight; `pcA11y` sets `aria-live` on a feedback line; the settings sheet has the Daylight button.
+- Browser check: a landscape page (844 by 390) for the home list, the same in Daylight, and the settings sheet in landscape; fails on overflow or buttons under 44 px.
