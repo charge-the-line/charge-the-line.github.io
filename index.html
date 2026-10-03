@@ -116,7 +116,7 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:6px;border:1
 <p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. Preconnect and its modules are independent and not affiliated with or endorsed by either organization. <span id="ver"></span></p>
 <script>
 const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
-const APP_VERSION='1.9.0';
+const APP_VERSION='1.9.1';
 const $=id=>document.getElementById(id);const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HUBKEY='preconnect';
 
@@ -155,8 +155,8 @@ function records(){const out=[];const add=(mod,type,act,pat,d,mode,score,who,ins
     else Object.keys(ctl.scen||{}).forEach(i=>{const s=ctl.scen[i];if(s&&s.runs)add('Charge the Line','Scenario (best of '+s.runs+')',L.ctl[i]||('Scenario '+(+i+1)),'',s.last,TIERS[s.tier],s.best);});
     (ctl.extra||[]).forEach(r=>add('Charge the Line',r.kind==='lesson'?'Lesson':'Drill',L.ctlX[r.id]||r.id,'',r.d,'',r.score,r.who,r.inst,r.night));}
   const pc=get('patient-contact');if(pc){(pc.runs||[]).forEach(r=>add('Patient Contact','Call',L.pc[r.call||'arrest']||r.call,r.variant,r.d,TIERS[r.tier],r.score,r.who,r.inst,r.night));(pc.drillRuns||[]).forEach(r=>add('Patient Contact',r.drill==='lesson'?'Lesson':'Drill',L.pcDrill[r.drill]||r.drill,'',r.d,'',r.score,r.who,r.inst,r.night));}
-  const bc=get('bleed-control');if(bc)(bc.runs||[]).forEach(r=>add('Bleed Control',TYPE[r.kind]||r.kind,L.bc[r.id]||r.id,r.variant,r.d,r.kind==='scenario'?TIERS[r.tier]:'',r.score,r.who,r.inst,r.night));
-  const bls=get('bls-ready');if(bls)(bls.runs||[]).forEach(r=>add('BLS Ready',TYPE[r.kind]||r.kind,L.bls[r.id]||r.id,'',r.d,(r.kind==='station'||r.kind==='scenario')?['Guided','Recall'][r.tier]||'':'',r.score,r.who,r.inst,r.night));
+  const bc=get('bleed-control');if(bc)(bc.runs||[]).forEach(r=>add('Bleed Control',TYPE[r.kind]||r.kind,L.bc[r.id]||r.id,r.variant,r.d,(r.kind==='scenario'?TIERS[r.tier]:'')+(r.inst===1?' · instructor':''),r.score,r.who,typeof r.inst==='string'?r.inst:'',r.night));
+  const bls=get('bls-ready');if(bls)(bls.runs||[]).forEach(r=>add('BLS Ready',TYPE[r.kind]||r.kind,L.bls[r.id]||r.id,'',r.d,((r.kind==='station'||r.kind==='scenario')?['Guided','Recall'][r.tier]||'':'')+(r.inst===1?' · instructor':''),r.score,r.who,typeof r.inst==='string'?r.inst:'',r.night));
   return out.sort((a,b)=>String(b.d).localeCompare(String(a.d)));}
 function csvRows(recs){const P=profile();const rows=[['Name','Organization','Module','Type','Activity','Patient','Date','Mode','Score','Instructor']];
   for(const r of (recs||records())){const names=r.who&&r.who.length?r.who:[P.name];for(const n of names)rows.push([n,P.org,r.mod,r.type,r.act,r.pat,String(r.d).slice(0,16).replace('T',' '),r.mode,r.score,r.inst]);}return rows;}

@@ -77,3 +77,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 ## Platform privacy check (October 3, 2026)
 
 - `tests/platform_check.py` now opens the settings sheet before typing the name (the field moved there in Milestone 2). Run against the assembled site on October 3, 2026 after Milestone 10: every module sends start, quit and error events, no name or organization appears in any event, and the opt-out stops everything.
+
+## Instructor mode in every module (added October 3, 2026)
+
+- `records`: a Bleed Control or BLS Ready run with `inst:1` shows "· instructor" in Mode and leaves the Instructor column empty; a run stamped with an instructor's name on a drill night fills the column instead.
