@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14161a">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Preconnect">
+<meta name="description" content="Preconnect: free practice for fire and EMS skills — pump operations, patient care, bleeding control, and BLS.">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<script data-pca>window.PCA_MOD="hub";
+/* Preconnect anonymous statistics (GoatCounter). Sends only activity paths — never names, organizations, or typed text.
+   Turn off per device on the Privacy page (localStorage 'preconnect-stats' = 'off'). Not sent from file:// or localhost. */
+(function(){var off=false;try{off=localStorage.getItem('preconnect-stats')==='off';}catch(e){}
+ var P=window.PCA={mod:window.PCA_MOD||'app',off:off,q:[],seen:{},cur:null,
+  clean:function(p){return String(p).toLowerCase().replace(/[^a-z0-9\/\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').slice(0,120);},
+  ev:function(path){if(this.off)return;var p=this.clean(path);if(this.q.length<60)this.q.push({path:p,title:p,event:true});this.flush();},
+  flush:function(){var g=window.goatcounter,s=this;if(!g||typeof g.count!=='function'){if(!s.t)s.t=setTimeout(function(){s.t=null;s.flush();},1500);return;}while(s.q.length){try{g.count(s.q.shift());}catch(e){}}},
+  bkt:function(n){n=+n;return n>=90?'score-90-100':n>=80?'score-80s':n>=70?'score-70s':n>=60?'score-60s':'score-under-60';},
+  att:function(n){return 'attempt-'+(n>=5?'5plus':n);},
+  begin:function(mod,act,where){this.abandon();this.cur={mod:mod,act:act,where:where};this.ev(mod+'/start/'+act);},
+  end:function(detail){var c=this.cur;if(!c)return;this.cur=null;this.ev(c.mod+'/finish/'+c.act+(detail?'/'+detail:''));},
+  abandon:function(){var c=this.cur;if(!c)return;this.cur=null;var w='';try{w=c.where?c.where():'';}catch(e){}this.ev(c.mod+'/quit/'+c.act+(w?'/'+w:''));},
+  err:function(mod,msg){var k=mod+'|'+msg;if(this.seen[k])return;this.seen[k]=1;this.ev('error/'+mod+'/'+String(msg).slice(0,60));}};
+ if(!off){var s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://preconnect.goatcounter.com/count');(document.head||document.documentElement).appendChild(s);}
+ window.addEventListener('error',function(e){P.err(P.mod||'app',e&&e.message||'error');});
+ window.addEventListener('pagehide',function(){P.abandon();});
+})();
+</script>
+
+<title>Feedback — Preconnect</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Saira+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#14161a;--deck:#1d2026;--deck2:#262a32;--line:#383d47;--ink:#f4f5f7;--soft:#b4bac4;--or:#ff7a1a;--or2:#ff9a4d}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+body{max-width:560px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top,0px)) calc(14px + env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) calc(14px + env(safe-area-inset-left,0px))}
+h1,h2,h3{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:600}
+.brand{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:38px;letter-spacing:3px;color:var(--or);line-height:1;margin:6px 0 2px}
+.tag{font-size:18px;color:var(--ink);margin:0 0 4px}.sub{font-size:15px;color:var(--soft);margin:0 0 16px;line-height:1.45}
+.mod{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--ink);background:var(--deck);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.mod:active{transform:translateY(1px)}.mod img{width:56px;height:56px;border-radius:12px;flex:0 0 auto}
+.mod b{display:block;font-family:"Saira Condensed";font-size:23px;font-weight:600;line-height:1.05}.mod span{display:block;font-size:14px;color:var(--soft);line-height:1.35}
+.mod i{display:block;font-style:normal;font-size:12px;color:var(--or2);margin-top:3px}
+.sec{font-family:"Saira Condensed";font-size:15px;letter-spacing:1.5px;color:var(--or2);margin:20px 0 8px}
+.card{background:var(--deck);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.mrow{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid #2c3038;font-size:15px}.mrow:first-of-type{border-top:0}.mrow span{color:var(--soft)}
+button{font-family:inherit;font-size:15px;border-radius:10px;padding:12px;cursor:pointer;color:var(--ink);background:var(--deck2);border:1px solid var(--line);touch-action:manipulation}
+button:focus-visible,a:focus-visible{outline:2px solid var(--or2);outline-offset:2px}
+.go{background:var(--or);border-color:var(--or);color:#1a0f05;font-weight:700}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+input{font-family:inherit;font-size:16px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0f1114;color:var(--ink);width:100%;margin-bottom:8px}
+.stat{font-size:13px;color:var(--soft);line-height:1.45}.legal{font-size:12px;color:#8d939d;line-height:1.5;margin-top:18px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<a href="./" style="display:inline-block;font-size:13px;font-weight:700;color:#ff8a3d;text-decoration:none;margin:0 0 6px">◂ PRECONNECT</a>
+<h1 style="font-size:32px;margin:4px 0 4px">Report a problem or idea</h1>
+<p class="sub">Something broken, confusing, or medically off? An idea for a scenario? Tell us — every report gets read.</p>
+<div class="card">
+  <label class="stat" for="f-mod">Which part?</label>
+  <select id="f-mod" style="width:100%;font-size:16px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0f1114;color:var(--ink);margin:4px 0 10px">
+    <option value="Preconnect home">Preconnect home page</option><option value="Charge the Line">Charge the Line</option><option value="Patient Contact">Patient Contact</option><option value="Bleed Control">Bleed Control</option><option value="BLS Ready">BLS Ready</option>
+  </select>
+  <label class="stat" for="f-kind">What kind?</label>
+  <select id="f-kind" style="width:100%;font-size:16px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0f1114;color:var(--ink);margin:4px 0 10px">
+    <option>Something isn't working</option><option>Confusing or hard to use</option><option>Medical or technical accuracy</option><option>Idea or request</option><option>Something else</option>
+  </select>
+  <label class="stat" for="f-text">What happened? Where were you, what did you tap, what did you expect?</label>
+  <textarea id="f-text" rows="6" style="width:100%;margin:4px 0 10px;font-family:inherit;font-size:16px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0f1114;color:var(--ink)"></textarea>
+  <input id="f-from" placeholder="Your name and department (optional)">
+  <div class="row"><button class="go" id="f-send">Send</button><button id="f-copy">Copy text</button></div>
+  <p id="f-msg" class="stat" style="margin:10px 0 0"></p>
+</div>
+<p class="legal">Your report goes only where you send it. It includes your device type to help us reproduce problems — nothing else is attached.</p>
+<script>
+/* Where reports go. Set this to the Association's feedback address. While it's blank, "Send" opens the phone's share sheet. */
+var FEEDBACK_TO='';
+var MODS={ctl:'Charge the Line',pc:'Patient Contact',bc:'Bleed Control',bls:'BLS Ready'};
+var from=(location.search.match(/[?&]from=([a-z]+)/)||[])[1];if(from&&MODS[from])document.getElementById('f-mod').value=MODS[from];
+try{var h=JSON.parse(localStorage.getItem('preconnect')||'{}');if(h.name)document.getElementById('f-from').value=h.name+(h.org?', '+h.org:'');}catch(e){}
+function body(){return 'Part: '+document.getElementById('f-mod').value+'\nKind: '+document.getElementById('f-kind').value+'\n\n'+(document.getElementById('f-text').value.trim()||'(no description)')+'\n\nFrom: '+(document.getElementById('f-from').value.trim()||'(not given)')+'\nDevice: '+navigator.userAgent+'\nScreen: '+screen.width+'x'+screen.height;}
+function msg(t){document.getElementById('f-msg').textContent=t;}
+document.getElementById('f-send').onclick=async function(){if(!document.getElementById('f-text').value.trim()){msg('Add a short description first.');return;}
+  var subj='Preconnect feedback — '+document.getElementById('f-mod').value;if(window.PCA)window.PCA.ev('hub/feedback-sent');
+  if(FEEDBACK_TO){location.href='mailto:'+FEEDBACK_TO+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body());msg('Opening your email app…');return;}
+  if(navigator.share){try{await navigator.share({title:subj,text:body()});msg('Thanks — sent.');return;}catch(e){if(e.name==='AbortError')return;}}
+  try{await navigator.clipboard.writeText(body());msg('Copied — paste it into a text or email.');}catch(e){msg('Select the text above and copy it.');}};
+document.getElementById('f-copy').onclick=async function(){try{await navigator.clipboard.writeText(body());msg('Copied.');}catch(e){msg('Select the text above and copy it.');}};
+</script>
+</body>
+</html>

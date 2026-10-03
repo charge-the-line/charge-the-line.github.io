@@ -8,6 +8,34 @@
 <meta name="apple-mobile-web-app-title" content="Preconnect">
 <meta name="description" content="Preconnect: free practice for fire and EMS skills — pump operations, patient care, bleeding control, and BLS.">
 <link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Preconnect">
+<meta property="og:title" content="Preconnect — Ready before the call">
+<meta property="og:description" content="Free practice for fire and EMS skills: pump operations, patient care, bleeding control, and BLS. Works on any phone, offline, no account needed.">
+<meta property="og:image" content="https://charge-the-line.github.io/og-card.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://charge-the-line.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<script data-pca>window.PCA_MOD="hub";
+/* Preconnect anonymous statistics (GoatCounter). Sends only activity paths — never names, organizations, or typed text.
+   Turn off per device on the Privacy page (localStorage 'preconnect-stats' = 'off'). Not sent from file:// or localhost. */
+(function(){var off=false;try{off=localStorage.getItem('preconnect-stats')==='off';}catch(e){}
+ var P=window.PCA={mod:window.PCA_MOD||'app',off:off,q:[],seen:{},cur:null,
+  clean:function(p){return String(p).toLowerCase().replace(/[^a-z0-9\/\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').slice(0,120);},
+  ev:function(path){if(this.off)return;var p=this.clean(path);if(this.q.length<60)this.q.push({path:p,title:p,event:true});this.flush();},
+  flush:function(){var g=window.goatcounter,s=this;if(!g||typeof g.count!=='function'){if(!s.t)s.t=setTimeout(function(){s.t=null;s.flush();},1500);return;}while(s.q.length){try{g.count(s.q.shift());}catch(e){}}},
+  bkt:function(n){n=+n;return n>=90?'score-90-100':n>=80?'score-80s':n>=70?'score-70s':n>=60?'score-60s':'score-under-60';},
+  att:function(n){return 'attempt-'+(n>=5?'5plus':n);},
+  begin:function(mod,act,where){this.abandon();this.cur={mod:mod,act:act,where:where};this.ev(mod+'/start/'+act);},
+  end:function(detail){var c=this.cur;if(!c)return;this.cur=null;this.ev(c.mod+'/finish/'+c.act+(detail?'/'+detail:''));},
+  abandon:function(){var c=this.cur;if(!c)return;this.cur=null;var w='';try{w=c.where?c.where():'';}catch(e){}this.ev(c.mod+'/quit/'+c.act+(w?'/'+w:''));},
+  err:function(mod,msg){var k=mod+'|'+msg;if(this.seen[k])return;this.seen[k]=1;this.ev('error/'+mod+'/'+String(msg).slice(0,60));}};
+ if(!off){var s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://preconnect.goatcounter.com/count');(document.head||document.documentElement).appendChild(s);}
+ window.addEventListener('error',function(e){P.err(P.mod||'app',e&&e.message||'error');});
+ window.addEventListener('pagehide',function(){P.abandon();});
+})();
+</script>
+
 <title>Preconnect — Ready before the call</title>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Saira+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -53,12 +81,14 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:8px;border:1
 </div>
 <div class="sec">ABOUT</div>
 <div class="card stat" style="font-size:14px">
-  <p style="margin:0 0 8px">Preconnect is a free training platform built in Bay County, Michigan. A preconnect is the hoseline that's hooked up and ready before the call, so it flows the moment you need it. That's what practice does for skills.</p>
+  <p style="margin:0 0 8px">Preconnect is a free, nonprofit training platform built by firefighters in Bay County, Michigan. A preconnect is the hoseline that's hooked up and ready before the call, so it flows the moment you need it. That's what practice does for skills.</p>
   <p style="margin:0">Preconnect is practice. It doesn't replace hands-on training, your department's protocols, or official certification courses.</p>
 </div>
+<div class="row" style="margin-top:4px"><a class="go" href="feedback.html" style="display:block;text-align:center;text-decoration:none;padding:12px;border-radius:10px;font-weight:700">Report a problem or idea</a><a href="privacy.html" style="display:block;text-align:center;text-decoration:none;padding:12px;border-radius:10px;border:1px solid var(--line);color:var(--ink)">Privacy</a></div>
 <p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. Preconnect and its modules are independent and not affiliated with or endorsed by either organization. <span id="ver"></span></p>
 <script>
-const APP_VERSION='1.0.0';
+const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
+const APP_VERSION='1.1.0';
 const $=id=>document.getElementById(id);const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HUBKEY='preconnect';
 const MODS=[
@@ -96,14 +126,14 @@ function render(){const recs=records();const by={};recs.forEach(r=>{(by[r.mod]=b
   $('r-sum').innerHTML=MODS.map(m=>{const r=by[m.name]||[];return `<div class="mrow"><span>${esc(m.name)}</span><b>${r.length?r.length+' completed':'—'}</b></div>`;}).join('')+`<div class="mrow"><span>Total</span><b>${recs.length}</b></div>`;}
 function saveProfile(){const h=get(HUBKEY)||{};h.name=$('r-name').value.trim();h.org=$('r-org').value.trim();put(HUBKEY,h);}
 $('r-name').onchange=saveProfile;$('r-org').onchange=saveProfile;
-$('r-csv').onclick=()=>{saveProfile();const P=profile();download(`preconnect-training-record${P.name?'-'+P.name.replace(/[^a-z0-9]+/gi,'-').toLowerCase():''}.csv`,toCSV(csvRows()),'text/csv');};
+$('r-csv').onclick=()=>{saveProfile();const P=profile();pca('ev','hub/training-record-csv');download(`preconnect-training-record${P.name?'-'+P.name.replace(/[^a-z0-9]+/gi,'-').toLowerCase():''}.csv`,toCSV(csvRows()),'text/csv');};
 /* backup / restore: every module's saved data in one file */
 const ALLKEYS=[HUBKEY,...MODS.map(m=>m.key)];
 function backup(){const data={};for(const k of ALLKEYS){const v=localStorage.getItem(k);if(v!==null)data[k]=v;}return {app:'preconnect',version:1,saved:new Date().toISOString(),data};}
 function restore(obj){if(!obj||obj.app!=='preconnect'||!obj.data)throw new Error('This file is not a Preconnect backup.');const keys=ALLKEYS.filter(k=>typeof obj.data[k]==='string');for(const k of keys){try{JSON.parse(obj.data[k]);}catch(e){throw new Error('This backup file is damaged. Nothing was changed.');}}for(const k of keys)localStorage.setItem(k,obj.data[k]);return keys.length;}
-$('b-backup').onclick=()=>{download(`preconnect-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(backup()),'application/json');$('b-msg').textContent='Backup downloaded. Keep it somewhere safe.';};
+$('b-backup').onclick=()=>{download(`preconnect-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(backup()),'application/json');pca('ev','hub/backup');$('b-msg').textContent='Backup downloaded. Keep it somewhere safe.';};
 $('b-restore').onclick=()=>$('f-restore').click();
-$('f-restore').onchange=e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const n=restore(JSON.parse(rd.result));$('b-msg').textContent=`Restored progress for ${n} module${n===1?'':'s'}.`;render();}catch(err){$('b-msg').textContent=err.message||'That file could not be read.';}};rd.readAsText(f);};
+$('f-restore').onchange=e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const n=restore(JSON.parse(rd.result));pca('ev','hub/restore');$('b-msg').textContent=`Restored progress for ${n} module${n===1?'':'s'}.`;render();}catch(err){$('b-msg').textContent=err.message||'That file could not be read.';}};rd.readAsText(f);};
 $('ver').textContent='Version '+APP_VERSION+'.';
 render();addEventListener('pageshow',render);addEventListener('focus',render);
 if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));

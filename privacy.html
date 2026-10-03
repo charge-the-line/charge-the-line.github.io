@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14161a">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Preconnect">
+<meta name="description" content="Preconnect: free practice for fire and EMS skills — pump operations, patient care, bleeding control, and BLS.">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<script data-pca>window.PCA_MOD="hub";
+/* Preconnect anonymous statistics (GoatCounter). Sends only activity paths — never names, organizations, or typed text.
+   Turn off per device on the Privacy page (localStorage 'preconnect-stats' = 'off'). Not sent from file:// or localhost. */
+(function(){var off=false;try{off=localStorage.getItem('preconnect-stats')==='off';}catch(e){}
+ var P=window.PCA={mod:window.PCA_MOD||'app',off:off,q:[],seen:{},cur:null,
+  clean:function(p){return String(p).toLowerCase().replace(/[^a-z0-9\/\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').slice(0,120);},
+  ev:function(path){if(this.off)return;var p=this.clean(path);if(this.q.length<60)this.q.push({path:p,title:p,event:true});this.flush();},
+  flush:function(){var g=window.goatcounter,s=this;if(!g||typeof g.count!=='function'){if(!s.t)s.t=setTimeout(function(){s.t=null;s.flush();},1500);return;}while(s.q.length){try{g.count(s.q.shift());}catch(e){}}},
+  bkt:function(n){n=+n;return n>=90?'score-90-100':n>=80?'score-80s':n>=70?'score-70s':n>=60?'score-60s':'score-under-60';},
+  att:function(n){return 'attempt-'+(n>=5?'5plus':n);},
+  begin:function(mod,act,where){this.abandon();this.cur={mod:mod,act:act,where:where};this.ev(mod+'/start/'+act);},
+  end:function(detail){var c=this.cur;if(!c)return;this.cur=null;this.ev(c.mod+'/finish/'+c.act+(detail?'/'+detail:''));},
+  abandon:function(){var c=this.cur;if(!c)return;this.cur=null;var w='';try{w=c.where?c.where():'';}catch(e){}this.ev(c.mod+'/quit/'+c.act+(w?'/'+w:''));},
+  err:function(mod,msg){var k=mod+'|'+msg;if(this.seen[k])return;this.seen[k]=1;this.ev('error/'+mod+'/'+String(msg).slice(0,60));}};
+ if(!off){var s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://preconnect.goatcounter.com/count');(document.head||document.documentElement).appendChild(s);}
+ window.addEventListener('error',function(e){P.err(P.mod||'app',e&&e.message||'error');});
+ window.addEventListener('pagehide',function(){P.abandon();});
+})();
+</script>
+
+<title>Privacy — Preconnect</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Saira+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#14161a;--deck:#1d2026;--deck2:#262a32;--line:#383d47;--ink:#f4f5f7;--soft:#b4bac4;--or:#ff7a1a;--or2:#ff9a4d}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+body{max-width:560px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top,0px)) calc(14px + env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) calc(14px + env(safe-area-inset-left,0px))}
+h1,h2,h3{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:600}
+.brand{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:38px;letter-spacing:3px;color:var(--or);line-height:1;margin:6px 0 2px}
+.tag{font-size:18px;color:var(--ink);margin:0 0 4px}.sub{font-size:15px;color:var(--soft);margin:0 0 16px;line-height:1.45}
+.mod{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--ink);background:var(--deck);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.mod:active{transform:translateY(1px)}.mod img{width:56px;height:56px;border-radius:12px;flex:0 0 auto}
+.mod b{display:block;font-family:"Saira Condensed";font-size:23px;font-weight:600;line-height:1.05}.mod span{display:block;font-size:14px;color:var(--soft);line-height:1.35}
+.mod i{display:block;font-style:normal;font-size:12px;color:var(--or2);margin-top:3px}
+.sec{font-family:"Saira Condensed";font-size:15px;letter-spacing:1.5px;color:var(--or2);margin:20px 0 8px}
+.card{background:var(--deck);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.mrow{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid #2c3038;font-size:15px}.mrow:first-of-type{border-top:0}.mrow span{color:var(--soft)}
+button{font-family:inherit;font-size:15px;border-radius:10px;padding:12px;cursor:pointer;color:var(--ink);background:var(--deck2);border:1px solid var(--line);touch-action:manipulation}
+button:focus-visible,a:focus-visible{outline:2px solid var(--or2);outline-offset:2px}
+.go{background:var(--or);border-color:var(--or);color:#1a0f05;font-weight:700}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+input{font-family:inherit;font-size:16px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0f1114;color:var(--ink);width:100%;margin-bottom:8px}
+.stat{font-size:13px;color:var(--soft);line-height:1.45}.legal{font-size:12px;color:#8d939d;line-height:1.5;margin-top:18px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<a href="./" style="display:inline-block;font-size:13px;font-weight:700;color:#ff8a3d;text-decoration:none;margin:0 0 6px">◂ PRECONNECT</a>
+<h1 style="font-size:32px;margin:4px 0 4px">Privacy</h1>
+<p class="sub">Plain language, no fine print. Last updated October 2026.</p>
+<div class="card stat" style="font-size:15px;color:var(--ink);line-height:1.55">
+<h3 style="margin:0 0 6px;color:var(--or2)">The short version</h3>
+<p style="margin:0 0 10px">Your name, your department, and your scores stay on your device. We never see them. We count anonymous activity, like "someone finished the infant CPR station," so we can improve the training and show it's working.</p>
+<h3 style="margin:14px 0 6px;color:var(--or2)">What stays on your device only</h3>
+<p style="margin:0 0 10px">Everything you type (name, department, crew names, feedback drafts) and your full training record. It's saved in your browser's storage on this phone or computer. We have no copy, no account, and no way to see it. Your training record CSV and backup file go only where you send them.</p>
+<h3 style="margin:14px 0 6px;color:var(--or2)">What we count, anonymously</h3>
+<p style="margin:0 0 6px">We use <a href="https://www.goatcounter.com" style="color:var(--or2)">GoatCounter</a>, an open-source, privacy-friendly statistics service. It uses no cookies and no tracking IDs. It records:</p>
+<ul style="margin:0 0 10px;padding-left:20px">
+<li>Which pages and activities were opened, finished, or left partway (and at which step).</li>
+<li>Score ranges (like "80s") and attempt numbers (like "3rd try"), with no names attached.</li>
+<li>General device information: browser, screen size, and approximate country and region. GoatCounter doesn't store IP addresses.</li>
+<li>Which website sent you here, if any.</li>
+<li>Error messages if something breaks, so we can fix it.</li>
+</ul>
+<p style="margin:0 0 10px">We use these numbers to find where training is confusing, fix bugs, and report results to grant funders, always as totals, never about any one person.</p>
+<h3 style="margin:14px 0 6px;color:var(--or2)">What we never do</h3>
+<p style="margin:0 0 10px">No ads. No selling or sharing data. No cookies. No accounts or passwords. No collecting names, emails, or anything you type into the app.</p>
+<h3 style="margin:14px 0 6px;color:var(--or2)">Turn off statistics on this device</h3>
+<p style="margin:0 0 8px">One switch covers every module on this device.</p>
+<button id="stats" style="width:100%"></button>
+<p id="stats-msg" class="stat" style="margin:8px 0 0"></p>
+<h3 style="margin:14px 0 6px;color:var(--or2)">Who runs Preconnect</h3>
+<p style="margin:0">Preconnect is a free, nonprofit project built by firefighters in Bay County, Michigan. Questions or concerns? Use the <a href="feedback.html" style="color:var(--or2)">feedback page</a>.</p>
+</div>
+<script>
+function lbl(){var off=false;try{off=localStorage.getItem('preconnect-stats')==='off';}catch(e){}document.getElementById('stats').textContent=off?'Statistics are OFF — tap to turn on':'Statistics are ON — tap to turn off';document.getElementById('stats').className=off?'':'go';}
+document.getElementById('stats').onclick=function(){var off=false;try{off=localStorage.getItem('preconnect-stats')==='off';localStorage.setItem('preconnect-stats',off?'on':'off');}catch(e){}if(window.PCA)window.PCA.off=!off;lbl();document.getElementById('stats-msg').textContent=off?'Thanks — anonymous statistics are back on.':'Done. Nothing is counted from this device, in any module.';};
+lbl();
+</script>
+</body>
+</html>

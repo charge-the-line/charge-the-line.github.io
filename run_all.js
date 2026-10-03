@@ -29,5 +29,14 @@ try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('scrip
  report('backup → restore on a new device brings back every module',nmods===4&&b.api.csvRows().length===a.api.csvRows().length,`${nmods} modules, ${b.api.csvRows().length-1} rows`);
  let threw=false;try{b.api.restore({hello:'world'});}catch(e){threw=true;}report('restore refuses a file that is not a Preconnect backup',threw);
  let threw2=false;const c=boot(FIX);try{c.api.restore({app:'preconnect',data:{'bls-ready':'{"runs":[]}','patient-contact':'{not json'}});}catch(e){threw2=true;}report('a damaged backup changes nothing at all (no half-restore)',threw2&&c.S['patient-contact']===FIX['patient-contact']&&c.S['bls-ready']===FIX['bls-ready']);}
+{const P=fs.readFileSync(path.join(__dirname,'..','privacy.html'),'utf8'),F=fs.readFileSync(path.join(__dirname,'..','feedback.html'),'utf8');
+ report('privacy page and feedback page exist and are linked',/href="privacy\.html"/.test(html)&&/href="feedback\.html"/.test(html)&&/never see them/.test(P)&&/preconnect-stats/.test(P)&&/Report a problem/.test(F));
+ report('social preview card is set up',/og:image" content="https:\/\/[^"]+og-card\.png"/.test(html)&&fs.existsSync(path.join(__dirname,'..','og-card.png')));
+ const snip=html.split('<script data-pca>')[1];report('analytics snippet present and pointed at preconnect.goatcounter.com',!!snip&&/https:\/\/preconnect\.goatcounter\.com\/count/.test(snip));
+ // run the snippet in isolation: names and typed text can't survive into an event path; buckets are coarse
+ const W={addEventListener(){}},sent=[];global.window=W;global.localStorage={getItem:()=>null};global.document={createElement:()=>({setAttribute(){}}),head:{appendChild(){}}};
+ new Function(snip.split('</script>')[0])();W.goatcounter={count:o=>sent.push(o.path)};W.PCA.ev('bls/finish/adult/Max Tester said "hi" <b>');W.PCA.flush();
+ report('event paths are cleaned to safe characters (no spaces, quotes, or tags)',/^[a-z0-9\/\-]+$/.test(sent[0]||'x '),sent[0]);
+ report('scores are reported only as coarse bands',W.PCA.bkt(97)==='score-90-100'&&W.PCA.bkt(83)==='score-80s'&&W.PCA.bkt(12)==='score-under-60');}
 report('trademark notices for both certifying organizations',/STOP THE BLEED® is a registered trademark/.test(html)&&/trademarks of the American Heart Association/.test(html));
 console.log(`\n${n-failed}/${n} checks passed`);process.exit(failed?1:0);

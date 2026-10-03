@@ -1,6 +1,6 @@
 // Preconnect home page. Bump CACHE when you upload a new version so phones pick it up.
-const CACHE = 'preconnect-v1.0.0';
-const CORE = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
+const CACHE = 'preconnect-v1.1.0';
+const CORE = ['./', 'index.html', 'privacy.html', 'feedback.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
 });
@@ -13,16 +13,18 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET') return;
   // Only handle the home page's own files at the site root. Each module lives in its own folder
   // (/charge-the-line/, /patient-contact/, /bleed-control/, /bls-ready/, …) and manages itself.
+  // Requests to other sites (like the statistics service) are never cached.
   const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
   const ownFile = url.pathname === '/' || /^\/[^/]+\.[a-z0-9]+$/i.test(url.pathname);
-  if (url.origin === self.location.origin && !ownFile) return;
+  if (!ownFile) return;
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).then(r => { const copy = r.clone(); caches.open(CACHE).then(c => c.put('index.html', copy)); return r; })
-      .catch(() => caches.match('index.html')));
+    e.respondWith(fetch(req).then(r => { const copy = r.clone(); caches.open(CACHE).then(c => c.put(req, copy)); return r; })
+      .catch(() => caches.match(req).then(hit => hit || caches.match('index.html'))));
     return;
   }
   e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(r => {
-    if (r.ok || r.type === 'opaque') { const copy = r.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
+    if (r.ok) { const copy = r.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
     return r;
   })));
 });
