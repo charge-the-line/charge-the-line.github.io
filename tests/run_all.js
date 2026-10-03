@@ -59,5 +59,17 @@ try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('scrip
  a.api.setSetting('stats','off');const off=a.S['preconnect-stats']==='off'&&a.api.settings().stats==='off';a.api.setSetting('stats','on');report('statistics switch in Settings is the same switch as the Privacy page',off&&a.api.settings().stats==='on'&&a.S['preconnect-stats']===undefined);
  const el={textContent:''};a.api.countUp(el,87);report('score count-up lands on the exact score when motion is unavailable',el.textContent==='87');
  report('motion is honored: Reduce Motion and the Motion = Off setting stop every animation',/prefers-reduced-motion:reduce\)\{\*\{animation:none!important/.test(html)&&/html\[data-motion="off"\] \*\{animation:none!important/.test(html));}
+{// Milestone 3: shared core (same checks every suite runs) plus the hub's Due for review cards and the cross-repo identity check
+ const cp=path.join(__dirname,'..','preconnect-core.js');const ct=fs.readFileSync(cp,'utf8');const first=ct.split('\n')[0];const body=ct.slice(first.length+1);const want=(first.match(/sha256:([0-9a-f]{64})/)||[])[1];const got=require('crypto').createHash('sha256').update(body,'utf8').digest('hex');
+ report('shared core loaded first, cached offline, header hash matches body',want===got&&sw.includes("'preconnect-core.js'")&&html.indexOf('<script src="preconnect-core.js"></script>')<html.indexOf('\n<script>\n'),want===got?'hash ok':`expected ${got.slice(0,12)}`);
+ const sib=['charge-the-line','patient-contact','bleed-control','bls-ready'].map(r=>[r,path.join(__dirname,'..','..',r,'preconnect-core.js')]).filter(([r,f])=>fs.existsSync(f));
+ if(sib.length){const drift=sib.filter(([r,f])=>fs.readFileSync(f,'utf8')!==ct).map(([r])=>r);report('shared core is byte-identical in every sibling repo checked out next to this one',drift.length===0,drift.length?'drifted: '+drift.join(', '):`${sib.length} siblings match`);}
+ else report('shared core identity across repos (skipped: no sibling repos checked out)',true);
+ const {boot}=require('./hub_mock.js');const {api}=boot();const d=n=>new Date(Date.now()-n*864e5).toISOString();
+ const one=api.pcSpacing([{d:d(0),score:90}]),two=api.pcSpacing([{d:d(5),score:90},{d:d(4),score:90}]),miss=api.pcSpacing([{d:d(5),score:90},{d:d(1),score:40}]);
+ report('spacing: 1, 3, 7, 14, 30 days after each clear at 70+; a miss resets',api.pcSpacing([]).status==='never'&&one.level===1&&one.dueIn===1&&two.level===2&&two.status==='due'&&miss.status==='missed');
+ const a=boot({'bls-ready':JSON.stringify({runs:[{kind:'station',id:'adult',score:95,d:d(10),tier:1},{kind:'station',id:'tempo',score:40,d:d(2),tier:0}]})});a.api.render();const D=a.api.due();
+ report('Today view: Due for review cards, most overdue first, a miss reads "try again"',D.length===2&&D[0].act==='Adult CPR and AED'&&D[0].sp.status==='due'&&D[1].sp.status==='missed'&&/Due for review/.test(a.els.today.innerHTML)&&/try again/.test(a.els.today.innerHTML),D.map(g=>g.act+' '+g.sp.status).join(', '));
+ const h=a.api.pcDebriefBody({score:90,compare:a.api.pcBestPrev([{d:d(3),score:80}]),metrics:[['Rate','110']],steps:[{name:'Shock',ok:false,missed:true}]});report('debrief body renders compare line, metrics and steps tables',/Best 80 · last time 80 · new best/.test(h)&&/pc-metrics/.test(h)&&/pc-steps/.test(h));}
 report('trademark notices for both certifying organizations',/STOP THE BLEED® is a registered trademark/.test(html)&&/trademarks of the American Heart Association/.test(html));
 console.log(`\n${n-failed}/${n} checks passed`);process.exit(failed?1:0);

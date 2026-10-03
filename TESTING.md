@@ -25,3 +25,10 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 - Score count-up lands on the exact value when animation frames are unavailable.
 - Reduce Motion and Motion = Off rules exist in the CSS.
 - `tests/browser_check.py`: home and Settings at 320/390 px, normal and large text, no overflow, no button under 44 px.
+
+## Milestone 3 checks (added October 2026)
+
+- Shared core: `preconnect-core.js` is loaded before the app script, listed in the service worker's cache, and its header hash matches its body (edit it, re-stamp with the hub's `node tests/core_hash.js`, copy to every repo).
+- Spacing: 1, 3, 7, 14, 30 days after each clear at 70+; a miss resets; overdue reads as due.
+- Debrief body: compare line (best, last time, new best), metrics table, what cost points, lesson chips, steps table.
+- Due for review cards on the Today view, most overdue first; a miss reads "try again". Sibling repos' core copies must be identical when checked out side by side.
