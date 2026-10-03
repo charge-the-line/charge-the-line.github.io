@@ -51,3 +51,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 - The board: `tonight()` is only the runs stamped with this night; the card counts runs and people; the board lists the roster with bests and tonight's runs; tonight's CSV has one row per person with the instructor; the picker escapes names (a quote or a tag in a name cannot break the button); switching who; ending takes two taps and leaves the set-up card and the roster.
 - Set-up form: instructor and roster from the form, the picker opens at once, the card becomes the live card.
 - Browser check: set-up form, picker, live card and board at 320 and 390 px.
+
+## BLS depth pack (October 2026)
+
+- `L.bls` names the new station, scenarios and drill (child2, pool, crib, special); the Today-view check expects 19 BLS activities.
