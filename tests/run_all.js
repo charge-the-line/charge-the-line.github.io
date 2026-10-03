@@ -7,7 +7,7 @@ const FIX=JSON.parse(fs.readFileSync(path.join(__dirname,'fixture.json'),'utf8')
 try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('script compiles',true);}catch(e){report('script compiles',false,e.message);}
 {const ver=(html.match(/APP_VERSION='([^']+)'/)||[])[1],cache=(sw.match(/CACHE = '([^']+)'/)||[])[1];report('offline cache matches app version',cache===`preconnect-v${ver}`,`${ver} / ${cache}`);}
 {const m=sw.match(/const ownFile = (.+);/);const own=new Function('url','return '+m[1]+';');const T=p=>own({pathname:p});
- report('offline helper handles only its own root files',T('/')&&T('/index.html')&&T('/icon-192.png')&&['/charge-the-line/','/patient-contact/index.html','/bleed-control/','/bls-ready/sw.js','/next-module/'].every(p=>!T(p)));
+ report('offline helper handles only its own root files (and its fonts folder)',T('/')&&T('/index.html')&&T('/icon-192.png')&&T('/fonts/atkinson-hyperlegible-latin-400-normal.woff2')&&['/charge-the-line/','/patient-contact/index.html','/bleed-control/','/bls-ready/sw.js','/next-module/'].every(p=>!T(p)));
  report('offline helper only clears its own old caches',/k\.startsWith\('preconnect-v'\)/.test(sw));}
 {const {api}=boot();report('links to all four module folders (relative paths)',['charge-the-line/','patient-contact/','bleed-control/','bls-ready/'].every(p=>api.MODS.some(m=>m.path===p)));}
 {const {api}=boot();report('empty device: no records, no crash',api.records().length===0&&api.csvRows().length===1);}
@@ -38,5 +38,15 @@ try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('scrip
  new Function(snip.split('</script>')[0])();W.goatcounter={count:o=>sent.push(o.path)};W.PCA.ev('bls/finish/adult/Max Tester said "hi" <b>');W.PCA.flush();
  report('event paths are cleaned to safe characters (no spaces, quotes, or tags)',/^[a-z0-9\/\-]+$/.test(sent[0]||'x '),sent[0]);
  report('scores are reported only as coarse bands',W.PCA.bkt(97)==='score-90-100'&&W.PCA.bkt(83)==='score-80s'&&W.PCA.bkt(12)==='score-under-60');}
+{// Milestone 1: fonts served from this site on every root page; nothing loads from Google; every font file exists and is in the offline cache list
+ const pages=['index.html','privacy.html','feedback.html'].map(f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8'));const urls=[...new Set(pages.flatMap(h=>[...h.matchAll(/url\((fonts\/[^)]+)\)/g)].map(m=>m[1])))];
+ report('fonts served from this site on every page, cached offline, no request to Google',pages.every(h=>!/fonts\.googleapis|gstatic\.com/.test(h)&&/@font-face/.test(h))&&urls.length>=5&&urls.every(u=>fs.existsSync(path.join(__dirname,'..',u))&&sw.includes(`'${u}'`)),`${urls.length} font files`);
+ report('privacy page says nothing loads from Google',/Nothing loads from Google/.test(fs.readFileSync(path.join(__dirname,'..','privacy.html'),'utf8')));}
+{// Milestone 1: install coaching. Shown to an iPhone browser, hidden once dismissed, never shown when already installed.
+ const a=boot();global.navigator={userAgent:'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) Safari/604.1'};a.api.installHint();const shown=a.els.install.hidden===false&&a.els['install-ios'].hidden===false;
+ a.els['install-later'].onclick();const dismissed=a.els.install.hidden===true&&a.S['preconnect-install']==='no';a.api.installHint();const stays=a.els.install.hidden===true;
+ const b=boot();global.navigator={userAgent:'iPhone',standalone:true};b.api.installHint();const installed=b.els.install.hidden===true;
+ const c=boot();global.navigator={userAgent:'Mozilla/5.0 (X11; Linux) Firefox'};c.api.installHint();const other=c.els.install.hidden===true;
+ report('install hint: iPhone browser sees it, dismissing hides it for good, installed or unsupported browsers never see it',shown&&dismissed&&stays&&installed&&other,`shown ${shown} dismissed ${dismissed} stays ${stays} installed ${installed} other ${other}`);}
 report('trademark notices for both certifying organizations',/STOP THE BLEED® is a registered trademark/.test(html)&&/trademarks of the American Heart Association/.test(html));
 console.log(`\n${n-failed}/${n} checks passed`);process.exit(failed?1:0);

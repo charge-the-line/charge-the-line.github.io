@@ -37,7 +37,16 @@
 </script>
 
 <title>Preconnect — Ready before the call</title>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Saira+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Fonts are served from this site (fonts/, SIL Open Font License). Nothing loads from Google: works offline and makes no outside request. */
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/saira-condensed-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/saira-condensed-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/saira-condensed-latin-700-normal.woff2) format("woff2")}
+/* Milestone 1: every button is at least 48 px tall (finger-sized, gloves on). */
+button{min-height:48px}
+</style>
 <style>
 :root{--bg:#14161a;--deck:#1d2026;--deck2:#262a32;--line:#383d47;--ink:#f4f5f7;--soft:#b4bac4;--or:#ff7a1a;--or2:#ff9a4d}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,sans-serif;-webkit-text-size-adjust:100%}
@@ -66,6 +75,12 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:8px;border:1
 <p class="tag">Ready before the call.</p>
 <p class="sub">Free practice for fire and EMS skills — learn it, drill it, run it under pressure. Works on any phone, offline, no account needed.</p>
 <div id="mods"></div>
+<div class="card" id="install" hidden style="margin:2px 0 6px">
+  <b style="font-family:'Saira Condensed';font-size:19px">Put Preconnect on your home screen</b>
+  <p class="stat" id="install-ios" style="margin:4px 0 0">On iPhone: tap <b>Share</b> (the square with the arrow at the bottom of Safari), then <b>Add to Home Screen</b>. It opens full-screen and works offline, like an app.</p>
+  <p class="stat" id="install-android" hidden style="margin:4px 0 0">Install it like an app: it opens full-screen and works offline.</p>
+  <div class="row" style="margin-top:10px"><button class="go" id="install-go" hidden>Install</button><button id="install-later">Not now</button></div>
+</div>
 <div class="sec">MY TRAINING RECORD</div>
 <div class="card">
   <input id="r-name" placeholder="Your name" autocomplete="name"><input id="r-org" placeholder="Department, school, or organization" autocomplete="organization">
@@ -88,9 +103,20 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:8px;border:1
 <p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. Preconnect and its modules are independent and not affiliated with or endorsed by either organization. <span id="ver"></span></p>
 <script>
 const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
-const APP_VERSION='1.1.1';
+const APP_VERSION='1.2.0';
 const $=id=>document.getElementById(id);const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HUBKEY='preconnect';
+/* Install coaching (Milestone 1): a one-time hint for people using Preconnect in a browser tab. iPhone gets the Share → Add to Home Screen steps;
+   Android/desktop Chrome gets a real Install button when the browser offers one. Hidden once installed or dismissed ('preconnect-install' = 'no'). */
+let INSTALL_EV=null;
+function installHint(){const box=$('install');if(!box)return;const nav=(typeof navigator!=='undefined')?navigator:{};
+  const standalone=!!nav.standalone||(typeof matchMedia==='function'&&matchMedia('(display-mode: standalone)').matches);
+  let dismissed=false;try{dismissed=localStorage.getItem('preconnect-install')==='no';}catch(e){}
+  const ios=/iPhone|iPad|iPod/i.test(nav.userAgent||'');const show=!standalone&&!dismissed&&(ios||!!INSTALL_EV);
+  box.hidden=!show;$('install-ios').hidden=!ios;$('install-android').hidden=ios;$('install-go').hidden=!INSTALL_EV;
+  $('install-go').onclick=()=>{if(INSTALL_EV){try{INSTALL_EV.prompt();}catch(e){}INSTALL_EV=null;}box.hidden=true;pca('ev','hub/install-tap');};
+  $('install-later').onclick=()=>{box.hidden=true;try{localStorage.setItem('preconnect-install','no');}catch(e){}};}
+{const W=(typeof window!=='undefined')?window:null;if(W&&W.addEventListener)W.addEventListener('beforeinstallprompt',e=>{e.preventDefault();INSTALL_EV=e;installHint();});}
 const MODS=[
  {id:'ctl',key:'e102-pump-trainer',path:'charge-the-line/',name:'Charge the Line',desc:'Pump panel simulator: hydrants, drafting, relays, foam, and ten real saves.'},
  {id:'pc',key:'patient-contact',path:'patient-contact/',name:'Patient Contact',desc:'Medical first responder calls: arrest, overdose, stroke, childbirth, and more.'},
@@ -135,7 +161,7 @@ $('b-backup').onclick=()=>{download(`preconnect-backup-${new Date().toISOString(
 $('b-restore').onclick=()=>$('f-restore').click();
 $('f-restore').onchange=e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const n=restore(JSON.parse(rd.result));pca('ev','hub/restore');$('b-msg').textContent=`Restored progress for ${n} module${n===1?'':'s'}.`;render();}catch(err){$('b-msg').textContent=err.message||'That file could not be read.';}};rd.readAsText(f);};
 $('ver').textContent='Version '+APP_VERSION+'.';
-render();addEventListener('pageshow',render);addEventListener('focus',render);
+installHint();render();addEventListener('pageshow',render);addEventListener('focus',render);
 if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body>

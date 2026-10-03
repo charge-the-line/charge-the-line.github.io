@@ -5,7 +5,7 @@ function boot(store){const html=fs.readFileSync(path.join(__dirname,'..','index.
  for(const m of html.matchAll(/id="([^"]+)"/g))els[m[1]]=mk(m[1]);const S=Object.assign({},store||{});
  global.localStorage={getItem:k=>k in S?S[k]:null,setItem:(k,v)=>{S[k]=String(v);}};
  global.document={getElementById:i=>els[i]||(els[i]=mk(i)),createElement:()=>({click(){}}),activeElement:null};
- global.addEventListener=()=>{};global.navigator={};global.location={protocol:'file:'};
+ global.addEventListener=()=>{};Object.defineProperty(globalThis,'navigator',{value:{},configurable:true,writable:true});global.location={protocol:'file:'};
  global.Blob=function(p){this.parts=p;};global.URL={createObjectURL:b=>{global.__dl=b.parts.join('');return 'x';}};
- const api=new Function(js+';return {records,csvRows,toCSV,backup,restore,profile,render,MODS};')();return {api,els,S};}
+ const api=new Function(js+';return {records,csvRows,toCSV,backup,restore,profile,render,MODS,installHint};')();return {api,els,S};}
 module.exports={boot};

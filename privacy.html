@@ -29,7 +29,16 @@
 </script>
 
 <title>Privacy — Preconnect</title>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Saira+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Fonts are served from this site (fonts/, SIL Open Font License). Nothing loads from Google: works offline and makes no outside request. */
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/saira-condensed-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/saira-condensed-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/saira-condensed-latin-700-normal.woff2) format("woff2")}
+/* Milestone 1: every button is at least 48 px tall (finger-sized, gloves on). */
+button{min-height:48px}
+</style>
 <style>
 :root{--bg:#14161a;--deck:#1d2026;--deck2:#262a32;--line:#383d47;--ink:#f4f5f7;--soft:#b4bac4;--or:#ff7a1a;--or2:#ff9a4d}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,sans-serif;-webkit-text-size-adjust:100%}
@@ -62,6 +71,7 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:8px;border:1
 <p style="margin:0 0 10px">Your name, your department, and your scores stay on your device. We never see them. We count anonymous activity, like "someone finished the infant CPR station," so we can improve the training and show it's working.</p>
 <h3 style="margin:14px 0 6px;color:var(--or2)">What stays on your device only</h3>
 <p style="margin:0 0 10px">Everything you type (name, department, crew names, feedback drafts) and your full training record. It's saved in your browser's storage on this phone or computer. We have no copy, no account, and no way to see it. Your training record CSV and backup file go only where you send them.</p>
+<p style="margin:0 0 10px">Nothing loads from Google or any advertising network. The code, fonts, and icons all come from this site and are saved on your phone for offline use. The only outside request Preconnect makes is the anonymous count described next, and only while statistics are on.</p>
 <h3 style="margin:14px 0 6px;color:var(--or2)">What we count, anonymously</h3>
 <p style="margin:0 0 6px">We use <a href="https://www.goatcounter.com" style="color:var(--or2)">GoatCounter</a>, an open-source, privacy-friendly statistics service. It uses no cookies and no tracking IDs. It records:</p>
 <ul style="margin:0 0 10px;padding-left:20px">

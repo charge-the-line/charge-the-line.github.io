@@ -9,3 +9,10 @@
 2. Each offline helper clears **only its own** old caches (`k.startsWith('<slug>-v')`). Clearing everything wipes the other apps' offline copies.
 3. Only the home page's helper handles root files, and it leaves every folder alone.
 4. Each module keeps its own storage key: `e102-pump-trainer`, `patient-contact`, `bleed-control`, `bls-ready`. Plus `preconnect` for the hub.
+
+## Milestone 1 checks (added October 2026)
+
+Foundation fixes: fonts served from this site, screen wake lock, finger-sized buttons. The `syntax` section (the hub: the plain list) now also proves:
+- Fonts: every root page (`index.html`, `privacy.html`, `feedback.html`) serves its type from `fonts/`, references nothing on Google, and each font file is in the service worker's `CORE` list. `ownFile` also covers `/fonts/`.
+- Install hint: shown to an iPhone browser, hidden for good once dismissed, never shown when installed or in a browser that can't install.
+- Privacy page says nothing loads from Google.

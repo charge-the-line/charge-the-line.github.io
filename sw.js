@@ -1,6 +1,6 @@
 // Preconnect home page. Bump CACHE when you upload a new version so phones pick it up.
-const CACHE = 'preconnect-v1.1.1';
-const CORE = ['./', 'index.html', 'privacy.html', 'feedback.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
+const CACHE = 'preconnect-v1.2.0';
+const CORE = ['./', 'index.html', 'privacy.html', 'feedback.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'fonts/atkinson-hyperlegible-latin-400-normal.woff2', 'fonts/atkinson-hyperlegible-latin-700-normal.woff2', 'fonts/saira-condensed-latin-500-normal.woff2', 'fonts/saira-condensed-latin-600-normal.woff2', 'fonts/saira-condensed-latin-700-normal.woff2'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
 });
@@ -16,7 +16,7 @@ self.addEventListener('fetch', e => {
   // Requests to other sites (like the statistics service) are never cached.
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
-  const ownFile = url.pathname === '/' || /^\/[^/]+\.[a-z0-9]+$/i.test(url.pathname);
+  const ownFile = url.pathname === '/' || /^\/[^/]+\.[a-z0-9]+$/i.test(url.pathname) || /^\/fonts\/[^/]+$/i.test(url.pathname);
   if (!ownFile) return;
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).then(r => { const copy = r.clone(); caches.open(CACHE).then(c => c.put(req, copy)); return r; })
