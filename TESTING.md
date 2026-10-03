@@ -16,3 +16,12 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 - Fonts: every root page (`index.html`, `privacy.html`, `feedback.html`) serves its type from `fonts/`, references nothing on Google, and each font file is in the service worker's `CORE` list. `ownFile` also covers `/fonts/`.
 - Install hint: shown to an iPhone browser, hidden for good once dismissed, never shown when installed or in a browser that can't install.
 - Privacy page says nothing loads from Google.
+
+## Milestone 2 checks (added October 2026)
+
+- Today view: picks up where you left off (module, activity, score, Continue link), counts this week, and shows a lesson prompt on an empty phone.
+- Module progress counts distinct activities and never exceeds the total taken from the `L` name table.
+- Settings: saved under `preconnect-settings`, applied to `<html>` as `data-text` / `data-contrast` / `data-motion`; the statistics switch is the Privacy page's key.
+- Score count-up lands on the exact value when animation frames are unavailable.
+- Reduce Motion and Motion = Off rules exist in the CSS.
+- `tests/browser_check.py`: home and Settings at 320/390 px, normal and large text, no overflow, no button under 44 px.

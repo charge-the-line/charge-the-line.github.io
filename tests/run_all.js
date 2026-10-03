@@ -48,5 +48,16 @@ try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('scrip
  const b=boot();global.navigator={userAgent:'iPhone',standalone:true};b.api.installHint();const installed=b.els.install.hidden===true;
  const c=boot();global.navigator={userAgent:'Mozilla/5.0 (X11; Linux) Firefox'};c.api.installHint();const other=c.els.install.hidden===true;
  report('install hint: iPhone browser sees it, dismissing hides it for good, installed or unsupported browsers never see it',shown&&dismissed&&stays&&installed&&other,`shown ${shown} dismissed ${dismissed} stays ${stays} installed ${installed} other ${other}`);}
+{// Milestone 2: the Today view and module progress
+ const a=boot({'bls-ready':JSON.stringify({runs:[{kind:'station',id:'adult',score:95,d:new Date().toISOString(),tier:1}]})});const T=a.api.today();a.api.render();
+ report('Today view: picks up where you left off and counts this week',!!T.last&&T.last.mod==='BLS Ready'&&T.last.act==='Adult CPR and AED'&&T.last.score===95&&T.week===1&&T.mods.find(m=>m.id==='bls').done===1&&T.mods.find(m=>m.id==='bls').total===15&&/Pick up where you left off/.test(a.els.today.innerHTML)&&/bls-ready\//.test(a.els.today.innerHTML),`${T.last&&T.last.act} · week ${T.week}`);
+ const b=boot(FIX);const Tb=b.api.today();report('module progress counts distinct activities, never above the total',Tb.mods.every(m=>m.done<=m.total&&m.done>0),Tb.mods.map(m=>`${m.id} ${m.done}/${m.total}`).join(', '));
+ const c=boot();c.api.render();report('empty device: Today view points new people at a lesson',/Start with a ten-minute lesson/.test(c.els.today.innerHTML)&&c.api.today().last===null);}
+{// Milestone 2: one settings sheet, one key, applied to the page
+ const a=boot();a.api.setSetting('text','large');a.api.setSetting('contrast','high');const s=a.api.settings();const de=global.document.documentElement.dataset;
+ report('settings: saved under preconnect-settings and applied to the page',s.text==='large'&&s.contrast==='high'&&de.text==='large'&&de.contrast==='high'&&JSON.parse(a.S['preconnect-settings']).text==='large'&&s.haptics==='on'&&s.sound==='off',JSON.stringify(s));
+ a.api.setSetting('stats','off');const off=a.S['preconnect-stats']==='off'&&a.api.settings().stats==='off';a.api.setSetting('stats','on');report('statistics switch in Settings is the same switch as the Privacy page',off&&a.api.settings().stats==='on'&&a.S['preconnect-stats']===undefined);
+ const el={textContent:''};a.api.countUp(el,87);report('score count-up lands on the exact score when motion is unavailable',el.textContent==='87');
+ report('motion is honored: Reduce Motion and the Motion = Off setting stop every animation',/prefers-reduced-motion:reduce\)\{\*\{animation:none!important/.test(html)&&/html\[data-motion="off"\] \*\{animation:none!important/.test(html));}
 report('trademark notices for both certifying organizations',/STOP THE BLEED® is a registered trademark/.test(html)&&/trademarks of the American Heart Association/.test(html));
 console.log(`\n${n-failed}/${n} checks passed`);process.exit(failed?1:0);
