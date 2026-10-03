@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Whole-platform analytics check (optional). Assemble the site the way it's deployed, then run:
      python3 tests/platform_check.py /path/to/assembled-site
-   The folder must hold this home page plus charge-the-line/, patient-contact/, bleed-control/, bls-ready/.
+   The folder must hold this home page plus charge-the-line/, patient-contact/, bleed-control/, bls-ready/, upwind/.
    GoatCounter is replaced by a recorder. Verifies: start/finish/quit events in every module, errors reported once,
    names typed into the app never appear in any event, and the Privacy page's opt-out stops everything."""
 import sys
@@ -50,6 +50,7 @@ with sync_playwright() as p:
     pg.goto(B+'/charge-the-line/');pg.wait_for_timeout(300)
     if pg.is_visible('#b-start'):pg.click('#b-start')
     pg.click('.scen[data-i="0"]');pg.wait_for_timeout(300)
+    pg.goto(B+'/upwind/');pg.wait_for_timeout(300);pg.click('[data-drill="placard"]');pg.wait_for_timeout(300);pg.click('[data-q="quit"]');pg.wait_for_timeout(150)
     pg.goto(B+'/');pg.wait_for_timeout(300)
     pg.goto(B+'/bls-ready/');pg.wait_for_timeout(250);pg.evaluate("setTimeout(()=>{throw new Error('test failure in drill')},0);setTimeout(()=>{throw new Error('test failure in drill')},10)");pg.wait_for_timeout(300)
     before=len(EV)
@@ -61,6 +62,6 @@ with sync_playwright() as p:
 res=dict({'page_errors':[e for e in errs if 'test failure' not in e],'events':EV[:before],'events_after_opt_out':after_opt,'opt_out_label':optlabel,
   'names_leaked':[e for e in EV if any(w in e for w in ['max','tester','monitor'])]})
 ok=(not res['page_errors'] and not res['names_leaked'] and not res['events_after_opt_out']
-    and all(any(e.startswith(m+'/start/') for e in res['events']) and any(e.startswith(m+'/quit/') for e in res['events']) for m in ['bls','bc','pc','ctl'])
+    and all(any(e.startswith(m+'/start/') for e in res['events']) and any(e.startswith(m+'/quit/') for e in res['events']) for m in ['bls','bc','pc','ctl','uw'])
     and any(e.startswith('bls/finish/') for e in res['events']) and sum(e.startswith('error/') for e in res['events'])==1)
 print(json.dumps(res,indent=1));print('PASS' if ok else 'FAIL');sys.exit(0 if ok else 1)

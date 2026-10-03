@@ -12,9 +12,9 @@ try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('scrip
 {const {api}=boot();report('links to all five module folders (relative paths)',['charge-the-line/','patient-contact/','bleed-control/','bls-ready/','upwind/'].every(p=>api.MODS.some(m=>m.path===p)));}
 {const {api}=boot();report('empty device: no records, no crash',api.records().length===0&&api.csvRows().length===1);}
 {const {api}=boot(FIX);const R=api.records();const mods=new Set(R.map(r=>r.mod));
- report('reads records from all four modules',mods.size===4,[...mods].join(', '));
+ report('reads records from all five modules',mods.size===5,[...mods].join(', '));
  report('every activity has a readable name (no raw ids, no blanks)',R.every(r=>r.act&&!/undefined|^[a-z]+[A-Z]?$|^tq-|^\d+$/.test(r.act)),R.map(r=>r.act).join(' | ').slice(0,160));
- const counts={};R.forEach(r=>counts[r.mod]=(counts[r.mod]||0)+1);const exp={'Charge the Line':JSON.parse(FIX['e102-pump-trainer']).log.length,'Patient Contact':JSON.parse(FIX['patient-contact']).runs.length+JSON.parse(FIX['patient-contact']).drillRuns.length,'Bleed Control':JSON.parse(FIX['bleed-control']).runs.length,'BLS Ready':JSON.parse(FIX['bls-ready']).runs.length};
+ const counts={};R.forEach(r=>counts[r.mod]=(counts[r.mod]||0)+1);const exp={'Charge the Line':JSON.parse(FIX['e102-pump-trainer']).log.length,'Patient Contact':JSON.parse(FIX['patient-contact']).runs.length+JSON.parse(FIX['patient-contact']).drillRuns.length,'Bleed Control':JSON.parse(FIX['bleed-control']).runs.length,'BLS Ready':JSON.parse(FIX['bls-ready']).runs.length,'Upwind':JSON.parse(FIX['upwind']).runs.length};
  report('record counts match each module exactly',Object.keys(exp).every(k=>counts[k]===exp[k]),JSON.stringify(counts));
  const rows=api.csvRows();const hdr=rows[0].join('|');report('CSV header',hdr==='Name|Organization|Module|Type|Activity|Patient|Date|Mode|Score|Instructor');
  const crew=rows.filter(r=>r[8]!==undefined&&r[9]==='Capt. Lee');report('drill-night call credits every crew member, with the instructor',crew.length===3&&new Set(crew.map(r=>r[0])).size===3,crew.map(r=>r[0]).join(', '));
@@ -26,7 +26,7 @@ try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('scrip
  report('older Charge the Line data (summary only) still appears',R.length===1&&/best of 3/.test(R[0].type)&&R[0].score===88&&R[0].act==='Residential structure fire');}
 {// backup → restore on a fresh device reproduces everything
  const a=boot(FIX);const file=JSON.stringify(a.api.backup());const b=boot();const nmods=b.api.restore(JSON.parse(file));
- report('backup → restore on a new device brings back every module',nmods===4&&b.api.csvRows().length===a.api.csvRows().length,`${nmods} modules, ${b.api.csvRows().length-1} rows`);
+ report('backup → restore on a new device brings back every module',nmods===5&&b.api.csvRows().length===a.api.csvRows().length,`${nmods} modules, ${b.api.csvRows().length-1} rows`);
  let threw=false;try{b.api.restore({hello:'world'});}catch(e){threw=true;}report('restore refuses a file that is not a Preconnect backup',threw);
  let threw2=false;const c=boot(FIX);try{c.api.restore({app:'preconnect',data:{'bls-ready':'{"runs":[]}','patient-contact':'{not json'}});}catch(e){threw2=true;}report('a damaged backup changes nothing at all (no half-restore)',threw2&&c.S['patient-contact']===FIX['patient-contact']&&c.S['bls-ready']===FIX['bls-ready']);}
 {const P=fs.readFileSync(path.join(__dirname,'..','privacy.html'),'utf8'),F=fs.readFileSync(path.join(__dirname,'..','feedback.html'),'utf8');
@@ -88,9 +88,9 @@ try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('scrip
   const rec=[];els['b-msg'].setAttribute=(k,v)=>rec.push(k+'='+v);els['b-msg'].getAttribute=()=>null;api.pcA11y();
   report('accessibility: Daylight tokens, focus outlines and landscape rules live in the core; Daylight applies; a phone asking for more contrast gets High unless Daylight was chosen; feedback lines get aria-live',/data-contrast="day"\]\{--bg:#000/.test(css)&&/focus-visible\{outline:3px solid/.test(css)&&/orientation:landscape\) and \(max-height:520px\)/.test(css)&&day==='day'&&normal==='normal'&&auto==='high'&&dayWins==='day'&&rec.includes('aria-live=polite')&&html.includes('data-val="day">Daylight'),`day ${day}, auto ${auto}, a11y ${rec.join(' ')}`);}}
 {// Milestone 9: the daily drill rotates across all four modules and deep-links; done-today, streak and level come from the records
- {const {api}=boot();const picks=Array.from({length:16},(_,i)=>api.dailyPick(1000+i));const ids=new Set(picks.map(p=>p.mod+':'+p.id)),mods=new Set(picks.map(p=>p.mod));const p0=api.dailyPick(1000);
-  report('daily drill: sixteen days give sixteen different drills across all four modules, each with a readable name and a deep link into its module',ids.size===16&&mods.size===4&&picks.every(p=>p.name&&p.name!==p.id&&/\?drill=/.test(p.href)&&p.href.startsWith(api.MODS.find(m=>m.id===p.mod).path))&&api.dailyPick(1016).id===p0.id,`${picks.map(p=>p.id).join(',')}`);}
- {const d=n=>new Date(Date.now()-n*864e5).toISOString();const pick0=boot().api.dailyPick();const key={bls:'bls-ready',ctl:'e102-pump-trainer',pc:'patient-contact',bc:'bleed-control'}[pick0.mod];
+ {const {api}=boot();const picks=Array.from({length:20},(_,i)=>api.dailyPick(1000+i));const ids=new Set(picks.map(p=>p.mod+':'+p.id)),mods=new Set(picks.map(p=>p.mod));const p0=api.dailyPick(1000);
+  report('daily drill: twenty days give twenty different drills across all five modules, each with a readable name and a deep link into its module',ids.size===20&&mods.size===5&&picks.every(p=>p.name&&p.name!==p.id&&/\?drill=/.test(p.href)&&p.href.startsWith(api.MODS.find(m=>m.id===p.mod).path))&&api.dailyPick(1020).id===p0.id,`${picks.map(p=>p.id).join(',')}`);}
+ {const d=n=>new Date(Date.now()-n*864e5).toISOString();const pick0=boot().api.dailyPick();const key={bls:'bls-ready',ctl:'e102-pump-trainer',pc:'patient-contact',bc:'bleed-control',uw:'upwind'}[pick0.mod];
   const store={'bls-ready':JSON.stringify({runs:[{kind:'station',id:'adult',score:90,d:d(0),tier:0},{kind:'station',id:'bvm',score:90,d:d(1),tier:0},{kind:'station',id:'infant',score:90,d:d(2),tier:0}]})};
   const b=boot(store);const s3=b.api.streak();const P=b.api.progression();b.api.render();const html=b.els.today.innerHTML;
   const c=boot({'bls-ready':JSON.stringify({runs:[{kind:'station',id:'adult',score:90,d:d(1),tier:0},{kind:'station',id:'bvm',score:90,d:d(2),tier:0},{kind:'station',id:'tempo',score:90,d:d(5),tier:0}]})});const s2=c.api.streak();

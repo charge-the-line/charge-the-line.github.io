@@ -85,3 +85,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 ## Upwind U0 (added October 3, 2026)
 
 - `links to all five module folders`; `ownFile` leaves `/upwind/` alone; a boot with an `upwind` key shows the tile with 16 planned activities, reads a drill and an incident with readable names, `Chaos · instructor` and `Layout B`, and includes the key in a backup. The fixture progress check now tolerates a module with no records yet.
+
+## Upwind U1 (added October 3, 2026)
+
+- The fixture gains an `upwind` key with a lesson run and three drill runs produced by Upwind's own harness; `reads records from all five modules`, exact counts, backup → restore (five modules). `DAILY` has twenty entries across five modules; the daily test checks twenty distinct picks and the cycle. `platform_check.py` opens Upwind's placard drill and quits it, and requires `uw/start/` and `uw/quit/` events.
