@@ -59,3 +59,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 ## Milestone 6 checks (added October 2026)
 
 - Core sound and haptics with a fake AudioContext (records every tone) and a fake vibrate (records every pattern): silent with sound off, haptics follow their switch, turning sound on previews 660/990 Hz, the bad cue is 220 Hz with a 30/40/30 buzz, the metronome schedules 880 Hz ticks at 110 and stops.
+
+## Patient Contact lesson (October 2026)
+
+- `L.pcDrill.lesson` names it and a `drillRuns` row with `drill:'lesson'` shows as type Lesson; Patient Contact's tile total is 16.

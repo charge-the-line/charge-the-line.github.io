@@ -116,7 +116,7 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:6px;border:1
 <p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. Preconnect and its modules are independent and not affiliated with or endorsed by either organization. <span id="ver"></span></p>
 <script>
 const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
-const APP_VERSION='1.7.0';
+const APP_VERSION='1.7.1';
 const $=id=>document.getElementById(id);const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HUBKEY='preconnect';
 
@@ -140,7 +140,7 @@ const L={
  ctl:["Residential structure fire","Commercial building — FDC","Vehicle fire — Class B foam","Rural barn fire — draft","Relay — supply Engine 10-1","Breezy Point — Superstorm Sandy, 2012","First Interstate Bank — Los Angeles, 1988","Port Jervis, NY — tanker shuttle at 0°F, 2005","Queens, NY — gasoline tanker fire, 1994","Corvallis, OR — the Mayday nobody heard"],
  ctlX:{lesson:'Pump operations lesson',friction:'Friction loss',pdp:'Pump discharge pressure',control:'Find the control',hydrant:'Hydrant math',math:'Pump math'},
  pc:{arrest:'Cardiac arrest',mva:'Car versus tree',od:'Overdose',ep:'Anaphylaxis',st:'Stroke',fl:'Elderly fall',cb:'Childbirth',dm:'Diabetic emergency'},
- pcDrill:{cpr:'CPR tempo',leads:'Lead placement',rhythm:'Rhythm ID',med:'Med math',o2:'Oxygen math',apgar:'APGAR',lkw:'Last known well'},
+ pcDrill:{lesson:'The lesson',cpr:'CPR tempo',leads:'Lead placement',rhythm:'Rhythm ID',med:'Med math',o2:'Oxygen math',apgar:'APGAR',lkw:'Last known well'},
  bc:{kitchen:'"He cut his arm on the glass"',garage:'Table saw in the garage',glass:'Through the glass door',crash:'Two-car crash','tq-arm':'Tourniquet — arm','tq-leg':'Tourniquet — leg',pack:'Wound packing',press:'Direct pressure',threat:'Life-threatening or not?',method:'Which technique?',place:'Tourniquet placement',lesson:'The lesson'},
  bls:{tempo:'Compressions and breaths',adult:'Adult CPR and AED',infant:'Infant CPR — two rescuers',child2:'Child CPR — two rescuers',pool:'Pulled from the pool',crib:'Not breathing in the crib',special:'Special situations',bvm:'Bag-mask breaths',chokeA:'Choking — adult or child',chokeI:'Choking — infant',team:'Collapse in the hallway',opioid:'Found in the restroom',baby:'Infant at the daycare',child:'Choking at the birthday party',numbers:'Numbers that matter',ages:'Adult vs. child vs. infant',choke:'Choking by age',exam:'Exam practice',lesson:'The lesson'}};
 const TYPE={lesson:'Lesson',station:'Skill',scenario:'Scenario',drill:'Drill',exam:'Exam practice'};
@@ -154,7 +154,7 @@ function records(){const out=[];const add=(mod,type,act,pat,d,mode,score,who,ins
   const ctl=get('e102-pump-trainer');if(ctl){if(ctl.log&&ctl.log.length)ctl.log.forEach(r=>add('Charge the Line','Scenario',L.ctl[r.i]||('Scenario '+(+r.i+1)),r.v?'Layout '+r.v:'',r.d,TIERS[r.tier]+(r.inst===1?' · instructor':''),r.score,r.who,typeof r.inst==='string'?r.inst:'',r.night));
     else Object.keys(ctl.scen||{}).forEach(i=>{const s=ctl.scen[i];if(s&&s.runs)add('Charge the Line','Scenario (best of '+s.runs+')',L.ctl[i]||('Scenario '+(+i+1)),'',s.last,TIERS[s.tier],s.best);});
     (ctl.extra||[]).forEach(r=>add('Charge the Line',r.kind==='lesson'?'Lesson':'Drill',L.ctlX[r.id]||r.id,'',r.d,'',r.score,r.who,r.inst,r.night));}
-  const pc=get('patient-contact');if(pc){(pc.runs||[]).forEach(r=>add('Patient Contact','Call',L.pc[r.call||'arrest']||r.call,r.variant,r.d,TIERS[r.tier],r.score,r.who,r.inst,r.night));(pc.drillRuns||[]).forEach(r=>add('Patient Contact','Drill',L.pcDrill[r.drill]||r.drill,'',r.d,'',r.score,r.who,r.inst,r.night));}
+  const pc=get('patient-contact');if(pc){(pc.runs||[]).forEach(r=>add('Patient Contact','Call',L.pc[r.call||'arrest']||r.call,r.variant,r.d,TIERS[r.tier],r.score,r.who,r.inst,r.night));(pc.drillRuns||[]).forEach(r=>add('Patient Contact',r.drill==='lesson'?'Lesson':'Drill',L.pcDrill[r.drill]||r.drill,'',r.d,'',r.score,r.who,r.inst,r.night));}
   const bc=get('bleed-control');if(bc)(bc.runs||[]).forEach(r=>add('Bleed Control',TYPE[r.kind]||r.kind,L.bc[r.id]||r.id,r.variant,r.d,r.kind==='scenario'?TIERS[r.tier]:'',r.score,r.who,r.inst,r.night));
   const bls=get('bls-ready');if(bls)(bls.runs||[]).forEach(r=>add('BLS Ready',TYPE[r.kind]||r.kind,L.bls[r.id]||r.id,'',r.d,(r.kind==='station'||r.kind==='scenario')?['Guided','Recall'][r.tier]||'':'',r.score,r.who,r.inst,r.night));
   return out.sort((a,b)=>String(b.d).localeCompare(String(a.d)));}
