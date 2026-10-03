@@ -44,3 +44,10 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 ## Milestone 5 part two checks (added October 2026)
 
 - A Charge the Line run with a layout letter shows "Layout B" in the Patient column, and an instructor-injected run reads "Recall · instructor" in Mode; plain runs are unchanged.
+
+## Milestone 7 checks (added October 2026)
+
+- Drill Night session (core): names trimmed and deduplicated, `pcDrillStamp` adds who, instructor and night, a new name joins the roster, ending keeps the roster, no session means no stamping.
+- The board: `tonight()` is only the runs stamped with this night; the card counts runs and people; the board lists the roster with bests and tonight's runs; tonight's CSV has one row per person with the instructor; the picker escapes names (a quote or a tag in a name cannot break the button); switching who; ending takes two taps and leaves the set-up card and the roster.
+- Set-up form: instructor and roster from the form, the picker opens at once, the card becomes the live card.
+- Browser check: set-up form, picker, live card and board at 320 and 390 px.

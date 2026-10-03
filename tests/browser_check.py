@@ -17,6 +17,11 @@ with sync_playwright() as p:
         pg.click('#h-set'); pg.wait_for_timeout(200); rows.append((w, 'settings', pg.evaluate(OVER), pg.evaluate(SMALL)))
         pg.click('[data-set="text"] [data-val="large"]'); pg.wait_for_timeout(200); rows.append((w, 'large text', pg.evaluate(OVER), pg.evaluate(SMALL)))
         pg.click('#set-close'); pg.wait_for_timeout(200); rows.append((w, 'home, large text', pg.evaluate(OVER), pg.evaluate(SMALL)))
+        pg.click('[data-set="text"] [data-val="normal"]') if pg.is_visible('[data-set="text"] [data-val="normal"]') else None
+        pg.click('#d-setup'); pg.wait_for_timeout(200); rows.append((w, 'drill setup', pg.evaluate(OVER), pg.evaluate(SMALL)))
+        pg.fill('#d-inst', 'Max'); pg.fill('#d-roster', 'Jo\nSam'); pg.click('#d-start'); pg.wait_for_timeout(250); rows.append((w, 'who picker', pg.evaluate(OVER), pg.evaluate(SMALL)))
+        pg.click('.pc-drill-name'); pg.wait_for_timeout(200); rows.append((w, 'drill night', pg.evaluate(OVER), pg.evaluate(SMALL)))
+        pg.click('#d-open'); pg.wait_for_timeout(200); rows.append((w, 'drill board', pg.evaluate(OVER), pg.evaluate(SMALL))); pg.click('#d-close')
         pg.close()
     b.close()
 bad = [r for r in rows if r[2] > 1 or r[3] > 0]

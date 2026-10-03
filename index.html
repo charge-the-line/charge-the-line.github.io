@@ -78,6 +78,7 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:6px;border:1
 <div class="flex" style="margin-bottom:2px"><div class="brand">PRECONNECT</div><div class="sp"></div><button class="gear" id="h-set">Settings</button></div>
 <p class="tag">Ready before the call.</p>
 <p class="sub">Free practice for fire and EMS skills. Works on any phone, offline, no account needed.</p>
+<div id="pc-drill" class="pc-drillbar hidden" data-hub="#" data-auto="no"></div>
 <div class="card" id="install" hidden style="margin:8px 0 6px">
   <b style="font-family:'Saira Condensed';font-size:20px">Put Preconnect on your home screen</b>
   <p class="stat" id="install-ios" style="margin:4px 0 0">On iPhone: tap <b>Share</b> (the square with the arrow at the bottom of Safari), then <b>Add to Home Screen</b>. It opens full-screen and works offline, like an app.</p>
@@ -88,10 +89,14 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:6px;border:1
 <div id="today"></div>
 <div class="sec">Modules</div>
 <div id="mods"></div>
+<div class="sec">Drill Night</div>
+<div id="drillcard"></div>
 <div class="sec">More</div>
 <div class="row"><button id="r-csv">Training record (CSV)</button><button id="b-backup">Back up to a file</button><button id="b-restore">Restore from a file</button><a class="btnlink" href="feedback.html">Report a problem or idea</a></div>
 <input type="file" id="f-restore" accept=".json,application/json" class="hidden"><p class="stat" id="b-msg" style="margin:8px 0 0"></p>
 <p class="stat" style="margin-top:14px">Preconnect is a free, independent training platform made in Bay County, Michigan. A preconnect is the hoseline that's hooked up and ready before the call, so it flows the moment you need it. That's what practice does for skills. Preconnect is practice: it doesn't replace hands-on training, your department's protocols, or official certification courses. <a href="privacy.html" style="color:var(--or2)">Privacy</a></p>
+<div class="overlay hidden" id="drillov" style="z-index:21"><div class="box" id="drillbox"></div></div>
+<div class="overlay hidden" id="pc-drillov" style="z-index:25"><div class="box" id="pc-drillbox"></div></div>
 <div class="overlay hidden" id="setov" style="z-index:20"><div class="box">
  <div class="flex"><h2 style="margin:0">Settings</h2><div class="sp"></div><button class="gear" id="set-close">Done</button></div>
  <div class="sec">You</div>
@@ -111,7 +116,7 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:6px;border:1
 <p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. Preconnect and its modules are independent and not affiliated with or endorsed by either organization. <span id="ver"></span></p>
 <script>
 const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
-const APP_VERSION='1.5.1';
+const APP_VERSION='1.6.0';
 const $=id=>document.getElementById(id);const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HUBKEY='preconnect';
 
@@ -145,16 +150,16 @@ function put(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 function profile(){const h=get(HUBKEY)||{};let name=h.name||'',org=h.org||'';
   for(const m of MODS){const d=get(m.key)||{};if(!name&&d.name)name=d.name;if(!org&&d.dept)org=d.dept;}return {name,org};}
 /* every completed activity, from all four modules, as one list of rows */
-function records(){const out=[];const add=(mod,type,act,pat,d,mode,score,who,inst)=>out.push({mod,type,act,pat:pat||'',d:d||'',mode:mode||'',score,who:who||null,inst:inst||''});
-  const ctl=get('e102-pump-trainer');if(ctl){if(ctl.log&&ctl.log.length)ctl.log.forEach(r=>add('Charge the Line','Scenario',L.ctl[r.i]||('Scenario '+(+r.i+1)),r.v?'Layout '+r.v:'',r.d,TIERS[r.tier]+(r.inst?' · instructor':''),r.score));
+function records(){const out=[];const add=(mod,type,act,pat,d,mode,score,who,inst,night)=>out.push({mod,type,act,pat:pat||'',d:d||'',mode:mode||'',score,who:who||null,inst:inst||'',night:night||''});
+  const ctl=get('e102-pump-trainer');if(ctl){if(ctl.log&&ctl.log.length)ctl.log.forEach(r=>add('Charge the Line','Scenario',L.ctl[r.i]||('Scenario '+(+r.i+1)),r.v?'Layout '+r.v:'',r.d,TIERS[r.tier]+(r.inst===1?' · instructor':''),r.score,r.who,typeof r.inst==='string'?r.inst:'',r.night));
     else Object.keys(ctl.scen||{}).forEach(i=>{const s=ctl.scen[i];if(s&&s.runs)add('Charge the Line','Scenario (best of '+s.runs+')',L.ctl[i]||('Scenario '+(+i+1)),'',s.last,TIERS[s.tier],s.best);});
-    (ctl.extra||[]).forEach(r=>add('Charge the Line',r.kind==='lesson'?'Lesson':'Drill',L.ctlX[r.id]||r.id,'',r.d,'',r.score));}
-  const pc=get('patient-contact');if(pc){(pc.runs||[]).forEach(r=>add('Patient Contact','Call',L.pc[r.call||'arrest']||r.call,r.variant,r.d,TIERS[r.tier],r.score,r.who,r.inst));(pc.drillRuns||[]).forEach(r=>add('Patient Contact','Drill',L.pcDrill[r.drill]||r.drill,'',r.d,'',r.score));}
-  const bc=get('bleed-control');if(bc)(bc.runs||[]).forEach(r=>add('Bleed Control',TYPE[r.kind]||r.kind,L.bc[r.id]||r.id,r.variant,r.d,r.kind==='scenario'?TIERS[r.tier]:'',r.score));
-  const bls=get('bls-ready');if(bls)(bls.runs||[]).forEach(r=>add('BLS Ready',TYPE[r.kind]||r.kind,L.bls[r.id]||r.id,'',r.d,(r.kind==='station'||r.kind==='scenario')?['Guided','Recall'][r.tier]||'':'',r.score));
+    (ctl.extra||[]).forEach(r=>add('Charge the Line',r.kind==='lesson'?'Lesson':'Drill',L.ctlX[r.id]||r.id,'',r.d,'',r.score,r.who,r.inst,r.night));}
+  const pc=get('patient-contact');if(pc){(pc.runs||[]).forEach(r=>add('Patient Contact','Call',L.pc[r.call||'arrest']||r.call,r.variant,r.d,TIERS[r.tier],r.score,r.who,r.inst,r.night));(pc.drillRuns||[]).forEach(r=>add('Patient Contact','Drill',L.pcDrill[r.drill]||r.drill,'',r.d,'',r.score,r.who,r.inst,r.night));}
+  const bc=get('bleed-control');if(bc)(bc.runs||[]).forEach(r=>add('Bleed Control',TYPE[r.kind]||r.kind,L.bc[r.id]||r.id,r.variant,r.d,r.kind==='scenario'?TIERS[r.tier]:'',r.score,r.who,r.inst,r.night));
+  const bls=get('bls-ready');if(bls)(bls.runs||[]).forEach(r=>add('BLS Ready',TYPE[r.kind]||r.kind,L.bls[r.id]||r.id,'',r.d,(r.kind==='station'||r.kind==='scenario')?['Guided','Recall'][r.tier]||'':'',r.score,r.who,r.inst,r.night));
   return out.sort((a,b)=>String(b.d).localeCompare(String(a.d)));}
-function csvRows(){const P=profile();const rows=[['Name','Organization','Module','Type','Activity','Patient','Date','Mode','Score','Instructor']];
-  for(const r of records()){const names=r.who&&r.who.length?r.who:[P.name];for(const n of names)rows.push([n,P.org,r.mod,r.type,r.act,r.pat,String(r.d).slice(0,16).replace('T',' '),r.mode,r.score,r.inst]);}return rows;}
+function csvRows(recs){const P=profile();const rows=[['Name','Organization','Module','Type','Activity','Patient','Date','Mode','Score','Instructor']];
+  for(const r of (recs||records())){const names=r.who&&r.who.length?r.who:[P.name];for(const n of names)rows.push([n,P.org,r.mod,r.type,r.act,r.pat,String(r.d).slice(0,16).replace('T',' '),r.mode,r.score,r.inst]);}return rows;}
 function toCSV(rows){return rows.map(r=>r.map(v=>`"${String(v===undefined||v===null?'':v).replace(/"/g,'""')}"`).join(',')).join('\n');}
 function download(name,text,type){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();}catch(e){}}
 function daysAgo(d){const t=Date.parse(d);if(!t)return null;return Math.floor((Date.now()-t)/864e5);}
@@ -173,7 +178,33 @@ function render(){const T=today();const D=due();const modOf=n=>MODS.find(m=>m.na
   $('today').innerHTML+=D.slice(0,2).map(g=>{const M=modOf(g.mod);const over=g.sp.status==='missed'?'try again':g.sp.dueIn<=-1?`due ${-g.sp.dueIn} day${g.sp.dueIn===-1?'':'s'} ago`:'due today';return `<a class="card mod m-${M.id} pc-due" href="${M.path}"><div class="flex"><div style="min-width:0"><div class="small">${g.sp.status==='missed'?'Missed last time':'Due for review'}</div><b class="t">${esc(g.act)}</b><div class="small">${esc(g.mod)} · ${esc(over)}</div></div><div class="sp"></div><span class="chip">${g.sp.status==='missed'?'Again':'Due'}</span></div></a>`;}).join('');
   $('mods').innerHTML=T.mods.map(m=>{const M=MODS.find(x=>x.id===m.id);const segs=Math.min(10,m.total);const on=Math.round(m.done/m.total*segs);const chip=!m.done?'':m.done===m.total?'<span class="chip">Ready</span>':m.last&&m.last.mode?`<span class="chip dim">${esc(m.last.mode)}</span>`:'<span class="chip dim">Started</span>';
     return `<a class="card mod m-${m.id}" href="${M.path}"><div class="flex"><img class="icon" src="${M.path}icon-192.png" alt=""><div style="min-width:0"><b class="t">${esc(M.name)}</b><div class="l">${m.done?`${m.done} of ${m.total} activities${m.last&&m.last.mode?' · last on '+esc(m.last.mode):''}`:esc(M.desc)}</div></div><div class="sp"></div>${chip}</div><div class="seg">${Array.from({length:segs},(_,i)=>`<i class="${i<on?'on':''}" style="animation-delay:${i*40}ms"></i>`).join('')}</div></a>`;}).join('');
-  const P=profile();if(document.activeElement!==$('r-name'))$('r-name').value=P.name;if(document.activeElement!==$('r-org'))$('r-org').value=P.org;}
+  const P=profile();if(document.activeElement!==$('r-name'))$('r-name').value=P.name;if(document.activeElement!==$('r-org'))$('r-org').value=P.org;drillRender();}
+/* ===== Drill Night (Milestone 7): the hub starts and ends the session, keeps the board, and exports the night. Modules read the same key through the core. ===== */
+function tonight(d){d=d||pcDrill();if(!d||!d.start)return [];return records().filter(r=>r.night===d.start);}
+function fmtTime(iso){const t=new Date(iso);return isNaN(t)?'':t.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});}
+function drillRender(){const el=$('drillcard');if(!el)return;const d=pcDrill();
+  if(!d){el.innerHTML=`<div class="card"><div class="small">Run a room</div><b style="display:block;font-family:'Saira Condensed';font-size:22px;line-height:1.05">Drill Night</b><div class="small">One instructor, a roster, and every module credits whoever is up. Patients and hose layouts stay standard, instructor injects are on. Names stay on this phone.</div><div class="row" style="margin-top:10px"><button class="go" id="d-setup">Set up Drill Night</button></div></div>`;$('d-setup').onclick=drillSetup;return;}
+  const T=tonight(d);const people=new Set(T.flatMap(r=>r.who||[]));
+  el.innerHTML=`<div class="card in" style="border-color:#7a5cff"><div class="flex"><div style="min-width:0"><div class="small">Drill Night in progress · since ${esc(fmtTime(d.start))}</div><b style="display:block;font-family:'Saira Condensed';font-size:22px;line-height:1.05">${esc(d.inst||'Instructor')}${d.org?' · '+esc(d.org):''}</b><div class="small">${T.length} run${T.length===1?'':'s'} tonight · ${people.size} of ${(d.roster||[]).length} on the board${d.who?' · up now: '+esc(d.who):''}</div></div><div class="sp"></div><div class="num" style="color:#c9b8ff">${T.length}</div></div><div class="row" style="margin-top:10px"><button class="go" id="d-open">Open the board</button><button id="d-who">Who's up?</button></div></div>`;
+  $('d-open').onclick=drillOpen;$('d-who').onclick=pcDrillPick;}
+function drillSetup(){const Pr=profile();const raw=pcDrillRaw();
+  $('drillbox').innerHTML=`<div class="flex"><h2 style="margin:0">Set up Drill Night</h2><div class="sp"></div><button class="gear" id="d-close">Close</button></div>
+  <label class="small" for="d-inst">Instructor</label><input id="d-inst" value="${esc(raw.inst||Pr.name)}" placeholder="Instructor's name">
+  <label class="small" for="d-org">Department or group</label><input id="d-org" value="${esc(raw.org||Pr.org)}" placeholder="Optional">
+  <label class="small" for="d-roster">Roster, one name per line</label><textarea id="d-roster" rows="6" placeholder="One name per line">${esc((raw.roster||[]).join('\n'))}</textarea>
+  <p class="stat">Every module shows a purple bar with who's up; tap it to switch. Runs are credited to that person and listed on the board here. Patients and hose layouts stay standard and instructor injects are on. Names stay on this phone and never go into statistics.</p>
+  <button class="go" id="d-start" style="width:100%">Start Drill Night</button>`;
+  $('drillov').classList.remove('hidden');$('d-close').onclick=()=>$('drillov').classList.add('hidden');
+  $('d-start').onclick=()=>{const names=String($('d-roster').value||'').split(/\n/);pcDrillStart($('d-inst').value,names,$('d-org').value);pca('ev','hub/drill-night-start');$('drillov').classList.add('hidden');render();pcDrillBar();pcDrillPick();};}
+let endSure=false;
+function drillOpen(){const d=pcDrill();if(!d){drillSetup();return;}endSure=false;const T=tonight(d);const per=(d.roster||[]).map(n=>({n,runs:T.filter(r=>(r.who||[]).includes(n))}));
+  $('drillbox').innerHTML=`<div class="flex"><h2 style="margin:0">Drill Night</h2><div class="sp"></div><button class="gear" id="d-close">Close</button></div><p class="small" style="margin:2px 0 0">${esc(d.inst)}${d.org?' · '+esc(d.org):''} · since ${esc(fmtTime(d.start))}</p>
+  <div class="sec">Board</div><table class="pc-table">${per.map(p=>`<tr><td class="l">${esc(p.n)}${d.who===p.n?' <span class="chip">up</span>':''}</td><td>${p.runs.length?p.runs.length+' run'+(p.runs.length===1?'':'s')+' · best '+Math.max(...p.runs.map(r=>+r.score||0)):'—'}</td></tr>`).join('')||'<tr><td class="l">No names yet. Tap Who\'s up? to add one.</td><td></td></tr>'}</table>
+  <div class="sec">Tonight</div><table class="pc-table">${T.slice(0,40).map(r=>`<tr><td class="l">${esc((r.who||[]).join(', ')||'—')} · ${esc(r.act)}<br><span class="small">${esc(r.mod)}${r.mode?' · '+esc(r.mode):''}</span></td><td>${esc(r.score)}</td></tr>`).join('')||'<tr><td class="l">Nothing yet. Open a module and go.</td><td></td></tr>'}</table>
+  <div class="row" style="margin-top:12px"><button id="d-who2">Who's up?</button><button id="d-csv">Tonight's record (CSV)</button><button id="d-end">End Drill Night</button></div><p class="stat" id="d-msg"></p>`;
+  $('drillov').classList.remove('hidden');$('d-close').onclick=()=>$('drillov').classList.add('hidden');$('d-who2').onclick=()=>{$('drillov').classList.add('hidden');pcDrillPick();};
+  $('d-csv').onclick=()=>{pca('ev','hub/drill-night-csv');download(`drill-night-${d.start.slice(0,10)}.csv`,toCSV(csvRows(T)),'text/csv');$('d-msg').textContent='Downloaded tonight\'s record.';};
+  $('d-end').onclick=()=>{if(!endSure){endSure=true;$('d-end').textContent='Tap again to end';return;}const n=T.length;pcDrillEnd();pca('ev','hub/drill-night-end');$('drillov').classList.add('hidden');render();pcDrillBar();$('b-msg').textContent=`Drill Night ended: ${n} run${n===1?'':'s'}. The roster is kept for next time, and the runs stay in the training record.`;};}
 function saveProfile(){const h=get(HUBKEY)||{};h.name=$('r-name').value.trim();h.org=$('r-org').value.trim();put(HUBKEY,h);}
 $('r-name').onchange=saveProfile;$('r-org').onchange=saveProfile;
 $('r-csv').onclick=()=>{saveProfile();const P=profile();pca('ev','hub/training-record-csv');download(`preconnect-training-record${P.name?'-'+P.name.replace(/[^a-z0-9]+/gi,'-').toLowerCase():''}.csv`,toCSV(csvRows()),'text/csv');};
@@ -185,7 +216,7 @@ $('b-backup').onclick=()=>{download(`preconnect-backup-${new Date().toISOString(
 $('b-restore').onclick=()=>$('f-restore').click();
 $('f-restore').onchange=e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const n=restore(JSON.parse(rd.result));pca('ev','hub/restore');$('b-msg').textContent=`Restored progress for ${n} module${n===1?'':'s'}.`;render();}catch(err){$('b-msg').textContent=err.message||'That file could not be read.';}};rd.readAsText(f);};
 $('ver').textContent='Version '+APP_VERSION+'.';
-applySettings();settingsBind();installHint();render();addEventListener('pageshow',render);addEventListener('focus',render);
+applySettings();settingsBind();installHint();if(typeof window!=='undefined')window.onPcDrillHub=drillOpen;pcDrillBind();render();addEventListener('pageshow',()=>{render();pcDrillBar();});addEventListener('focus',render);
 if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body>
