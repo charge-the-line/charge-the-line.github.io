@@ -112,8 +112,10 @@ Each of these cost a real bug. Don't relearn them.
 
 **Current version: 1.1.1.** Files: `index.html` (home), `privacy.html`, `feedback.html`, `og-card.png` (1200×630 social card), `manifest.json`, `sw.js`, icons, `ANALYTICS.md`, `TESTING.md`, `tests/`.
 
-## ⚠️ Repo housekeeping, check first
+## Repo housekeeping (done October 3, 2026)
 Before the move, this repo **was Charge the Line**, and the home page was uploaded over the top of it. Leftover Charge the Line files are likely still here: test files such as `qa.js`, `qa2.js`, `qa_guide.js`, `qa_mock.js`, `stress.js`, and `browser_check.py` (at the root and/or in `tests/`), and possibly an old `README.md`. They're harmless but confusing. **The files that belong here:** `index.html`, `privacy.html`, `feedback.html`, `og-card.png`, `manifest.json`, `sw.js`, `icon-192.png`, `icon-512.png`, `README.txt`, `TESTING.md`, `ANALYTICS.md`, `CLAUDE.md`, and `tests/` containing `run_all.js`, `hub_mock.js`, `fixture.json`, `platform_check.py`. **Confirm with Max before deleting anything**, then clean up in one commit.
+
+**Done (October 3, 2026, approved by Max):** the eight leftovers (`qa.js`, `qa2.js`, `qa_guide.js`, `qa_mock.js`, `stress.js`, `browser_check.py`, the old `README.md`, and `charge-the-line-site.zip`) were deleted, and the hub's own tests (`run_all.js`, `hub_mock.js`, `fixture.json`, `platform_check.py`) moved into `tests/`. `node tests/run_all.js` now works in place. Nothing left to clean up here.
 
 ## What it does
 - **Module tiles** (`MODS`): name, folder, description, icon, and a "N completed · last date" line from each module's saved data.
