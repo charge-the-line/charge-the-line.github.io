@@ -20,7 +20,7 @@ with sync_playwright() as p:
     ctx.expose_binding('reportEv',lambda src,path:EV.append(path));ctx.add_init_script(STUB)
     pg=ctx.new_page();pg.on('pageerror',lambda e:errs.append(str(e)))
     B='http://localhost:8766'
-    pg.goto(B+'/');pg.wait_for_timeout(300);pg.fill('#r-name','Max Tester');pg.fill('#r-org','Monitor Twp FD');pg.locator('#r-name').dispatch_event('change');pg.locator('#r-org').dispatch_event('change')
+    pg.goto(B+'/');pg.wait_for_timeout(300);pg.click('#h-set');pg.wait_for_timeout(200);pg.fill('#r-name','Max Tester');pg.fill('#r-org','Monitor Twp FD');pg.locator('#r-name').dispatch_event('change');pg.locator('#r-org').dispatch_event('change');pg.click('#set-close');pg.wait_for_timeout(150)
     with pg.expect_download():pg.click('#r-csv')
     pg.goto(B+'/bls-ready/');pg.wait_for_timeout(250);pg.evaluate("window.__t=1000;NOW=()=>window.__t;");pg.click('[data-run="tempo"]');pg.evaluate("__t+=1");pg.wait_for_timeout(200);pg.click('[data-r="next"]')
     for i in range(5):

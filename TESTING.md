@@ -73,3 +73,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 
 - Core: Daylight tokens, focus outlines and the landscape rule are in the look CSS; Daylight applies to the page; a stubbed `prefers-contrast: more` turns Off into High but never overrides Daylight; `pcA11y` sets `aria-live` on a feedback line; the settings sheet has the Daylight button.
 - Browser check: a landscape page (844 by 390) for the home list, the same in Daylight, and the settings sheet in landscape; fails on overflow or buttons under 44 px.
+
+## Platform privacy check (October 3, 2026)
+
+- `tests/platform_check.py` now opens the settings sheet before typing the name (the field moved there in Milestone 2). Run against the assembled site on October 3, 2026 after Milestone 10: every module sends start, quit and error events, no name or organization appears in any event, and the opt-out stops everything.
