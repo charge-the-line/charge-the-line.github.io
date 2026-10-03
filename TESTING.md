@@ -36,3 +36,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 ## Milestone 4 checks (added October 2026)
 
 - The motion rules are checked in the shared core now (the hub no longer carries its own copy of the look CSS).
+
+## Milestone 5 part one checks (added October 2026)
+
+- Charge the Line lesson and drill runs (`extra[]`) appear in the record with readable names from `L.ctlX`, and count toward the module's tile total (15 activities).
