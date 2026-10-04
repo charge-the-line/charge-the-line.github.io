@@ -89,6 +89,7 @@ Each of these cost a real bug. Don't relearn them.
 - **Practice, not certification.** Never imply the platform certifies anyone.
 - **Medical content follows current guidelines with protocol caveats.** Bay County MCA (medical control) review is **still pending** for Patient Contact; keep agency and hospital names generic until approved ("Medic 1," "East Side Hospital," "Regional Medical Center").
 - **Real Saves** (Charge the Line) follow published accounts with sources cited. Unpublished specifics are modeled and labeled as such.
+- **Bay County cardiac arrest protocol (Max, October 4, 2026; pending MCA review):** an arrest is worked on scene for about 25 minutes from the start of resuscitation (one setting, `COUNTY.torMin` in Patient Contact); a patient in arrest is never transported, only after ROSC; without ROSC the medic consults medical control while CPR continues, and after the order the devices stay for the coroner, the scene is not cleaned and the family is supported in plain words; the medic may keep working longer for special cases. Unwitnessed: look for definite signs of death (rigor, lividity, decomposition, cold in a warm environment; context alone never counts; cold from a cold environment is not death). Always ask for a DNR; it counts only if produced right away and valid. Score the care, never the outcome. Full note in Patient Contact's CLAUDE.md.
 
 ## How to work in this repo
 
@@ -145,7 +146,7 @@ Max's likely picks after 1: 2, then 3, then either Charge the Line catch-up or D
 
 # This repo: the Preconnect home page (`charge-the-line.github.io`, site root)
 
-**Current version: 1.11.0.** Files: `index.html` (home), `privacy.html`, `feedback.html`, `og-card.png` (1200×630 social card), `manifest.json`, `sw.js`, icons, `ANALYTICS.md`, `TESTING.md`, `fonts/` (self-hosted type, OFL), `tests/`.
+**Current version: 1.11.1** (1.11.1 names Patient Contact's new Start CPR or not? drill in `L.pcDrill.startcpr`; the Patient Contact tile counts 17 activities). Files: `index.html` (home), `privacy.html`, `feedback.html`, `og-card.png` (1200×630 social card), `manifest.json`, `sw.js`, icons, `ANALYTICS.md`, `TESTING.md`, `fonts/` (self-hosted type, OFL), `tests/`.
 
 ## Repo housekeeping (done October 3, 2026)
 Before the move, this repo **was Charge the Line**, and the home page was uploaded over the top of it. Leftover Charge the Line files are likely still here: test files such as `qa.js`, `qa2.js`, `qa_guide.js`, `qa_mock.js`, `stress.js`, and `browser_check.py` (at the root and/or in `tests/`), and possibly an old `README.md`. They're harmless but confusing. **The files that belong here:** `index.html`, `privacy.html`, `feedback.html`, `og-card.png`, `manifest.json`, `sw.js`, `icon-192.png`, `icon-512.png`, `README.txt`, `TESTING.md`, `ANALYTICS.md`, `CLAUDE.md`, and `tests/` containing `run_all.js`, `hub_mock.js`, `fixture.json`, `platform_check.py`. **Confirm with Max before deleting anything**, then clean up in one commit.
