@@ -1,6 +1,6 @@
 # Preconnect home page — testing guide
 
-`node tests/run_all.js` runs 19 checks against `tests/fixture.json`, which holds real saved data produced by actually playing all four modules. The checks cover: reading every module's records, readable activity names, exact record counts, the combined CSV (including crediting every crew member on a drill-night call), older Charge the Line summary-only data, backup → restore on a fresh device, rejecting bad or damaged backups without a half-restore, and the offline helper leaving every module folder alone.
+`node tests/run_all.js` runs the suite against `tests/fixture.json` and `tests/fixtures/`, which hold real saved data produced by playing every module. The checks cover: reading every module's records, readable activity names, exact record counts, the combined CSV (including crediting every crew member on a drill-night call), older Charge the Line summary-only data, backup → restore on a fresh device, rejecting bad or damaged backups without a half-restore, and the offline helper leaving every module folder alone.
 
 **When a module changes how it saves data, regenerate the fixture** by playing that module's bots and re-saving its storage key into `fixture.json`. Then rerun this suite. The hub has its own copy of each module's activity-name table (`L` in index.html), so a new scenario or drill needs a line there too, or the `readable name` check will fail.
 
@@ -66,7 +66,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 
 ## Milestone 9 checks (added October 2026)
 
-- Daily drill: sixteen consecutive day numbers give sixteen different drills across all four modules, each with a readable name and a deep link under its module path; day 17 repeats day 1. Done-today is true only for that module's drill with that name recorded today.
+- Daily drill: twenty consecutive day numbers give twenty different drills across all five modules, each with a readable name and a deep link under its module path; day 17 repeats day 1. Done-today is true only for that module's drill with that name recorded today.
 - Progression: streak counts consecutive days ending today or yesterday; level is one per eight activities (17 done = level 3, one into it); the Today view shows the daily card and the level card, and an empty phone reads level 1.
 
 ## Milestone 10 checks (added October 2026)
@@ -100,3 +100,8 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 
 ## Rule 15 (final sweep milestone 2, October 10, 2026)
 - The core's pause hook: subscribers hear one hide and one show with the seconds away; repeats are ignored; `pcPauseBind` is wired from `settingsBind` and listens for `visibilitychange`.
+
+## Truth and counts (final sweep milestone 3, October 10, 2026)
+- A Charge the Line `extra` entry `{kind:'drill',id:'math'}` reads as "Pump math", type Drill, and the tile total is 21 (`L.ctl.length + L.ctlX` keys, nothing subtracted).
+- The docs are tested: `CLAUDE.md`'s "Current version" must equal `APP_VERSION`, and `README.txt` must name `preconnect-core.js` and `fonts/`. Every module's suite has the same check. Check counts are no longer stated in prose anywhere; name the section instead.
+- The legal line names the four bodies whose courses and documents the platform models (ACS via the DoD trademark, the AHA, PHMSA, the NFPA) and the words "either organization" are gone.

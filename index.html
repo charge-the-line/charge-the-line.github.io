@@ -113,10 +113,10 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:6px;border:1
  <div class="set"><div class="k">Anonymous statistics<small>Counts like "someone finished the infant station." Never names. <a href="privacy.html" style="color:var(--acc)">Details</a></small></div><div class="seg2" data-set="stats"><button data-val="off">Off</button><button data-val="on">On</button></div></div>
  <p class="stat" style="margin-top:10px">Settings apply to every Preconnect module on this phone.</p>
 </div></div>
-<p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. Preconnect and its modules are independent and not affiliated with or endorsed by either organization. <span id="ver"></span></p>
+<p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. The Emergency Response Guidebook is published by the U.S. Department of Transportation (PHMSA), and NFPA 470 is a standard of the National Fire Protection Association. Preconnect and its modules are independent and not affiliated with or endorsed by any of these organizations. <span id="ver"></span></p>
 <script>
 const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
-const APP_VERSION='1.11.27';
+const APP_VERSION='1.11.28';
 const $=id=>document.getElementById(id);const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HUBKEY='preconnect';
 
@@ -132,11 +132,11 @@ function installHint(){const box=$('install');if(!box)return;const nav=(typeof n
   $('install-later').onclick=()=>{box.hidden=true;try{localStorage.setItem('preconnect-install','no');}catch(e){}};}
 {const W=(typeof window!=='undefined')?window:null;if(W&&W.addEventListener)W.addEventListener('beforeinstallprompt',e=>{e.preventDefault();INSTALL_EV=e;installHint();});}
 const MODS=[
- {id:'ctl',key:'e102-pump-trainer',path:'charge-the-line/',name:'Charge the Line',desc:'Pump panel simulator: hydrants, drafting, relays, foam, and ten real saves.'},
+ {id:'ctl',key:'e102-pump-trainer',path:'charge-the-line/',name:'Charge the Line',desc:'Pump panel simulator: hydrants, drafting, relays, foam, master streams, an EV fire and six Real Saves.'},
  {id:'pc',key:'patient-contact',path:'patient-contact/',name:'Patient Contact',desc:'Medical first responder calls: arrest, overdose, stroke, childbirth, and more.'},
  {id:'bc',key:'bleed-control',path:'bleed-control/',name:'Bleed Control',desc:'The ABCs of bleeding: tourniquets, wound packing, and scenarios on the clock.'},
  {id:'bls',key:'bls-ready',path:'bls-ready/',name:'BLS Ready',desc:'High-quality CPR, AED, and choking — updated for the 2025 guidelines.'},
- {id:'uw',key:'upwind',path:'upwind/',name:'Upwind',desc:'Hazmat Awareness and Operations: the lesson and eight drills now; incidents with wind, zones and a meter next.'}];
+ {id:'uw',key:'upwind',path:'upwind/',name:'Upwind',desc:'Hazmat Awareness and Operations: the ERG workflow, zones and a 4-gas meter across eight incidents and three Real Calls.'}];
 const L={
  ctl:["Residential structure fire","Commercial building — FDC","Vehicle fire — Class B foam","Rural barn fire — draft","Relay — supply Engine 10-1","Breezy Point — Superstorm Sandy, 2012","First Interstate Bank — Los Angeles, 1988","Port Jervis, NY — tanker shuttle at 0°F, 2005","Queens, NY — gasoline tanker fire, 1994","Corvallis, OR — the Mayday nobody heard","EV fire on a county road","Defensive commercial fire — going big","Fill site at a dry hydrant","One Meridian Plaza — Philadelphia, 1991"],
  ctlX:{lesson:'Pump operations lesson',friction:'Friction loss',pdp:'Pump discharge pressure',control:'Find the control',hydrant:'Hydrant math',tank:'Tank time',math:'Pump math'},
@@ -168,7 +168,7 @@ function download(name,text,type){try{const a=document.createElement('a');a.href
 function daysAgo(d){const t=Date.parse(d);if(!t)return null;return Math.floor((Date.now()-t)/864e5);}
 /* The Today view (Milestone 2): the most recent activity, this week's count, and each module's progress as distinct activities done out of its total. */
 function today(){const recs=records();const last=recs[0]||null;const week=recs.filter(r=>{const n=daysAgo(r.d);return n!==null&&n>=0&&n<7;}).length;
-  const totals={ctl:L.ctl.length+Object.keys(L.ctlX).length-1,pc:Object.keys(L.pc).length+Object.keys(L.pcDrill).length,bc:Object.keys(L.bc).length,bls:Object.keys(L.bls).length,uw:Object.keys(L.uw).length};
+  const totals={ctl:L.ctl.length+Object.keys(L.ctlX).length,pc:Object.keys(L.pc).length+Object.keys(L.pcDrill).length,bc:Object.keys(L.bc).length,bls:Object.keys(L.bls).length,uw:Object.keys(L.uw).length};
   const mods=MODS.map(m=>{const r=recs.filter(x=>x.mod===m.name);const done=Math.min(totals[m.id],new Set(r.map(x=>x.act)).size);return {id:m.id,name:m.name,path:m.path,done,total:totals[m.id],last:r[0]||null};});
   return {last,week,mods,days:last?daysAgo(last.d):null};}
 /* Due for review: every activity's run history through pcSpacing (Milestone 3). Most overdue first; a miss shows as "try again". */
@@ -188,7 +188,7 @@ function dailyHTML(T){const pick=dailyPick(),dd=dailyDone(pick),P9=progression(T
 function render(){const T=today();const D=due();const modOf=n=>MODS.find(m=>m.name===n)||MODS[0];const ago=n=>n===null?'':n<=0?'today':n===1?'yesterday':n+' days ago';
   const th=$('today-h');if(th)th.textContent='Today · '+new Date().toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
   $('today').innerHTML=T.last?`<div class="card in m-${modOf(T.last.mod).id}"><div class="flex"><div><div class="small">Pick up where you left off</div><b style="display:block;font-family:'Saira Condensed';font-size:22px;line-height:1.05">${esc(T.last.act)}</b><div class="small">${esc(T.last.mod)}${T.last.mode?' · '+esc(T.last.mode):''} · ${esc(ago(T.days))}</div></div><div class="sp"></div><div class="num">${T.last.score===undefined||T.last.score===null?'':esc(T.last.score)}</div></div><a class="go btnlink" href="${modOf(T.last.mod).path}" style="margin-top:10px">Continue</a><div class="small" style="margin-top:8px">${T.week} ${T.week===1?'activity':'activities'} this week</div></div>`
-   :`<div class="card in"><div class="small">New here?</div><b style="display:block;font-family:'Saira Condensed';font-size:22px;line-height:1.05">Start with a ten-minute lesson</b><div class="small">Bleed Control, BLS Ready and Upwind each open with one. Your progress saves on this phone.</div></div>`;
+   :`<div class="card in"><div class="small">New here?</div><b style="display:block;font-family:'Saira Condensed';font-size:22px;line-height:1.05">Start with a ten-minute lesson</b><div class="small">Every module opens with one. Your progress saves on this phone.</div></div>`;
   $('today').innerHTML+=dailyHTML(T);
   $('today').innerHTML+=D.slice(0,2).map(g=>{const M=modOf(g.mod);const over=g.sp.status==='missed'?'try again':g.sp.dueIn<=-1?`due ${-g.sp.dueIn} day${g.sp.dueIn===-1?'':'s'} ago`:'due today';return `<a class="card mod m-${M.id} pc-due" href="${M.path}"><div class="flex"><div style="min-width:0"><div class="small">${g.sp.status==='missed'?'Missed last time':'Due for review'}</div><b class="t">${esc(g.act)}</b><div class="small">${esc(g.mod)} · ${esc(over)}</div></div><div class="sp"></div><span class="chip">${g.sp.status==='missed'?'Again':'Due'}</span></div></a>`;}).join('');
   $('mods').innerHTML=T.mods.map(m=>{const M=MODS.find(x=>x.id===m.id);const segs=Math.min(10,m.total);const on=Math.round(m.done/m.total*segs);const chip=!m.done?'':m.done===m.total?'<span class="chip">Ready</span>':m.last&&m.last.mode?`<span class="chip dim">${esc(m.last.mode)}</span>`:'<span class="chip dim">Started</span>';

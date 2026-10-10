@@ -1,10 +1,13 @@
-PRECONNECT — HOME PAGE (goes in the ROOT repository: charge-the-line.github.io)
-Upload: index.html, privacy.html, feedback.html, og-card.png, manifest.json, sw.js, icon-192.png, icon-512.png, ANALYTICS.md (+ tests folder, TESTING.md — optional)
-This REPLACES the old Charge the Line files in that repo. Charge the Line itself moves to its own repo
-named "charge-the-line" so it lives at /charge-the-line/ like the other modules. Do that move FIRST.
+PRECONNECT — HOME PAGE (the ROOT repository: charge-the-line.github.io, served at https://charge-the-line.github.io/)
+This folder is the whole home page:
+  index.html, privacy.html, feedback.html, preconnect-core.js, manifest.json, sw.js, icon-192.png, icon-512.png, og-card.png, fonts/
+(plus tests/, TESTING.md, ANALYTICS.md and CLAUDE.md, which do not affect the page).
+Every one of those files must be uploaded together: the page loads preconnect-core.js first, and the type comes from fonts/.
+Each module (charge-the-line, patient-contact, bleed-control, bls-ready, upwind) is its own repository and its own folder under the same address.
 
-Releasing an update: change APP_VERSION in index.html AND the CACHE name in sw.js together.
-Tests: node tests/run_all.js   (uses tests/fixture.json — real saved data from all four modules)
+GitHub Pages serves the main branch root of this repository. Committing to main deploys within a minute or two.
+Releasing an update: change APP_VERSION in index.html AND the CACHE name in sw.js together, and keep the "Current version" line in CLAUDE.md in step (the tests check all three).
+Tests: node tests/run_all.js   (uses tests/fixture.json and tests/fixtures/ — saved data from every module)
 
 FEEDBACK ADDRESS: open feedback.html and set FEEDBACK_TO = 'your-address@example.org' (near the bottom).
 While it's blank, "Send" uses the phone's share sheet instead.
