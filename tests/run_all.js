@@ -51,7 +51,7 @@ try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('scrip
  report('install hint: iPhone browser sees it, dismissing hides it for good, installed or unsupported browsers never see it',shown&&dismissed&&stays&&installed&&other,`shown ${shown} dismissed ${dismissed} stays ${stays} installed ${installed} other ${other}`);}
 {// Milestone 2: the Today view and module progress
  const a=boot({'bls-ready':JSON.stringify({runs:[{kind:'station',id:'adult',score:95,d:new Date().toISOString(),tier:1}]})});const T=a.api.today();a.api.render();
- report('Today view: picks up where you left off and counts this week',!!T.last&&T.last.mod==='BLS Ready'&&T.last.act==='Adult CPR and AED'&&T.last.score===95&&T.week===1&&T.mods.find(m=>m.id==='bls').done===1&&T.mods.find(m=>m.id==='bls').total===19&&/Pick up where you left off/.test(a.els.today.innerHTML)&&/bls-ready\//.test(a.els.today.innerHTML),`${T.last&&T.last.act} · week ${T.week}`);
+ report('Today view: picks up where you left off and counts this week',!!T.last&&T.last.mod==='BLS Ready'&&T.last.act==='Adult CPR and AED'&&T.last.score===95&&T.week===1&&T.mods.find(m=>m.id==='bls').done===1&&T.mods.find(m=>m.id==='bls').total===20&&/Pick up where you left off/.test(a.els.today.innerHTML)&&/bls-ready\//.test(a.els.today.innerHTML),`${T.last&&T.last.act} · week ${T.week}`);
  const b=boot(FIX);const Tb=b.api.today();report('module progress counts distinct activities, never above the total',Tb.mods.every(m=>m.done<=m.total&&(m.done>0||!b.api.records().some(r=>r.mod===m.name))),Tb.mods.map(m=>`${m.id} ${m.done}/${m.total}`).join(', '));
  const c=boot();c.api.render();report('empty device: Today view points new people at a lesson',/Start with a ten-minute lesson/.test(c.els.today.innerHTML)&&c.api.today().last===null);}
 {// Milestone 2: one settings sheet, one key, applied to the page
@@ -128,5 +128,8 @@ try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('scrip
 {// BLS Ready 0.15.0: a pool run names its patient in the Patient column; older runs leave it blank
  const b=boot({'bls-ready':JSON.stringify({runs:[{kind:'scenario',id:'pool',score:95,d:new Date().toISOString(),tier:0,v:'B',pt:'Medication patch'},{kind:'scenario',id:'crib',score:90,d:new Date().toISOString(),tier:1}]})});const R=b.api.records();const p=R.find(r=>r.score===95),c=R.find(r=>r.score===90);
  report('BLS Ready: a pool run shows its patient ("Medication patch") in the Patient column; other runs leave it blank',p&&p.pat==='Medication patch'&&p.act==='Pulled from the pool'&&c&&c.pat==='',`${p&&p.pat} / ${c&&c.pat}`);}
+{// BLS Ready 0.16.0: the slow-pulse scenario reads by name and the tile counts 20 activities
+ const b=boot({'bls-ready':JSON.stringify({runs:[{kind:'scenario',id:'slow',score:88,d:new Date().toISOString(),tier:1,v:'B',pt:'Pulse falls at the first recheck'}]})});const R=b.api.records();const T=b.api.today().mods.find(m=>m.id==='bls');
+ report('BLS Ready: "She has a pulse, but it\'s slow" reads by name with its patient, and the tile counts 20 activities',R.length===1&&R[0].act==="She has a pulse, but it's slow"&&R[0].pat==='Pulse falls at the first recheck'&&T.total===20&&T.done===1,`${R[0]&&R[0].act}, total ${T&&T.total}`);}
 report('trademark notices for both certifying organizations',/STOP THE BLEED® is a registered trademark/.test(html)&&/trademarks of the American Heart Association/.test(html));
 console.log(`\n${n-failed}/${n} checks passed`);process.exit(failed?1:0);
