@@ -97,3 +97,6 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 - CSV cells starting with `= + - @` or a tab get a leading apostrophe (training record and Drill Night CSV; `toCSV` → core `pcCsv`).
 - `restore()` refuses wrong-shape values (a list, a number, a list where an object belongs, a bad statistics value) and accepts the right shapes including settings and the statistics switch; a backup carries both.
 - `tests/fixtures/`: 21 older saved-data files from every module read into the record and the Today view; a hub 1.0.0 backup restores. Proven to fail (scratch): removing the CSV defusing or the shape check fails its check.
+
+## Rule 15 (final sweep milestone 2, October 10, 2026)
+- The core's pause hook: subscribers hear one hide and one show with the seconds away; repeats are ignored; `pcPauseBind` is wired from `settingsBind` and listens for `visibilitychange`.
