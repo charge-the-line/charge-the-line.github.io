@@ -89,3 +89,6 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 ## Upwind U1 (added October 3, 2026)
 
 - The fixture gains an `upwind` key with a lesson run and three drill runs produced by Upwind's own harness; `reads records from all five modules`, exact counts, backup → restore (five modules). `DAILY` has twenty entries across five modules; the daily test checks twenty distinct picks and the cycle. `platform_check.py` opens Upwind's placard drill and quits it, and requires `uw/start/` and `uw/quit/` events.
+
+## Offline helper (final sweep milestone 1, October 10, 2026)
+- Page and core network-first with a short wait, only 2xx saved, `cache:'reload'` installs, index cached once, module tile icons cached on first load (`moduleIcon` rule tested with module paths that must not match). Proven in a browser (scratch): first launch after a deploy runs the new page with the new core; a hanging network shows the saved page in under 4 s; a 404 serves the saved page; the hub's tile icons load offline.
