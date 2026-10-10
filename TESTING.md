@@ -24,7 +24,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 - Settings: saved under `preconnect-settings`, applied to `<html>` as `data-text` / `data-contrast` / `data-motion`; the statistics switch is the Privacy page's key.
 - Score count-up lands on the exact value when animation frames are unavailable.
 - Reduce Motion and Motion = Off rules exist in the CSS.
-- `tests/browser_check.py`: home and Settings at 320/390 px, normal and large text, no overflow, no button under 44 px.
+- `tests/browser_check.py`: home and Settings at 320/390 px, normal and large text, no overflow (fixed elements included), no button under 44 px tall or wide, no text under the floor (15 px for a sentence, 13 px for a caption).
 
 ## Milestone 3 checks (added October 2026)
 
@@ -72,7 +72,7 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 ## Milestone 10 checks (added October 2026)
 
 - Core: Daylight tokens, focus outlines and the landscape rule are in the look CSS; Daylight applies to the page; a stubbed `prefers-contrast: more` turns Off into High but never overrides Daylight; `pcA11y` sets `aria-live` on a feedback line; the settings sheet has the Daylight button.
-- Browser check: a landscape page (844 by 390) for the home list, the same in Daylight, and the settings sheet in landscape; fails on overflow or buttons under 44 px.
+- Browser check: a landscape page (844 by 390) for the home list, the same in Daylight, and the settings sheet in landscape; fails on overflow, buttons under 44 px tall or wide, or text under the floor.
 
 ## Platform privacy check (October 3, 2026)
 
