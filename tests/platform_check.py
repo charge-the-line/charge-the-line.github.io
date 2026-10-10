@@ -50,7 +50,7 @@ with sync_playwright() as p:
     pg.goto(B+'/charge-the-line/');pg.wait_for_timeout(300)
     if pg.is_visible('#b-start'):pg.click('#b-start')
     pg.click('.scen[data-i="0"]');pg.wait_for_timeout(300)
-    pg.goto(B+'/upwind/');pg.wait_for_timeout(300);pg.click('[data-drill="placard"]');pg.wait_for_timeout(300);pg.click('[data-q="quit"]');pg.wait_for_timeout(150)
+    pg.goto(B+'/upwind/');pg.wait_for_timeout(300);pg.click('#h-drills');pg.wait_for_timeout(200);pg.click('[data-drill="placard"]');pg.wait_for_timeout(300);pg.click('[data-q="quit"]');pg.wait_for_timeout(150)
     pg.goto(B+'/');pg.wait_for_timeout(300)
     pg.goto(B+'/bls-ready/');pg.wait_for_timeout(250);pg.evaluate("setTimeout(()=>{throw new Error('test failure in drill')},0);setTimeout(()=>{throw new Error('test failure in drill')},10)");pg.wait_for_timeout(300)
     before=len(EV)
