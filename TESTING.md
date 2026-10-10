@@ -92,3 +92,8 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 
 ## Offline helper (final sweep milestone 1, October 10, 2026)
 - Page and core network-first with a short wait, only 2xx saved, `cache:'reload'` installs, index cached once, module tile icons cached on first load (`moduleIcon` rule tested with module paths that must not match). Proven in a browser (scratch): first launch after a deploy runs the new page with the new core; a hanging network shows the saved page in under 4 s; a 404 serves the saved page; the hub's tile icons load offline.
+
+## Saved data (final sweep milestone 1, October 10, 2026)
+- CSV cells starting with `= + - @` or a tab get a leading apostrophe (training record and Drill Night CSV; `toCSV` → core `pcCsv`).
+- `restore()` refuses wrong-shape values (a list, a number, a list where an object belongs, a bad statistics value) and accepts the right shapes including settings and the statistics switch; a backup carries both.
+- `tests/fixtures/`: 21 older saved-data files from every module read into the record and the Today view; a hub 1.0.0 backup restores. Proven to fail (scratch): removing the CSV defusing or the shape check fails its check.

@@ -116,7 +116,7 @@ input{font-family:inherit;font-size:16px;padding:10px;border-radius:6px;border:1
 <p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. Preconnect and its modules are independent and not affiliated with or endorsed by either organization. <span id="ver"></span></p>
 <script>
 const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
-const APP_VERSION='1.11.25';
+const APP_VERSION='1.11.26';
 const $=id=>document.getElementById(id);const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HUBKEY='preconnect';
 
@@ -163,7 +163,7 @@ function records(){const out=[];const add=(mod,type,act,pat,d,mode,score,who,ins
   return out.sort((a,b)=>String(b.d).localeCompare(String(a.d)));}
 function csvRows(recs){const P=profile();const rows=[['Name','Organization','Module','Type','Activity','Patient','Date','Mode','Score','Instructor']];
   for(const r of (recs||records())){const names=r.who&&r.who.length?r.who:[P.name];for(const n of names)rows.push([n,P.org,r.mod,r.type,r.act,r.pat,String(r.d).slice(0,16).replace('T',' '),r.mode,r.score,r.inst]);}return rows;}
-function toCSV(rows){return rows.map(r=>r.map(v=>`"${String(v===undefined||v===null?'':v).replace(/"/g,'""')}"`).join(',')).join('\n');}
+function toCSV(rows){return pcCsv(rows);}/* the core quotes every cell and defuses =, +, -, @ formulas */
 function download(name,text,type){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();}catch(e){}}
 function daysAgo(d){const t=Date.parse(d);if(!t)return null;return Math.floor((Date.now()-t)/864e5);}
 /* The Today view (Milestone 2): the most recent activity, this week's count, and each module's progress as distinct activities done out of its total. */
@@ -225,9 +225,11 @@ $('today').onclick=e=>{const a=e.target&&e.target.closest&&e.target.closest('[da
 $('r-name').onchange=saveProfile;$('r-org').onchange=saveProfile;
 $('r-csv').onclick=()=>{saveProfile();const P=profile();pca('ev','hub/training-record-csv');download(`preconnect-training-record${P.name?'-'+P.name.replace(/[^a-z0-9]+/gi,'-').toLowerCase():''}.csv`,toCSV(csvRows()),'text/csv');};
 /* backup / restore: every module's saved data in one file */
-const ALLKEYS=[HUBKEY,...MODS.map(m=>m.key)];
+const ALLKEYS=[HUBKEY,'preconnect-settings','preconnect-stats',...MODS.map(m=>m.key)];/* the profile, the settings sheet, the statistics switch, every module */
+/* A backup value must be the shape its app expects: an object (not a list or a number), with list fields that are lists. A file that parses but is the wrong shape used to restore "successfully" and then crash the modules. */
+function shapeOK(k,v){if(k==='preconnect-stats')return v==='off'||v==='on';let o;try{o=JSON.parse(v);}catch(e){return false;}if(!o||typeof o!=='object'||Array.isArray(o))return false;for(const f of ['runs','log','extra','drillRuns','crew','roster'])if(o[f]!==undefined&&!Array.isArray(o[f]))return false;if(o.scen!==undefined&&(!o.scen||typeof o.scen!=='object'||Array.isArray(o.scen)))return false;return true;}
 function backup(){const data={};for(const k of ALLKEYS){const v=localStorage.getItem(k);if(v!==null)data[k]=v;}return {app:'preconnect',version:1,saved:new Date().toISOString(),data};}
-function restore(obj){if(!obj||obj.app!=='preconnect'||!obj.data)throw new Error('This file is not a Preconnect backup.');const keys=ALLKEYS.filter(k=>typeof obj.data[k]==='string');for(const k of keys){try{JSON.parse(obj.data[k]);}catch(e){throw new Error('This backup file is damaged. Nothing was changed.');}}for(const k of keys)localStorage.setItem(k,obj.data[k]);return keys.length;}
+function restore(obj){if(!obj||obj.app!=='preconnect'||!obj.data)throw new Error('This file is not a Preconnect backup.');const keys=ALLKEYS.filter(k=>typeof obj.data[k]==='string');for(const k of keys){if(!shapeOK(k,obj.data[k]))throw new Error('This backup file is damaged. Nothing was changed.');}for(const k of keys)localStorage.setItem(k,obj.data[k]);return keys.length;}
 $('b-backup').onclick=()=>{download(`preconnect-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(backup()),'application/json');pca('ev','hub/backup');$('b-msg').textContent='Backup downloaded. Keep it somewhere safe.';};
 $('b-restore').onclick=()=>$('f-restore').click();
 $('f-restore').onchange=e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const n=restore(JSON.parse(rd.result));pca('ev','hub/restore');$('b-msg').textContent=`Restored progress for ${n} module${n===1?'':'s'}.`;render();}catch(err){$('b-msg').textContent=err.message||'That file could not be read.';}};rd.readAsText(f);};

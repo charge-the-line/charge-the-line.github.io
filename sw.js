@@ -1,5 +1,5 @@
 // Preconnect home page. Bump CACHE when you upload a new version so phones pick it up.
-const CACHE = 'preconnect-v1.11.25';
+const CACHE = 'preconnect-v1.11.26';
 const CORE = ['index.html', 'privacy.html', 'feedback.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'fonts/atkinson-hyperlegible-latin-400-normal.woff2', 'fonts/atkinson-hyperlegible-latin-700-normal.woff2', 'fonts/saira-condensed-latin-500-normal.woff2', 'fonts/saira-condensed-latin-600-normal.woff2', 'fonts/saira-condensed-latin-700-normal.woff2', 'preconnect-core.js'];
 // How long to wait for the network before serving the saved copy. Airplane mode fails at once; one bar
 // of signal can hang for a minute, and the whole page is already on the phone.
