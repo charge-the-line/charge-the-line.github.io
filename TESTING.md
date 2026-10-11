@@ -109,3 +109,6 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 ## One voice (final sweep milestone 5, October 10, 2026)
 
 - The core's shared pieces: `pcTierHelp` is one base sentence per tier plus the module clause; `pcTag` has its fixed texts and is a 13 px caption; `pcResultRow` is Again · Home · Next with Next primary when there is one and Home otherwise; `pcLinks` and `pcAboutFoot` link back to Preconnect and to Feedback for the module as 44 px tap targets and carry the version line; `pcBandClass` tints a result's big number by band; the lesson and quiz engines say "Stop and go back"; `pcProfile`/`pcProfileSet` read and write the hub's own profile key; `pcGearShould` shows the floating Settings button over an overlay with no Settings of its own and never over the home, the sheet itself, the instructor sheet or the Drill Night picker; `#setov` sits above every overlay. The hub's sheet says Vibration.
+
+## Every activity with real taps (milestone 10)
+The home page has no activities of its own; the every-activity gate (`PC_ALL=1 python3 tests/browser_check.py`, milestone 10, lean finish) lives in each module's repo. The hub's check also opens `testers.html` at both widths.

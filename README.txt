@@ -1,6 +1,6 @@
 PRECONNECT — HOME PAGE (the ROOT repository: charge-the-line.github.io, served at https://charge-the-line.github.io/)
 This folder is the whole home page:
-  index.html, privacy.html, feedback.html, preconnect-core.js, manifest.json, sw.js, icon-192.png, icon-512.png, og-card.png, fonts/
+  index.html, privacy.html, feedback.html, testers.html, preconnect-core.js, manifest.json, sw.js, icon-192.png, icon-512.png, og-card.png, fonts/
 (plus tests/, TESTING.md, ANALYTICS.md and CLAUDE.md, which do not affect the page).
 Every one of those files must be uploaded together: the page loads preconnect-core.js first, and the type comes from fonts/.
 Each module (charge-the-line, patient-contact, bleed-control, bls-ready, upwind) is its own repository and its own folder under the same address.

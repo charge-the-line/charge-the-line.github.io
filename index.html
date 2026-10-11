@@ -93,7 +93,7 @@ input,textarea{font-family:inherit;font-size:16px;padding:10px;border-radius:6px
 <div class="sec">Drill Night</div>
 <div id="drillcard"></div>
 <div class="sec">More</div>
-<div class="row"><button id="r-csv">Training record (CSV)</button><button id="b-backup">Back up to a file</button><button id="b-restore">Restore from a file</button><a class="btnlink" href="feedback.html">Report a problem or idea</a></div>
+<div class="row"><button id="r-csv">Training record (CSV)</button><button id="b-backup">Back up to a file</button><button id="b-restore">Restore from a file</button><a class="btnlink" href="feedback.html">Report a problem or idea</a><a class="btnlink" href="testers.html">For testers</a></div>
 <input type="file" id="f-restore" accept=".json,application/json" class="hidden"><p class="stat" id="b-msg" style="margin:8px 0 0"></p>
 <p class="stat" style="margin-top:14px">Preconnect is a free, independent training platform made in Bay County, Michigan. A preconnect is the hoseline that's hooked up and ready before the call, so it flows the moment you need it. That's what practice does for skills. Preconnect is practice: it doesn't replace hands-on training, your department's protocols, or official certification courses. <a href="privacy.html" style="color:var(--or2)">Privacy</a></p>
 <div class="overlay hidden" id="drillov" style="z-index:21"><div class="box" id="drillbox"></div></div>
@@ -117,7 +117,7 @@ input,textarea{font-family:inherit;font-size:16px;padding:10px;border-radius:6px
 <p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. The Emergency Response Guidebook is published by the U.S. Department of Transportation (PHMSA), and NFPA 470 is a standard of the National Fire Protection Association. Preconnect and its modules are independent and not affiliated with or endorsed by any of these organizations. <span id="ver"></span></p>
 <script>
 const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
-const APP_VERSION='1.13.1';
+const APP_VERSION='1.14.0';
 const $=id=>document.getElementById(id);const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HUBKEY='preconnect';
 

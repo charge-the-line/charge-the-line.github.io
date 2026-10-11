@@ -15,6 +15,8 @@ with sync_playwright() as p:
         pg = b.new_page(viewport={'width': w, 'height': 800}, device_scale_factor=2, is_mobile=True, has_touch=True)
         pg.on('pageerror', lambda e: errs.append(str(e)))
         pg.goto(URL); pg.wait_for_timeout(300); rows.append((w, 'home', pg.evaluate(OVER), pg.evaluate(SMALL)))
+        pg.goto(URL.replace('index.html', 'testers.html')); pg.wait_for_timeout(300); rows.append((w, 'for testers', pg.evaluate(OVER), pg.evaluate(SMALL)))
+        pg.goto(URL); pg.wait_for_timeout(300)
         pg.click('#h-set'); pg.wait_for_timeout(200); rows.append((w, 'settings', pg.evaluate(OVER), pg.evaluate(SMALL)))
         pg.click('[data-set="text"] [data-val="large"]'); pg.wait_for_timeout(200); rows.append((w, 'large text', pg.evaluate(OVER), pg.evaluate(SMALL)))
         pg.click('#set-close'); pg.wait_for_timeout(200); rows.append((w, 'home, large text', pg.evaluate(OVER), pg.evaluate(SMALL)))

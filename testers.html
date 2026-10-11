@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14161a">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Preconnect">
+<meta name="description" content="Preconnect: free practice for fire and EMS skills — pump operations, patient care, bleeding control, BLS, and hazmat.">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<script data-pca>window.PCA_MOD="hub";
+/* Preconnect anonymous statistics (GoatCounter). Sends only activity paths — never names, organizations, or typed text.
+   Turn off per device on the Privacy page (localStorage 'preconnect-stats' = 'off'). Not sent from file:// or localhost. */
+(function(){var off=false;try{off=localStorage.getItem('preconnect-stats')==='off';}catch(e){}
+ var P=window.PCA={mod:window.PCA_MOD||'app',off:off,q:[],seen:{},cur:null,
+  clean:function(p){return String(p).toLowerCase().replace(/[^a-z0-9\/\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').slice(0,120);},
+  ev:function(path){if(this.off)return;var p=this.clean(path);if(this.q.length<60)this.q.push({path:p,title:p,event:true});this.flush();},
+  flush:function(){var g=window.goatcounter,s=this;if(!g||typeof g.count!=='function'){if(!s.t)s.t=setTimeout(function(){s.t=null;s.flush();},1500);return;}while(s.q.length){try{g.count(s.q.shift());}catch(e){}}},
+  bkt:function(n){n=+n;return n>=90?'score-90-100':n>=80?'score-80s':n>=70?'score-70s':n>=60?'score-60s':'score-under-60';},
+  att:function(n){return 'attempt-'+(n>=5?'5plus':n);},
+  begin:function(mod,act,where){this.abandon();this.cur={mod:mod,act:act,where:where};this.ev(mod+'/start/'+act);},
+  end:function(detail){var c=this.cur;if(!c)return;this.cur=null;this.ev(c.mod+'/finish/'+c.act+(detail?'/'+detail:''));},
+  abandon:function(){var c=this.cur;if(!c)return;this.cur=null;var w='';try{w=c.where?c.where():'';}catch(e){}this.ev(c.mod+'/quit/'+c.act+(w?'/'+w:''));},
+  err:function(mod,msg){var k=mod+'|'+msg;if(this.seen[k])return;this.seen[k]=1;this.ev('error/'+mod+'/'+String(msg).slice(0,60));}};
+ if(!off){var s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://preconnect.goatcounter.com/count');(document.head||document.documentElement).appendChild(s);}
+ window.addEventListener('error',function(e){P.err(P.mod||'app',e&&e.message||'error');});
+ window.addEventListener('pagehide',function(){P.abandon();});
+})();
+</script>
+
+<title>For testers — Preconnect</title>
+<style>
+/* Fonts are served from this site (fonts/, SIL Open Font License). Nothing loads from Google: works offline and makes no outside request. */
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/saira-condensed-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/saira-condensed-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/saira-condensed-latin-700-normal.woff2) format("woff2")}
+/* Milestone 1: every button is at least 48 px tall (finger-sized, gloves on). */
+button{min-height:48px}
+</style>
+<style>
+:root{--bg:#0a0c0f;--deck:#14171c;--deck2:#1c2026;--line:#2a2f37;--ink:#f6f7f9;--soft:#aab2bd;--or:#ff7a1a;--or2:#ff9a4d}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+body{max-width:560px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top,0px)) calc(14px + env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) calc(14px + env(safe-area-inset-left,0px))}
+h1,h2,h3{font-family:"Saira Condensed","Arial Narrow",sans-serif;font-weight:600}
+.brand{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:38px;letter-spacing:3px;color:var(--or);line-height:1;margin:6px 0 2px}
+.tag{font-size:18px;color:var(--ink);margin:0 0 4px}.sub{font-size:15px;color:var(--soft);margin:0 0 16px;line-height:1.45}
+.mod{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--ink);background:var(--deck);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.mod:active{transform:translateY(1px)}.mod img{width:56px;height:56px;border-radius:12px;flex:0 0 auto}
+.mod b{display:block;font-family:"Saira Condensed";font-size:23px;font-weight:600;line-height:1.05}.mod span{display:block;font-size:14px;color:var(--soft);line-height:1.35}
+.mod i{display:block;font-style:normal;font-size:12px;color:var(--or2);margin-top:3px}
+.sec{font-family:"Saira Condensed";font-size:15px;letter-spacing:1.5px;color:var(--or2);margin:20px 0 8px}
+.card{background:var(--deck);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.mrow{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid #2c3038;font-size:15px}.mrow:first-of-type{border-top:0}.mrow span{color:var(--soft)}
+button{font-family:inherit;font-size:15px;border-radius:10px;padding:12px;cursor:pointer;color:var(--ink);background:var(--deck2);border:1px solid var(--line);touch-action:manipulation}
+button:focus-visible,a:focus-visible{outline:2px solid var(--or2);outline-offset:2px}
+.go{background:var(--or);border-color:var(--or);color:#1a0f05;font-weight:700}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+input{font-family:inherit;font-size:16px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0f1114;color:var(--ink);width:100%;margin-bottom:8px}
+.stat{font-size:13px;color:var(--soft);line-height:1.45}.legal{font-size:12px;color:#8d939d;line-height:1.5;margin-top:18px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<a href="./" style="display:inline-block;font-size:15px;font-weight:700;color:#ff8a3d;text-decoration:none;margin:0 0 6px;padding:12px 0;min-height:44px">◂ PRECONNECT</a>
+<h1 style="font-size:32px;margin:4px 0 4px">For testers</h1>
+<p class="sub">Thank you for trying Preconnect before anyone else. This page is the whole briefing. Ten minutes to read, then play.</p>
+<div class="card stat" style="font-size:15px;color:var(--ink);line-height:1.55">
+<h3 style="margin:0 0 6px;color:var(--or2)">What Preconnect is</h3>
+<p style="margin:0 0 10px">Free practice for fire and EMS skills, on your phone, made in Bay County, Michigan. Five modules: pump operations (Charge the Line), medical first response (Patient Contact), bleeding control (Bleed Control), BLS (BLS Ready) and hazmat awareness and operations (Upwind). Each one opens with a short lesson, then quick drills and scenarios that score what you did and tell you why. It is a personal project, not a department program and not a certification. The tagline says it: ready before the call.</p>
+<h3 style="margin:14px 0 6px;color:var(--or2)">Practice, not certification</h3>
+<p style="margin:0 0 10px">Nothing here certifies anyone. Bleed Control is modeled on the ACS Stop the Bleed® course and BLS Ready on the AHA BLS Provider course (2025 guidelines), in our own words; we are not affiliated with either. Your department's protocols, your medical control and your instructors win every time the app and they disagree. If you spot a place where the app teaches something your protocol does differently, that is exactly the kind of report we want.</p>
+<h3 style="margin:14px 0 6px;color:var(--or2)">Install it first</h3>
+<p style="margin:0 0 6px">Preconnect runs from the home screen like an app, works offline once it has loaded, and keeps your progress on the phone. Install it before you test anything else:</p>
+<ul style="margin:0 0 10px;padding-left:20px">
+<li><b>iPhone:</b> open <a href="https://charge-the-line.github.io/" style="color:var(--or2)">charge-the-line.github.io</a> in Safari, tap Share (the square with the arrow), then <b>Add to Home Screen</b>, then Add.</li>
+<li><b>Android:</b> open the same address in Chrome, tap the menu (three dots), then <b>Install app</b> or <b>Add to Home screen</b>.</li>
+<li>From then on, open Preconnect from its icon, not from the browser. One icon runs every module.</li>
+</ul>
+<p style="margin:0 0 10px">Why it matters: Safari can clear a website's saved progress after about a week of not using it, and the installed app is protected from that. The installed app also keeps an offline copy, so it works in a basement or a bay with no signal.</p>
+<h3 style="margin:14px 0 6px;color:var(--or2)">What to try</h3>
+<ol style="margin:0 0 10px;padding-left:20px">
+<li>Open Settings (the gear) and put in your name. Try large text, and Daylight contrast outdoors in the sun.</li>
+<li>Do one lesson all the way through, in the module closest to your job.</li>
+<li>Do the daily drill from the home page two days in a row.</li>
+<li>Play one scenario per module on Guided, then the same one on Recall. Read the debrief: does it say why you lost points?</li>
+<li>Turn sound on in Settings and run a BLS Ready compressions station: the metronome should keep time.</li>
+<li>Lock the phone in the middle of a timed station, wait a minute, unlock it. You should not be charged for the time away.</li>
+<li>Put the phone in airplane mode and open Preconnect from its icon. Every module should still open.</li>
+<li>Come back to the home page: Continue should open the activity you left, and the tiles should show what you have done.</li>
+<li>If you teach: start a Drill Night from the home page with two or three names on the roster, run a few activities, then look at the board and download the night's CSV.</li>
+<li>Try to break it. Tap fast, tap twice, tap the wrong thing on purpose, rotate the phone, use it with gloves on.</li>
+</ol>
+<h3 style="margin:14px 0 6px;color:var(--or2)">How to report</h3>
+<p style="margin:0 0 6px">Use the <a href="feedback.html" style="color:var(--or2)">feedback page</a> (also linked under every result screen). One report per thing you found. The most useful report says:</p>
+<ul style="margin:0 0 10px;padding-left:20px">
+<li>Your phone and its software version (for example iPhone 13, iOS 18).</li>
+<li>Which module and which activity, and the difficulty you were on.</li>
+<li>What you did, what happened, and what you expected instead. A screenshot helps.</li>
+<li>Whether you could make it happen again.</li>
+</ul>
+<p style="margin:0 0 10px">Inside a Patient Contact call, the "Report an issue" button sends a snapshot of the call's state with your note, which is even better for a bug in a call. Content disagreements ("my protocol says 90, not 94") are reports too: say which protocol and, if you can, where it is written.</p>
+<h3 style="margin:14px 0 6px;color:var(--or2)">Known limitations</h3>
+<ul style="margin:0 0 10px;padding-left:20px">
+<li>Progress lives on this phone only. There are no accounts and no sync. Back up from Settings → More → Back up to a file before you switch phones, and restore it on the new one.</li>
+<li>Patient Contact follows current guidelines with protocol caveats; the Bay County medical control review is still pending, so agency and hospital names are generic ("Medic 1", "East Side Hospital") and lines marked "per protocol · MCA review pending" may change.</li>
+<li>BLS Ready follows the published 2025 guidelines; it will be compared with the official course materials after the instructor course in November and adjusted where the AHA teaches something differently. Lines marked "to confirm" are flagged for that.</li>
+<li>Upwind's hazmat team name, callout and notification list are placeholders marked "to confirm", and no phone numbers are shown. Always use your current ERG.</li>
+<li>Charge the Line is modeled on one engine, Engine 10-2 (Hale Q-Flo 1250, 800-gallon tank). Numbers on your rig will differ.</li>
+<li>Anything marked "modeled" is a reasonable simulation, not a measured fact; anything marked "per department SOP" depends on where you work.</li>
+<li>Sound is off by default; turn it on in Settings. Vibration needs a phone that supports it (most iPhones do not vibrate from a web app).</li>
+<li>Feedback sends through your phone's share sheet or copies to the clipboard until an email address is set up.</li>
+<li>Anonymous statistics count activity like "someone finished the infant station", never names; turn them off per device on the <a href="privacy.html" style="color:var(--or2)">Privacy page</a>.</li>
+</ul>
+<h3 style="margin:14px 0 6px;color:var(--or2)">After an update</h3>
+<p style="margin:0">New versions arrive on their own. If a bar says "New version available", tap it to reload. If something looks stale, close the app completely and open it again. The version number sits under each module's title and at the bottom of every About page; please include it in a report.</p>
+</div>
+<p class="legal" style="font-size:15px">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense, licensed to the American College of Surgeons. BLS Provider is a course of the American Heart Association. Preconnect is not affiliated with or endorsed by either, by PHMSA or by the NFPA.</p>
+</body>
+</html>
