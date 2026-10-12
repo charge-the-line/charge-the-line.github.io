@@ -3,6 +3,10 @@
 Plain-language history of the home page (the hub at https://charge-the-line.github.io/). Each module has its own CHANGELOG.md.
 Newest first. "Core" is `preconnect-core.js`, the file every module shares.
 
+## 1.15.3 — October 12, 2026
+
+- Purchase Point E4: all seven scenarios are live, so the For testers page says the module is complete at 19 activities; the fixture holds real runs of the four new scenarios (the trailer on Guided and the loaded trailer on Recall, the EV's white smoke, the pole on Chaos, the two-car crash on Recall with the second-patient inject, played through the module's harness) and `tests/fixtures/pp-0.4.0-scenarios.json`.
+
 ## 1.15.2 — October 12, 2026
 
 - Purchase Point E3: the For testers page names the three live scenarios (car versus tree, the ditch, the field) and the four still marked Soon; the fixture carries real scenario runs (the tree on Guided, the ditch on Recall, the field on Chaos with an instructor inject), so the Scenario rows with their tier, layout and instructor mark are read on every run; the statistics dictionary names `scn-<id>`.
