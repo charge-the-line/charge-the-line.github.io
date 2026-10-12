@@ -19,6 +19,7 @@ Dashboard: **https://preconnect.goatcounter.com** (sign in with the account you 
 | `*/lesson` · `*/exam` · `*/drill-…` | Lessons, exam practice, quick drills |
 | `uw/start/drill-placard` · `uw/quit/lesson/slide-4` | Upwind drills and lesson, with the question or slide where someone stopped |
 | `pp/start/drill-hazard` · `pp/quit/exam/question-7` · `pp/finish/lesson/score-90-100` | Purchase Point drills, exam practice and lesson |
+| `pp/start/station-door` · `pp/quit/scn-tree/step-9` · `pp/finish/scn-ditch/score-80s` | Purchase Point skill stations and scenarios, with the step where someone stopped |
 | `hub/training-record-csv` · `hub/backup` · `hub/restore` · `hub/feedback-sent` | Home-page actions |
 | `hub/daily-drill` | Someone tapped the day's 60-second drill on the home page |
 | `hub/install-tap` | Someone tapped Install on the home page's install card (Chrome and Android; iPhone has no such button) |

@@ -3,6 +3,10 @@
 Plain-language history of the home page (the hub at https://charge-the-line.github.io/). Each module has its own CHANGELOG.md.
 Newest first. "Core" is `preconnect-core.js`, the file every module shares.
 
+## 1.15.2 — October 12, 2026
+
+- Purchase Point E3: the For testers page names the three live scenarios (car versus tree, the ditch, the field) and the four still marked Soon; the fixture carries real scenario runs (the tree on Guided, the ditch on Recall, the field on Chaos with an instructor inject), so the Scenario rows with their tier, layout and instructor mark are read on every run; the statistics dictionary names `scn-<id>`.
+
 ## 1.15.1 — October 12, 2026
 
 - Purchase Point E2: the For testers page names the five skill stations and the Where to cut drill as live; the fixture carries real station runs and a Where to cut run.
