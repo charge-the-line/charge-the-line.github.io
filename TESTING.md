@@ -112,3 +112,9 @@ Foundation fixes: fonts served from this site, screen wake lock, finger-sized bu
 
 ## Every activity with real taps (milestone 10)
 The home page has no activities of its own; the every-activity gate (`PC_ALL=1 python3 tests/browser_check.py`, milestone 10, lean finish) lives in each module's repo. The hub's check also opens `testers.html` at both widths.
+
+## Purchase Point (hub 1.15.0, October 12, 2026)
+- `links to all six module folders`; `ownFile` leaves `/purchase-point/` alone; `reads records from all six modules` with exact counts from the fixture (a lesson, two drills and the exam played through Purchase Point's own harness); backup → restore brings back six modules.
+- A boot with a `purchase-point` key shows the tile with 19 activities and reads a drill, the exam, a station (type Skill, with the tier) and a scenario (tier, layout and the instructor mark), each with its `href`.
+- When the module is checked out next to this repo, every name in `L.pp` must equal the module's own activity name (proved by renaming one in a scratch copy).
+- The daily drill: twenty-four days, twenty-four drills, six modules. `platform_check.py` opens a Purchase Point drill and quits it (`pp/start/drill-hazard`, `pp/quit/drill-hazard/question-1`).

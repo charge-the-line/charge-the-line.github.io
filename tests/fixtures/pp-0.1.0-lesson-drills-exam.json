@@ -1,0 +1,36 @@
+{
+ "runs": [
+  {
+   "kind": "lesson",
+   "id": "lesson",
+   "score": 100,
+   "d": "2026-10-12T12:37:09.952Z",
+   "tier": 0,
+   "href": "purchase-point/?lesson=1"
+  },
+  {
+   "kind": "drill",
+   "id": "tool",
+   "score": 100,
+   "d": "2026-10-12T12:37:09.954Z",
+   "tier": 0,
+   "href": "purchase-point/?drill=tool"
+  },
+  {
+   "kind": "drill",
+   "id": "hazard",
+   "score": 75,
+   "d": "2026-10-12T12:37:09.955Z",
+   "tier": 0,
+   "href": "purchase-point/?drill=hazard"
+  },
+  {
+   "kind": "exam",
+   "id": "exam",
+   "score": 93,
+   "d": "2026-10-12T12:37:09.956Z",
+   "tier": 0,
+   "href": "purchase-point/?exam=1"
+  }
+ ]
+}

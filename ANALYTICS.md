@@ -18,13 +18,14 @@ Dashboard: **https://preconnect.goatcounter.com** (sign in with the account you 
 | `pc/quit/arrest/mission-2` · `ctl/finish/scenario-6/guided/attempt-1/score-80s` | Patient Contact calls, Charge the Line scenarios |
 | `*/lesson` · `*/exam` · `*/drill-…` | Lessons, exam practice, quick drills |
 | `uw/start/drill-placard` · `uw/quit/lesson/slide-4` | Upwind drills and lesson, with the question or slide where someone stopped |
+| `pp/start/drill-hazard` · `pp/quit/exam/question-7` · `pp/finish/lesson/score-90-100` | Purchase Point drills, exam practice and lesson |
 | `hub/training-record-csv` · `hub/backup` · `hub/restore` · `hub/feedback-sent` | Home-page actions |
 | `hub/daily-drill` | Someone tapped the day's 60-second drill on the home page |
 | `hub/install-tap` | Someone tapped Install on the home page's install card (Chrome and Android; iPhone has no such button) |
 | `hub/drill-night-start` · `hub/drill-night-end` · `hub/drill-night-csv` | A Drill Night session was started, ended, or exported (counts only; never who was there) |
 | `error/<module>/<message>` | A bug someone hit. **Check these weekly** |
 
-Module codes: `ctl` Charge the Line · `pc` Patient Contact · `bc` Bleed Control · `bls` BLS Ready · `uw` Upwind · `hub` home page.
+Module codes: `ctl` Charge the Line · `pc` Patient Contact · `bc` Bleed Control · `bls` BLS Ready · `uw` Upwind · `pp` Purchase Point · `hub` home page.
 
 **Reading the ids.** Paths are lower-cased before they are sent, so BLS Ready's `chokeA` and `chokeI` arrive as `chokea` and `chokei`, and `child2` stays `child2`. Every id is listed by module in the key at the end of this file.
 
@@ -175,3 +176,16 @@ Generated from the home page's name table (`L` in `index.html`), so a new activi
 | `scenario-king` | Real Call: Kingman, 1973 |
 | `scenario-epal` | Real Call: East Palestine, 2023 |
 | `scenario-liion` | Lithium-ion battery fire |
+
+### Purchase Point (`pp`)
+| Event id | Activity |
+|---|---|
+| `lesson` | The lesson |
+| `drill-cut` | Where to cut (on the car diagram, coming in E2) |
+| `drill-tool` | Tool for the job |
+| `drill-hazard` | Hazard ID |
+| `drill-first` | What's first |
+| `drill-build` | Vehicle construction |
+| `exam` | Exam practice |
+| `skill-stab` · `skill-glass` · `skill-door` · `skill-roof` · `skill-dash` | The five skill stations (coming in E2) |
+| `scenario-tree` · `scenario-ditch` · `scenario-field` · `scenario-under` · `scenario-ev` · `scenario-pole` · `scenario-two` | The seven scenarios (coming in E3 to E5) |

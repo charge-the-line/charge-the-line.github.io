@@ -3,6 +3,10 @@
 Plain-language history of the home page (the hub at https://charge-the-line.github.io/). Each module has its own CHANGELOG.md.
 Newest first. "Core" is `preconnect-core.js`, the file every module shares.
 
+## 1.15.0 — October 12, 2026 — Purchase Point joins
+- A sixth tile: Purchase Point, vehicle extrication at the Operations level, in glass cyan. It counts 19 activities; its lesson, four quick drills and exam practice are live, and its stations and scenarios are on the way.
+- Its runs show in the training record, the CSV, Continue, Due for review and the Drill Night board; four of its drills join the daily rotation (24 drills); backup and restore carry it; the feedback page lists it.
+
 ## 1.14.0 — October 11, 2026 — tester release
 - A "For testers" page: what Preconnect is, install first, what to try, how to report, known limitations, practice not certification. Linked under More on the home page.
 - Every activity on the platform (100 of them) is now played to the end with real taps at 390 px by the browser checks before a release.
