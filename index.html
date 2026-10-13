@@ -117,7 +117,7 @@ input,textarea{font-family:inherit;font-size:16px;padding:10px;border-radius:6px
 <p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. The Emergency Response Guidebook is published by the U.S. Department of Transportation (PHMSA), and NFPA 470 is a standard of the National Fire Protection Association. Preconnect and its modules are independent and not affiliated with or endorsed by any of these organizations. <span id="ver"></span></p>
 <script>
 const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
-const APP_VERSION='1.15.3';
+const APP_VERSION='1.15.4';
 const $=id=>document.getElementById(id);const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HUBKEY='preconnect';
 
@@ -138,7 +138,7 @@ const MODS=[
  {id:'bc',key:'bleed-control',path:'bleed-control/',name:'Bleed Control',desc:'The ABCs of bleeding: tourniquets, wound packing, and scenarios on the clock.'},
  {id:'bls',key:'bls-ready',path:'bls-ready/',name:'BLS Ready',desc:'High-quality CPR, AED, and choking — updated for the 2025 guidelines.'},
  {id:'uw',key:'upwind',path:'upwind/',name:'Upwind',desc:'Hazmat Awareness and Operations: the ERG workflow, zones and a 4-gas meter across eight incidents and three Real Calls.'},
- {id:'pp',key:'purchase-point',path:'purchase-point/',name:'Purchase Point',desc:'Vehicle extrication at the Operations level: size-up, stabilization, power in order, glass, and the car off the patient.'}];
+ {id:'pp',key:'purchase-point',path:'purchase-point/',name:'Purchase Point',desc:'Vehicle extrication, the engine crew\'s part: size-up, stabilization, power in order, glass, and the car off the patient.'}];
 const L={
  ctl:["Residential structure fire","Commercial building — FDC","Vehicle fire — Class B foam","Rural barn fire — draft","Relay — supply Engine 10-1","Breezy Point — Superstorm Sandy, 2012","First Interstate Bank — Los Angeles, 1988","Port Jervis, NY — tanker shuttle at 0°F, 2005","Queens, NY — gasoline tanker fire, 1994","Corvallis, OR — the Mayday nobody heard","EV fire on a county road","Defensive commercial fire — going big","Fill site at a dry hydrant","One Meridian Plaza — Philadelphia, 1991"],
  ctlX:{lesson:'Pump operations lesson',friction:'Friction loss',pdp:'Pump discharge pressure',control:'Find the control',hydrant:'Hydrant math',tank:'Tank time',math:'Pump math'},

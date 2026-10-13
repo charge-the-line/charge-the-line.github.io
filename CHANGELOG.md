@@ -3,6 +3,9 @@
 Plain-language history of the home page (the hub at https://charge-the-line.github.io/). Each module has its own CHANGELOG.md.
 Newest first. "Core" is `preconnect-core.js`, the file every module shares.
 
+## 1.15.4 — October 13, 2026
+- The Purchase Point tile reads "Vehicle extrication, the engine crew's part" (no more "at the Operations level"), alongside Purchase Point 0.5.0, the call-sheet workbench.
+
 ## 1.15.3 — October 12, 2026
 
 - Purchase Point E4: all seven scenarios are live, so the For testers page says the module is complete at 19 activities; the fixture holds real runs of the four new scenarios (the trailer on Guided and the loaded trailer on Recall, the EV's white smoke, the pole on Chaos, the two-car crash on Recall with the second-patient inject, played through the module's harness) and `tests/fixtures/pp-0.4.0-scenarios.json`.
