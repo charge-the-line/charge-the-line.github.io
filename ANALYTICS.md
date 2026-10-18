@@ -79,8 +79,8 @@ Generated from the home page's name table (`L` in `index.html`), so a new activi
 | `drill-pdp` | Pump discharge pressure |
 | `drill-control` | Find the control |
 | `drill-hydrant` | Hydrant math |
-| `drill-tank` | Tank time |
-| `drill-math` | Pump math |
+| `drill-math` | Pump math (one drill since Charge the Line 2.24.0, October 18, 2026: pump-pressure and tank-time problems) |
+| `drill-tank` | Tank time: the same drill's history before October 18, 2026 (merged into Pump math; read the two ids together) |
 
 ### Patient Contact (`pc`)
 | Event id | Activity |
@@ -182,11 +182,11 @@ Generated from the home page's name table (`L` in `index.html`), so a new activi
 | Event id | Activity |
 |---|---|
 | `lesson` | The lesson |
-| `drill-cut` | Where to cut (on the car diagram, coming in E2) |
+| `drill-cut` | Where to cut (on the car diagram) |
 | `drill-tool` | Tool for the job |
 | `drill-hazard` | Hazard ID |
 | `drill-first` | What's first |
 | `drill-build` | Vehicle construction |
 | `exam` | Exam practice |
-| `skill-stab` · `skill-glass` · `skill-door` · `skill-roof` · `skill-dash` | The five skill stations (coming in E2) |
-| `scenario-tree` · `scenario-ditch` · `scenario-field` · `scenario-under` · `scenario-ev` · `scenario-pole` · `scenario-two` | The seven scenarios (coming in E3 to E5) |
+| `station-stab` · `station-glass` · `station-door` · `station-roof` · `station-dash` | The five skill stations |
+| `scn-tree` · `scn-ditch` · `scn-field` · `scn-under` · `scn-ev` · `scn-pole` · `scn-two` · `scn-ped` | The eight scenarios (`scn-ped`, Pedestrian under a car, since Purchase Point 0.6.0) |

@@ -3,6 +3,9 @@
 Plain-language history of the home page (the hub at https://charge-the-line.github.io/). Each module has its own CHANGELOG.md.
 Newest first. "Core" is `preconnect-core.js`, the file every module shares.
 
+## 1.16.0 — October 18, 2026
+- Every module counts 20 activities (120 in all): Charge the Line's Pump math is one quick drill (its old Tank time runs count toward it, best kept), and Purchase Point's eighth scenario, Pedestrian under a car, is on the tile and in the record. The For testers page says so.
+
 ## 1.15.4 — October 13, 2026
 - The Purchase Point tile reads "Vehicle extrication, the engine crew's part" (no more "at the Operations level"), alongside Purchase Point 0.5.0, the call-sheet workbench.
 
