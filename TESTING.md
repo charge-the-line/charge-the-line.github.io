@@ -118,3 +118,7 @@ The home page has no activities of its own; the every-activity gate (`PC_ALL=1 p
 - A boot with a `purchase-point` key shows the tile with 19 activities and reads a drill, the exam, a station (type Skill, with the tier) and a scenario (tier, layout and the instructor mark), each with its `href`.
 - When the module is checked out next to this repo, every name in `L.pp` must equal the module's own activity name (proved by renaming one in a scratch copy).
 - The daily drill: twenty-four days, twenty-four drills, six modules. `platform_check.py` opens a Purchase Point drill and quits it (`pp/start/drill-hazard`, `pp/quit/drill-hazard/question-1`).
+
+## The address (hub 1.16.1, October 18, 2026, preconnect.org)
+- `CNAME` exists and holds exactly `preconnect.org` (GitHub wrote it when Max set the custom domain; never delete or overwrite it), no module repo checked out next to this one has a `CNAME`, no file in this repo names the old github.io address, the `og:url` and `og:image` tags are on https://preconnect.org/, every manifest here and in the siblings has `start_url`, `scope` and `id` set to `./`, and the For testers page installs from preconnect.org and tells anyone who installed before the move how to carry their progress over. Each was proven to fail on a planted bug (a changed and a missing `CNAME`, a module `CNAME`, an absolute link, an absolute manifest `id`).
+- `tests/platform_check.py` now launches the preinstalled Chromium like `browser_check.py` (it stopped on a missing headless shell).

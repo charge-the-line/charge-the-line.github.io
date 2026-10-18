@@ -4,9 +4,10 @@
    The folder must hold this home page plus charge-the-line/, patient-contact/, bleed-control/, bls-ready/, upwind/, purchase-point/.
    GoatCounter is replaced by a recorder. Verifies: start/finish/quit events in every module, errors reported once,
    names typed into the app never appear in any event, and the Privacy page's opt-out stops everything."""
-import sys
+import os, sys
 from playwright.sync_api import sync_playwright
 import json, threading, functools, http.server
+EXE = '/opt/pw-browsers/chromium' if os.path.exists('/opt/pw-browsers/chromium') else None   # the preinstalled Chromium, like browser_check.py
 ROOT=sys.argv[1] if len(sys.argv)>1 else '.'
 H=functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT);H.log_message=lambda *a:None
 srv=http.server.ThreadingHTTPServer(('127.0.0.1',8766),functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
@@ -15,7 +16,7 @@ threading.Thread(target=srv.serve_forever,daemon=True).start()
 EV=[];errs=[]
 STUB="window.goatcounter={count:function(o){window.reportEv(o.path)}};"
 with sync_playwright() as p:
-    b=p.chromium.launch();ctx=b.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True)
+    b=(p.chromium.launch(executable_path=EXE) if EXE else p.chromium.launch());ctx=b.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True)
     ctx.route('**/gc.zgo.at/**',lambda r:r.abort());ctx.route('**goatcounter.com/**',lambda r:r.abort())
     ctx.expose_binding('reportEv',lambda src,path:EV.append(path));ctx.add_init_script(STUB)
     pg=ctx.new_page();pg.on('pageerror',lambda e:errs.append(str(e)))

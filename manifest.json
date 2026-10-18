@@ -4,6 +4,7 @@
   "description": "Ready before the call. Free practice for fire and EMS skills.",
   "start_url": "./",
   "scope": "./",
+  "id": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#14161a",

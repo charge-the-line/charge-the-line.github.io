@@ -1,7 +1,13 @@
 # Preconnect home page — changelog
 
-Plain-language history of the home page (the hub at https://charge-the-line.github.io/). Each module has its own CHANGELOG.md.
+Plain-language history of the home page (the hub at https://preconnect.org/). Each module has its own CHANGELOG.md.
 Newest first. "Core" is `preconnect-core.js`, the file every module shares.
+
+## 1.16.1 — October 18, 2026 — preconnect.org
+- Preconnect lives at https://preconnect.org. The link preview (og:url, og:image), the For testers page and the docs use the new address; every link between pages stays relative, and every manifest (start_url, scope, id) is relative, so nothing names a host.
+- The For testers page tells anyone who installed before the move how to carry their progress over: back up from the old icon, restore at preconnect.org, add the new icon.
+- The platform check (tests/platform_check.py) launches the preinstalled browser like the browser check.
+- The suite fails if the CNAME file GitHub added (preconnect.org) is missing or changed, if any module repo checked out next to this one has a CNAME of its own, or if the old github.io address appears anywhere.
 
 ## 1.16.0 — October 18, 2026
 - Every module counts 20 activities (120 in all): Charge the Line's Pump math is one quick drill (its old Tank time runs count toward it, best kept), and Purchase Point's eighth scenario, Pedestrian under a car, is on the tile and in the record. The For testers page says so.

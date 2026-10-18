@@ -72,6 +72,19 @@ try{new vm.Script(html.split('<script>')[1].split('</script>')[0]);report('scrip
  const sib=['charge-the-line','patient-contact','bleed-control','bls-ready','upwind','purchase-point'].map(r=>[r,path.join(__dirname,'..','..',r,'preconnect-core.js')]).filter(([r,f])=>fs.existsSync(f));
  if(sib.length){const drift=sib.filter(([r,f])=>fs.readFileSync(f,'utf8')!==ct).map(([r])=>r);report('shared core is byte-identical in every sibling repo checked out next to this one',drift.length===0,drift.length?'drifted: '+drift.join(', '):`${sib.length} siblings match`);}
  else report('shared core identity across repos (skipped: no sibling repos checked out)',true);
+ {/* preconnect.org (October 18, 2026): GitHub's CNAME file is the custom domain; nothing names the old host */const R0=path.join(__dirname,'..');const cn=path.join(R0,'CNAME');
+  report('CNAME exists and holds exactly preconnect.org (GitHub wrote it when the custom domain was set; never delete or overwrite it)',fs.existsSync(cn)&&fs.readFileSync(cn,'utf8').trim()==='preconnect.org',fs.existsSync(cn)?JSON.stringify(fs.readFileSync(cn,'utf8')):'missing');
+  const sibs=['charge-the-line','patient-contact','bleed-control','bls-ready','upwind','purchase-point'].map(r=>path.join(R0,'..',r)).filter(d=>fs.existsSync(path.join(d,'index.html')));
+  const own=sibs.filter(d=>fs.existsSync(path.join(d,'CNAME'))).map(d=>path.basename(d));
+  report(sibs.length?'no module repo checked out next to this one has a CNAME file (modules are served at preconnect.org/<module>/)':'module CNAME check (skipped: no sibling repos checked out)',own.length===0,own.join(', '));
+  const OLD=new RegExp('https?://charge-the-line\\.github\\.io');const hits=[];(function walk(d){for(const e of fs.readdirSync(d,{withFileTypes:true})){if(e.name==='.git'||e.name==='node_modules'||e.name==='fonts')continue;const f=path.join(d,e.name);if(e.isDirectory())walk(f);else if(/\.(html|js|json|md|txt|py|css)$/i.test(e.name)&&OLD.test(fs.readFileSync(f,'utf8')))hits.push(path.relative(R0,f));}})(R0);
+  report('no file names the old github.io address (the site is https://preconnect.org)',hits.length===0,hits.join(', '));
+  const H=fs.readFileSync(path.join(R0,'index.html'),'utf8');
+  report('the link preview points at the new address (og:url and og:image on https://preconnect.org/)',/<meta property="og:url" content="https:\/\/preconnect\.org\/">/.test(H)&&/<meta property="og:image" content="https:\/\/preconnect\.org\/og-card\.png/.test(H));
+  const bad=[R0,...sibs].map(d=>[path.basename(d),JSON.parse(fs.readFileSync(path.join(d,'manifest.json'),'utf8'))]).filter(([r,m])=>!(m.start_url==='./'&&m.scope==='./'&&m.id==='./')).map(([r])=>r);
+  report('every manifest (this one and each sibling) names no host: start_url, scope and id are ./',bad.length===0,bad.join(', '));
+  const T=fs.readFileSync(path.join(R0,'testers.html'),'utf8');
+  report('the For testers page installs from preconnect.org and tells anyone who installed before the move how to carry their progress over',/href="https:\/\/preconnect\.org\/"/.test(T)&&/Installed before October 18, 2026\?/.test(T)&&/Back up to a file/.test(T)&&/Restore from a file/.test(T));}
  const {boot}=require('./hub_mock.js');const {api}=boot();const d=n=>new Date(Date.now()-n*864e5).toISOString();
  const one=api.pcSpacing([{d:d(0),score:90}]),two=api.pcSpacing([{d:d(5),score:90},{d:d(4),score:90}]),miss=api.pcSpacing([{d:d(5),score:90},{d:d(1),score:40}]);
  report('spacing: 1, 3, 7, 14, 30 days after each clear at 70+; a miss resets',api.pcSpacing([]).status==='never'&&one.level===1&&one.dueIn===1&&two.level===2&&two.status==='due'&&miss.status==='missed');
