@@ -2,15 +2,16 @@
 """Real-browser check for the home page (optional). Needs:  pip install playwright && playwright install chromium
 Opens the home page and the Settings sheet at phone sizes; fails on any JavaScript error, anything off-screen, or a button under 44 px.
 Usage:  python3 tests/browser_check.py"""
-import pathlib, sys
+import os, pathlib, sys
 from playwright.sync_api import sync_playwright
+EXE = '/opt/pw-browsers/chromium' if os.path.exists('/opt/pw-browsers/chromium') else None   # the preinstalled Chromium, like the modules' checks
 URL = (pathlib.Path(__file__).resolve().parent.parent / 'index.html').as_uri()
 OVER = "(()=>{let m=0;const vis=e=>e.checkVisibility?e.checkVisibility({visibilityProperty:true}):e.offsetParent!==null;document.querySelectorAll('body *').forEach(e=>{if(!vis(e))return;const r=e.getBoundingClientRect();if(r.width<1||r.height<1)return;m=Math.max(m,r.right-window.innerWidth);});return Math.round(m);})()"   # fixed elements count too (the hub header slipped past offsetParent)
 TEXT = "(()=>{let n=0;const vis=e=>e.checkVisibility?e.checkVisibility({visibilityProperty:true}):e.offsetParent!==null;document.querySelectorAll('body *').forEach(e=>{if(e.closest('svg')||!vis(e))return;const t=[...e.childNodes].filter(x=>x.nodeType===3).map(x=>x.textContent).join(' ').replace(/\\s+/g,' ').trim();if(t.length<2)return;const r=e.getBoundingClientRect();if(r.width<1||r.height<1)return;const fs=parseFloat(getComputedStyle(e).fontSize),w=t.split(' ').filter(x=>/[A-Za-z0-9]/.test(x)).length;if(fs<(w>=6?15:13)-.01)n++;});return n;})()"   # the text floor: 15 px for anything read as a sentence (six words or more), 13 px for captions; SVG numerals exempt
 SMALL = "(()=>{let n=0;const vis=e=>e.checkVisibility?e.checkVisibility({visibilityProperty:true}):e.offsetParent!==null;document.querySelectorAll('button').forEach(e=>{if(!vis(e))return;const r=e.getBoundingClientRect();if(r.width<2||r.height<2||r.bottom<0||r.top>innerHeight)return;if(r.height<44||r.width<44)n++;});return n+100*(()=>{let n=0;const vis=e=>e.checkVisibility?e.checkVisibility({visibilityProperty:true}):e.offsetParent!==null;document.querySelectorAll('body *').forEach(e=>{if(e.closest('svg')||!vis(e))return;const t=[...e.childNodes].filter(x=>x.nodeType===3).map(x=>x.textContent).join(' ').replace(/\\s+/g,' ').trim();if(t.length<2)return;const r=e.getBoundingClientRect();if(r.width<1||r.height<1)return;const fs=parseFloat(getComputedStyle(e).fontSize),w=t.split(' ').filter(x=>/[A-Za-z0-9]/.test(x)).length;if(fs<(w>=6?15:13)-.01)n++;});return n;})();})()"   # buttons under 44 px tall or wide, plus 100 per text under the floor
 errs, rows = [], []
 with sync_playwright() as p:
-    b = p.chromium.launch()
+    b = (p.chromium.launch(executable_path=EXE) if EXE else p.chromium.launch())
     for w in (320, 390):
         pg = b.new_page(viewport={'width': w, 'height': 800}, device_scale_factor=2, is_mobile=True, has_touch=True)
         pg.on('pageerror', lambda e: errs.append(str(e)))
