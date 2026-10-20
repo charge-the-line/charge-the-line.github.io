@@ -3,6 +3,11 @@
 Plain-language history of the home page (the hub at https://preconnect.org/). Each module has its own CHANGELOG.md.
 Newest first. "Core" is `preconnect-core.js`, the file every module shares.
 
+## 1.17.0 — October 20, 2026 — the backup three ways, the six-module card
+- Back up to a file now has two companions under Settings, More: Share the backup (the phone's share sheet, with the backup as a file; shown only where the phone can share a file) and Copy backup as text (the clipboard). A copied backup comes back through Restore from pasted text. For testers whose phones would not download the file.
+- The link preview picture lists all six modules, Purchase Point included, and every page description names vehicle extrication.
+- The For testers page says what happens when you tap a never-opened module on the old icon: its tile lands on the new site with nothing in it, so back up first.
+
 ## 1.16.1 — October 18, 2026 — preconnect.org
 - Preconnect lives at https://preconnect.org. The link preview (og:url, og:image), the For testers page and the docs use the new address; every link between pages stays relative, and every manifest (start_url, scope, id) is relative, so nothing names a host.
 - The For testers page tells anyone who installed before the move how to carry their progress over: back up from the old icon, restore at preconnect.org, add the new icon.

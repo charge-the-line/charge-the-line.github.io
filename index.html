@@ -6,13 +6,13 @@
 <meta name="theme-color" content="#14161a">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Preconnect">
-<meta name="description" content="Preconnect: free practice for fire and EMS skills — pump operations, patient care, bleeding control, BLS, and hazmat.">
+<meta name="description" content="Preconnect: free practice for fire and EMS skills — pump operations, patient care, bleeding control, BLS, hazmat, and vehicle extrication.">
 <link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Preconnect">
 <meta property="og:title" content="Preconnect — Ready before the call">
-<meta property="og:description" content="Free practice for fire and EMS skills: pump operations, patient care, bleeding control, BLS, and hazmat. Works on any phone, offline, no account needed.">
-<meta property="og:image" content="https://preconnect.org/og-card.png?v=5">
+<meta property="og:description" content="Free practice for fire and EMS skills: pump operations, patient care, bleeding control, BLS, hazmat, and vehicle extrication. Works on any phone, offline, no account needed.">
+<meta property="og:image" content="https://preconnect.org/og-card.png?v=6">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:url" content="https://preconnect.org/">
 <meta name="twitter:card" content="summary_large_image">
@@ -93,8 +93,8 @@ input,textarea{font-family:inherit;font-size:16px;padding:10px;border-radius:6px
 <div class="sec">Drill Night</div>
 <div id="drillcard"></div>
 <div class="sec">More</div>
-<div class="row"><button id="r-csv">Training record (CSV)</button><button id="b-backup">Back up to a file</button><button id="b-restore">Restore from a file</button><a class="btnlink" href="feedback.html">Report a problem or idea</a><a class="btnlink" href="testers.html">For testers</a></div>
-<input type="file" id="f-restore" accept=".json,application/json" class="hidden"><p class="stat" id="b-msg" style="margin:8px 0 0"></p>
+<div class="row"><button id="r-csv">Training record (CSV)</button><button id="b-backup">Back up to a file</button><button id="b-restore">Restore from a file</button><button id="b-share" class="hidden">Share the backup</button><button id="b-copy">Copy backup as text</button><button id="b-paste">Restore from pasted text</button><a class="btnlink" href="feedback.html">Report a problem or idea</a><a class="btnlink" href="testers.html">For testers</a></div>
+<input type="file" id="f-restore" accept=".json,application/json" class="hidden"><div id="b-pastebox" class="hidden" style="margin-top:8px"><label class="small" for="b-pastetxt">Paste the backup text here</label><textarea id="b-pastetxt" rows="4" placeholder="Starts with {&quot;app&quot;:&quot;preconnect&quot;"></textarea><div class="row"><button id="b-pasteok">Restore the pasted backup</button><button id="b-pastex">Cancel</button></div></div><p class="stat" id="b-msg" style="margin:8px 0 0"></p>
 <p class="stat" style="margin-top:14px">Preconnect is a free, independent training platform made in Bay County, Michigan. A preconnect is the hoseline that's hooked up and ready before the call, so it flows the moment you need it. That's what practice does for skills. Preconnect is practice: it doesn't replace hands-on training, your department's protocols, or official certification courses. <a href="privacy.html" style="color:var(--or2)">Privacy</a></p>
 <div class="overlay hidden" id="drillov" style="z-index:21"><div class="box" id="drillbox"></div></div>
 <div class="overlay hidden" id="pc-drillov" style="z-index:25"><div class="box" id="pc-drillbox"></div></div>
@@ -117,7 +117,7 @@ input,textarea{font-family:inherit;font-size:16px;padding:10px;border-radius:6px
 <p class="legal">STOP THE BLEED® is a registered trademark of the U.S. Department of Defense. American Heart Association, BLS Provider, and Heartsaver are trademarks of the American Heart Association. The Emergency Response Guidebook is published by the U.S. Department of Transportation (PHMSA), and NFPA 470 is a standard of the National Fire Protection Association. Preconnect and its modules are independent and not affiliated with or endorsed by any of these organizations. <span id="ver"></span></p>
 <script>
 const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
-const APP_VERSION='1.16.1';
+const APP_VERSION='1.17.0';
 const $=id=>document.getElementById(id);const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const HUBKEY='preconnect';
 
@@ -168,7 +168,14 @@ function records(){const out=[];const add=(mod,type,act,pat,d,mode,score,who,ins
 function csvRows(recs){const P=profile();const rows=[['Name','Organization','Module','Type','Activity','Patient','Date','Mode','Score','Instructor']];
   for(const r of (recs||records())){const names=r.who&&r.who.length?r.who:[P.name];for(const n of names)rows.push([n,P.org,r.mod,r.type,r.act,r.pat,String(r.d).slice(0,16).replace('T',' '),r.mode,r.score,r.inst]);}return rows;}
 function toCSV(rows){return pcCsv(rows);}/* the core quotes every cell and defuses =, +, -, @ formulas */
-function download(name,text,type){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();}catch(e){}}
+function download(name,text,type){return saveFile(name,text,type);}
+/* saving a file three ways (Max, October 20, 2026, for testers whose phones will not download): the download link, the share sheet with a File, and the clipboard as text */
+function saveFile(name,text,type){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();return true;}catch(e){return false;}}
+function canShareFile(){try{const f=new File(['{}'],'t.json',{type:'application/json'});return !!(navigator.canShare&&navigator.share&&navigator.canShare({files:[f]}));}catch(e){return false;}}
+async function shareFile(name,text,type){try{const f=new File([text],name,{type});if(!(navigator.canShare&&navigator.canShare({files:[f]})))return false;await navigator.share({files:[f],title:name});return true;}catch(e){return e&&e.name==='AbortError'?'cancel':false;}}
+async function copyText(text){try{await navigator.clipboard.writeText(text);return true;}catch(e){try{const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();const ok=document.execCommand('copy');t.remove();return !!ok;}catch(e2){return false;}}}
+function restoreText(text){let o;try{o=JSON.parse(String(text||'').trim());}catch(e){throw new Error('That is not a Preconnect backup: the text does not read as one.');}return restore(o);}
+function shareSetup(){$('b-share').classList.toggle('hidden',!canShareFile());}
 function daysAgo(d){const t=Date.parse(d);if(!t)return null;return Math.floor((Date.now()-t)/864e5);}
 /* The Today view (Milestone 2): the most recent activity, this week's count, and each module's progress as distinct activities done out of its total. */
 function today(){const recs=records();const last=recs[0]||null;const week=recs.filter(r=>{const n=daysAgo(r.d);return n!==null&&n>=0&&n<7;}).length;
@@ -234,11 +241,17 @@ const ALLKEYS=[HUBKEY,'preconnect-settings','preconnect-stats',...MODS.map(m=>m.
 function shapeOK(k,v){if(k==='preconnect-stats')return v==='off'||v==='on';let o;try{o=JSON.parse(v);}catch(e){return false;}if(!o||typeof o!=='object'||Array.isArray(o))return false;for(const f of ['runs','log','extra','drillRuns','crew','roster'])if(o[f]!==undefined&&!Array.isArray(o[f]))return false;if(o.scen!==undefined&&(!o.scen||typeof o.scen!=='object'||Array.isArray(o.scen)))return false;return true;}
 function backup(){const data={};for(const k of ALLKEYS){const v=localStorage.getItem(k);if(v!==null)data[k]=v;}return {app:'preconnect',version:1,saved:new Date().toISOString(),data};}
 function restore(obj){if(!obj||obj.app!=='preconnect'||!obj.data)throw new Error('This file is not a Preconnect backup.');const keys=ALLKEYS.filter(k=>typeof obj.data[k]==='string');for(const k of keys){if(!shapeOK(k,obj.data[k]))throw new Error('This backup file is damaged. Nothing was changed.');}for(const k of keys)localStorage.setItem(k,obj.data[k]);return keys.length;}
-$('b-backup').onclick=()=>{download(`preconnect-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(backup()),'application/json');pca('ev','hub/backup');$('b-msg').textContent='Backup downloaded. Keep it somewhere safe.';};
+const backupName=()=>`preconnect-backup-${new Date().toISOString().slice(0,10)}.json`;
+$('b-backup').onclick=()=>{const ok=saveFile(backupName(),JSON.stringify(backup()),'application/json');pca('ev','hub/backup');$('b-msg').textContent=ok?'Backup downloaded. Keep it somewhere safe. No file showed up? Use Share the backup or Copy backup as text.':'This browser would not save the file. Use Share the backup or Copy backup as text.';};
+$('b-share').onclick=async()=>{const r=await shareFile(backupName(),JSON.stringify(backup()),'application/json');if(r===true)pca('ev','hub/backup');$('b-msg').textContent=r===true?'Backup handed to the share sheet. Save it to Files, or send it to yourself.':r==='cancel'?'Share cancelled. Nothing was sent.':'This phone cannot share a file from here. Use Copy backup as text.';};
+$('b-copy').onclick=async()=>{const ok=await copyText(JSON.stringify(backup()));if(ok)pca('ev','hub/backup');$('b-msg').textContent=ok?'Backup copied as text. Paste it into a note or an email to yourself and keep it; Restore from pasted text brings it back.':'Could not copy on this phone. Try Back up to a file or Share the backup.';};
+$('b-paste').onclick=()=>{$('b-pastebox').classList.toggle('hidden');$('b-pastetxt').focus&&$('b-pastetxt').focus();};
+$('b-pastex').onclick=()=>{$('b-pastebox').classList.add('hidden');$('b-pastetxt').value='';};
+$('b-pasteok').onclick=()=>{try{const n=restoreText($('b-pastetxt').value);pca('ev','hub/restore');$('b-msg').textContent=`Restored progress for ${n} module${n===1?'':'s'}.`;$('b-pastebox').classList.add('hidden');$('b-pastetxt').value='';render();}catch(err){$('b-msg').textContent=err.message||'That text could not be read.';}};
 $('b-restore').onclick=()=>$('f-restore').click();
 $('f-restore').onchange=e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const n=restore(JSON.parse(rd.result));pca('ev','hub/restore');$('b-msg').textContent=`Restored progress for ${n} module${n===1?'':'s'}.`;render();}catch(err){$('b-msg').textContent=err.message||'That file could not be read.';}};rd.readAsText(f);};
 $('ver').textContent='Version '+APP_VERSION+'.';
-applySettings();settingsBind();installHint();if(typeof window!=='undefined')window.onPcDrillHub=drillOpen;pcDrillBind();render();addEventListener('pageshow',()=>{render();pcDrillBar();});addEventListener('focus',render);
+applySettings();settingsBind();installHint();shareSetup();if(typeof window!=='undefined')window.onPcDrillHub=drillOpen;pcDrillBind();render();addEventListener('pageshow',()=>{render();pcDrillBar();});addEventListener('focus',render);
 if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body>
